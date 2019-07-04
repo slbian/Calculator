@@ -18,7 +18,7 @@ export default class App extends Component {
       </div>
     );
   }
-
+  // this = app
   addCharacter(char) {
     this.setState({
       displayText: this.state.isCleared
