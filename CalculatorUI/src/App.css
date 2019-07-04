@@ -1,0 +1,57 @@
+.App {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.calculator {
+  border: 1px solid black;
+  padding: 15px;
+  width: 260px;
+}
+
+.controls {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 90%;
+}
+
+.operators {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  overflow-wrap: normal;
+  width: 10%;
+  justify-content: center;
+}
+
+.numbers {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  overflow-wrap: normal;
+  width: 80%;
+  justify-content: center;
+}
+
+.screen {
+  text-align: right;
+  font-size: 20px;
+  font-weight: bold;
+  width: 85%;
+  background-color: #888888;
+  color: black;
+  margin: 15px;
+  padding: 5px;
+  min-height: 30px;
+}
+
+.button {
+  border: 1px solid black;
+  padding: 5px 15px;
+  border-radius: 3px;
+  min-width: 25px;
+  margin: 2px;
+}

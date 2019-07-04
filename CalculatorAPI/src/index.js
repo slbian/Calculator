@@ -1,6 +1,6 @@
-import express from 'express';
-import cors from 'cors';
-import 'dotenv/config';
+import express from '../node_modules/express';
+import cors from '../node_modules/cors/lib';
+import '../node_modules/dotenv/config';
 
 const PORT = process.env.PORT;
 const app = express();
