@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 
 import Calculator from './components/Calculator';
+import Scoreboard from './components/Scoreboard';
 
 export default class App extends Component {
   state = { displayText: '', isCleared: false };
@@ -15,6 +16,9 @@ export default class App extends Component {
           clearScreen={this.clearScreen.bind(this)}
           evaluate={this.evaluate.bind(this)}
         />
+        <div className="scoreboard">
+          <Scoreboard />
+        </div>
       </div>
     );
   }
@@ -37,5 +41,21 @@ export default class App extends Component {
       displayText: eval(this.state.displayText),
       isCleared: true,
     });
+    // axios
+    //   .post('http://localhost:3002/register-user')
+    //   .then(function(response) {
+    //     console.log('post', response);
+    //   })
+    //   .catch(function(error) {
+    //     console.log(error);
+    //   });
+    // axios
+    //   .post('http://localhost:3002/increment-score', [sharonb], 2)
+    //   .then(function(response) {
+    //     console.log(response);
+    //   })
+    //   .catch(function(error) {
+    //     console.log(error);
+    //   });
   }
 }

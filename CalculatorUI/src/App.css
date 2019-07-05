@@ -55,3 +55,15 @@
   min-width: 25px;
   margin: 2px;
 }
+
+.scoreboard {
+  text-align: left;
+  font-size: 20px;
+  font-weight: bold;
+  width: 85%;
+  background-color: #98cbec;
+  color: black;
+  margin: 15px;
+  padding: 5px;
+  min-height: 30px;
+}
