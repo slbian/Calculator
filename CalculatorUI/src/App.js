@@ -1,13 +1,23 @@
 import React, { Component } from 'react';
 import './App.css';
+import axios from 'axios';
 
 import Calculator from './components/Calculator';
 import Scoreboard from './components/Scoreboard';
+import Profile from './components/Profile';
+import Login from './components/Login';
 
 export default class App extends Component {
-  state = { displayText: '', isCleared: false };
+  state = {
+    displayText: '',
+    isCleared: false,
+    activeUser: { userName: 'sharonb', score: 1 },
+    users: null,
+    loginText: '',
+  };
 
   render() {
+    console.log(this.state);
     return (
       <div className="App">
         <Calculator
@@ -17,7 +27,20 @@ export default class App extends Component {
           evaluate={this.evaluate.bind(this)}
         />
         <div className="scoreboard">
-          <Scoreboard />
+          <Scoreboard users={this.state.users} />
+        </div>
+        <div className="profile">
+          <Profile
+            userName={this.state.activeUser.userName}
+            score={this.state.activeUser.score}
+          />
+        </div>
+        <div className="login">
+          <Login
+            loginText={this.state.loginText}
+            changeLogin={this.handleChangeLogin.bind(this)}
+            requestLogin={this.handleLoginRequest.bind(this)}
+          />
         </div>
       </div>
     );
@@ -36,26 +59,66 @@ export default class App extends Component {
     this.setState({ displayText: '' });
   }
 
-  evaluate() {
-    this.setState({
-      displayText: eval(this.state.displayText),
-      isCleared: true,
-    });
-    // axios
-    //   .post('http://localhost:3002/register-user')
-    //   .then(function(response) {
-    //     console.log('post', response);
-    //   })
-    //   .catch(function(error) {
-    //     console.log(error);
-    //   });
-    // axios
-    //   .post('http://localhost:3002/increment-score', [sharonb], 2)
-    //   .then(function(response) {
-    //     console.log(response);
-    //   })
-    //   .catch(function(error) {
-    //     console.log(error);
-    //   });
+  async evaluate() {
+    try {
+      const userWithNewScore = await axios.post(
+        `http://localhost:3002/increment-score?username=${
+          this.state.activeUser.userName
+        }&incrementamount=${this.state.displayText.length}`
+      );
+      console.log(userWithNewScore, userWithNewScore.data.newScore, '!!!!!');
+
+      const newActiveUser =
+        userWithNewScore.data.userName === this.state.activeUser.userName
+          ? {
+              userName: this.state.activeUser.userName,
+              score: userWithNewScore.data.newScore,
+            }
+          : this.state.activeUser;
+      this.setState({
+        displayText: eval(this.state.displayText),
+        isCleared: true,
+        activeUser: newActiveUser,
+      });
+      this.getUsers();
+    } catch (error) {
+      console.log('increment', error);
+    }
+  }
+
+  async getUsers() {
+    try {
+      const response = await axios.get('http://localhost:3002/all-users');
+      this.setState({ users: response.data });
+      return response;
+    } catch (error) {
+      console.log(1, error);
+    }
+  }
+
+  handleChangeLogin(event) {
+    const text = event.target.value;
+    this.setState({ loginText: text });
+  }
+
+  async postLogin(userName) {
+    try {
+      const userObject = await axios.post(
+        `http://localhost:3002/login?username=${userName}`
+      );
+      return userObject;
+    } catch (error) {
+      console.log('login request', error);
+    }
+  }
+
+  async handleLoginRequest() {
+    const activeUser = await this.postLogin(this.state.loginText);
+    this.setState({ activeUser: activeUser.data, loginText: '' });
+  }
+
+  async componentDidMount() {
+    await this.getUsers();
+    this.setState({ activeUser: this.state.users[0] });
   }
 }
