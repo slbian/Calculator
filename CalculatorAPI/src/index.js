@@ -20,7 +20,7 @@ app.get('/all-users', (req, res) => {
     score: value,
   }));
   users = users.sort((a, b) => b.score - a.score); //descending
-  res.json(users);
+  setTimeout(() => res.json(users), 1000);
 });
 
 app.post('/register-user', (req, res) => {
