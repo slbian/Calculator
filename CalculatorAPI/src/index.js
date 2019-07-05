@@ -44,9 +44,12 @@ app.post('/login', (req, res) => {
 });
 
 app.post('/increment-score', (req, res) => {
+  logger.trace(
+    'increment input',
+    `${req.query.username} ${req.query.incrementamount}`
+  );
   const userName = req.query.username;
   const incrementAmount = Number(req.query.incrementamount);
-  logger.trace('increment input', `${userName} ${incrementAmount}`);
 
   const newScore = memory.incrementScoreForUser(userName, incrementAmount);
 

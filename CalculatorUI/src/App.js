@@ -17,7 +17,6 @@ export default class App extends Component {
   };
 
   render() {
-    console.log(this.state);
     return (
       <div className="App">
         <Calculator
@@ -49,7 +48,7 @@ export default class App extends Component {
   addCharacter(char) {
     this.setState({
       displayText: this.state.isCleared
-        ? char
+        ? `${char}`
         : `${this.state.displayText}${char}`,
       isCleared: false,
     });
@@ -66,7 +65,6 @@ export default class App extends Component {
           this.state.activeUser.userName
         }&incrementamount=${this.state.displayText.length}`
       );
-      console.log(userWithNewScore, userWithNewScore.data.newScore, '!!!!!');
 
       const newActiveUser =
         userWithNewScore.data.userName === this.state.activeUser.userName
