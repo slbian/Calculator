@@ -1,8 +1,28 @@
 .App {
   display: flex;
+  flex-direction: row;
   justify-content: center;
   align-items: center;
   height: 100vh;
+}
+
+.mainpanel {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  height: 100vh;
+  width: 100%;
+}
+
+.sidepanel {
+  display: flex;
+  justify-content: right;
+  flex-direction: column;
+  align-items: center;
+  margin-left: auto;
+  height: 100vh;
+  padding: 20px;
 }
 
 .calculator {
@@ -84,7 +104,7 @@
   text-align: left;
   font-size: 20px;
   font-weight: bold;
-  width: 85%;
+  width: 300x;
   background-color: #962387;
   color: black;
   margin: 15px;

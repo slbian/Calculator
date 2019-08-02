@@ -7,6 +7,7 @@ import Scoreboard from './components/Scoreboard';
 import Profile from './components/Profile';
 import Login from './components/Login';
 
+//TODO: database, cleanup/layering, authorization, live data, error handling/defensive programming, styling, testing
 export default class App extends Component {
   state = {
     displayText: '',
@@ -19,27 +20,36 @@ export default class App extends Component {
   render() {
     return (
       <div className="App">
-        <Calculator
-          displayText={this.state.displayText}
-          addCharacter={this.addCharacter.bind(this)}
-          clearScreen={this.clearScreen.bind(this)}
-          evaluate={this.evaluate.bind(this)}
-        />
-        <div className="scoreboard">
-          <Scoreboard users={this.state.users} />
-        </div>
-        <div className="profile">
-          <Profile
-            userName={this.state.activeUser.userName}
-            score={this.state.activeUser.score}
+        <head>
+          <title>
+            Welcome to ${this.state.activeUser.userName}'s calculator!
+          </title>
+        </head>
+        <div className="mainpanel">
+          <Calculator
+            displayText={this.state.displayText}
+            addCharacter={this.addCharacter.bind(this)}
+            clearScreen={this.clearScreen.bind(this)}
+            evaluate={this.evaluate.bind(this)}
           />
+          <div className="login">
+            <Login
+              loginText={this.state.loginText}
+              changeLogin={this.handleChangeLogin.bind(this)}
+              requestLogin={this.handleLoginRequest.bind(this)}
+            />
+          </div>
         </div>
-        <div className="login">
-          <Login
-            loginText={this.state.loginText}
-            changeLogin={this.handleChangeLogin.bind(this)}
-            requestLogin={this.handleLoginRequest.bind(this)}
-          />
+        <div className="sidepanel">
+          <div className="profile">
+            <Profile
+              userName={this.state.activeUser.userName}
+              score={this.state.activeUser.score}
+            />
+          </div>
+          <div className="scoreboard">
+            <Scoreboard users={this.state.users} />
+          </div>
         </div>
       </div>
     );
@@ -52,6 +62,7 @@ export default class App extends Component {
         : `${this.state.displayText}${char}`,
       isCleared: false,
     });
+    console.log(typeof this.state.displayText);
   }
 
   clearScreen() {
@@ -60,6 +71,10 @@ export default class App extends Component {
 
   async evaluate() {
     try {
+      console.log(typeof this.state.displayText, this.state.displayText);
+      if (this.state.isCleared) {
+        return;
+      }
       const userWithNewScore = await axios.post(
         `http://localhost:3002/increment-score?username=${
           this.state.activeUser.userName

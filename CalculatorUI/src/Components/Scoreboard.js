@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 
-// save response from GET in state? not allowed to access response outside of get???
 export default class Scoreboard extends Component {
   render() {
     return (

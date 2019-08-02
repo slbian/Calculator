@@ -26,6 +26,7 @@ app.get('/all-users', (req, res) => {
   setTimeout(() => res.json(users), 1000);
 });
 
+// callback function - function that we put in another function
 app.post('/login', (req, res) => {
   const userName = req.query.username;
   logger.trace('login', userName);
