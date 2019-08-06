@@ -8,8 +8,8 @@ export default class Scoreboard extends Component {
         {this.props.users ? (
           this.props.users.map(userEntry => {
             return (
-              <div key={userEntry.userName}>
-                {userEntry.userName} : {userEntry.score}{' '}
+              <div key={userEntry.username}>
+                {userEntry.username} : {userEntry.score}{' '}
               </div>
             );
           })

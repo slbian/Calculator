@@ -43,7 +43,7 @@ export default class App extends Component {
         <div className="sidepanel">
           <div className="profile">
             <Profile
-              userName={this.state.activeUser.userName}
+              username={this.state.activeUser.username}
               score={this.state.activeUser.score}
             />
           </div>
@@ -62,7 +62,6 @@ export default class App extends Component {
         : `${this.state.displayText}${char}`,
       isCleared: false,
     });
-    console.log(typeof this.state.displayText);
   }
 
   clearScreen() {
@@ -71,7 +70,6 @@ export default class App extends Component {
 
   async evaluate() {
     try {
-      console.log(typeof this.state.displayText, this.state.displayText);
       if (this.state.isCleared) {
         return;
       }

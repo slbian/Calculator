@@ -3,6 +3,8 @@ import cors from '../node_modules/cors/lib';
 import '../node_modules/dotenv/config';
 import Memory from './Memory';
 import logger from './Instances/logger';
+import db from './Instances/db';
+import _ from 'lodash';
 
 const PORT = process.env.PORT;
 const app = express();
@@ -12,17 +14,29 @@ const memory = new Memory();
 app.use(cors());
 
 // routes
-app.get('/all-users', (req, res) => {
-  let users = [];
-  // square brackets for left side when dont want string
-  logger.trace('get users called');
-  users = Object.entries(memory.cache).map(([key, value]) => ({
-    userName: key,
-    score: value,
+app.get('/all-users', async (req, res) => {
+  let users = await db.select('*').from('users');
+
+  let score = await db
+    .select('userId')
+    .sum('score')
+    .from('executions')
+    .groupBy('userId');
+
+  score = _.keyBy(score, 'userId');
+
+  let logins = await db
+    .select(db.raw('distinct on ("userId") "userId", "created_at"'))
+    .from('logins');
+  logins = _.keyBy(logins, 'userId');
+
+  users = users.map(user => ({
+    ...user,
+    score: Number(_.get(score, `[${user.id}].sum`, 0)),
+    lastLogin: _.get(logins, `[${user.id}].created_at`, null),
   }));
-  users = users.sort((a, b) => b.score - a.score); //descending
-  users = users.slice(0, 5); // only show top 5
-  logger.trace('get users output', users.length);
+
+  logger.trace('count of users output: ', users.length);
   setTimeout(() => res.json(users), 1000);
 });
 
