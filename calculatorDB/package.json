@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "eslint": "^6.1.0",
     "knex": "^0.19.1",
     "pg": "^7.12.0"
   }

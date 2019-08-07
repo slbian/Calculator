@@ -12,7 +12,7 @@ export default class App extends Component {
   state = {
     displayText: '',
     isCleared: false,
-    activeUser: { userName: 'sharonb', score: 1 },
+    activeUser: { username: 'sharonb', score: 1 },
     users: null,
     loginText: '',
   };
@@ -22,7 +22,7 @@ export default class App extends Component {
       <div className="App">
         <head>
           <title>
-            Welcome to ${this.state.activeUser.userName}'s calculator!
+            Welcome to ${this.state.activeUser.username}'s calculator!
           </title>
         </head>
         <div className="mainpanel">
@@ -54,6 +54,7 @@ export default class App extends Component {
       </div>
     );
   }
+
   // this = app
   addCharacter(char) {
     this.setState({
@@ -73,16 +74,17 @@ export default class App extends Component {
       if (this.state.isCleared) {
         return;
       }
+      console.log(this.state.displayText);
       const userWithNewScore = await axios.post(
         `http://localhost:3002/increment-score?username=${
-          this.state.activeUser.userName
-        }&incrementamount=${this.state.displayText.length}`
+          this.state.activeUser.username
+        }&equation=${this.state.displayText}`
       );
 
       const newActiveUser =
-        userWithNewScore.data.userName === this.state.activeUser.userName
+        userWithNewScore.data.username === this.state.activeUser.username
           ? {
-              userName: this.state.activeUser.userName,
+              username: this.state.activeUser.username,
               score: userWithNewScore.data.newScore,
             }
           : this.state.activeUser;
@@ -100,6 +102,7 @@ export default class App extends Component {
   async getUsers() {
     try {
       const response = await axios.get('http://localhost:3002/all-users');
+
       this.setState({ users: response.data });
       return response;
     } catch (error) {
@@ -112,15 +115,13 @@ export default class App extends Component {
     this.setState({ loginText: text });
   }
 
-  async postLogin(userName) {
+  async postLogin(username) {
     try {
       const userObject = await axios.post(
-        `http://localhost:3002/login?username=${userName}`
+        `http://localhost:3002/login?username=${username}`
       );
       return userObject;
-    } catch (error) {
-      console.log('login request', error);
-    }
+    } catch (error) {}
   }
 
   async handleLoginRequest() {

@@ -15,7 +15,7 @@ export default class Memory {
 
   registerUser(username) {
     this.cache[username] = 0;
-    return { userName: username, score: this.cache[username] };
+    return { username: username, score: this.cache[username] };
   }
 
   getScoreByUsername(username) {

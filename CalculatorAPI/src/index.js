@@ -37,39 +37,104 @@ app.get('/all-users', async (req, res) => {
   }));
 
   logger.trace('count of users output: ', users.length);
-  setTimeout(() => res.json(users), 1000);
+  return res.json(users);
+  // setTimeout(() => res.json(users), 1000);
 });
 
 // callback function - function that we put in another function
-app.post('/login', (req, res) => {
-  const userName = req.query.username;
-  logger.trace('login', userName);
+// TODO: add trigger for logins
+app.post('/login', async (req, res) => {
+  const username = req.query.username;
+  logger.trace('login', username);
 
-  const score = memory.getScoreByUsername(userName);
-  if (score !== undefined) {
-    res.json({ userName, score });
-  } else {
-    const user = memory.registerUser(userName); // object
-    res.json(user);
+  const now = new Date().toISOString();
+
+  let [user] = await db
+    .select('*')
+    .from('users')
+    .where('username', username);
+
+  if (!user) {
+    [user] = await db('users')
+      .insert({
+        username: username,
+      })
+      .returning('*');
   }
+
+  let scores = await db
+    .select('userId')
+    .sum('score')
+    .from('executions')
+    .groupBy('userId')
+    .where('userId', user.id);
+
+  let score = scores[0] ? Number(scores[0].sum) : 0;
+
+  await db('logins').insert({
+    userId: user.id,
+    created_at: now,
+    updated_at: now,
+  });
+
+  await db('logins').insert({
+    userId: user.id,
+    created_at: now,
+    updated_at: now,
+  });
+  return res.json({ username: username, score });
+
+  // before database - for memory
+
+  // const username = req.query.username;
+  // logger.trace('login', username);
+
+  // const score = memory.getScoreByUsername(username);
+  // if (score !== undefined) {
+  //   res.json({ username, score });
+  // } else {
+  //   const user = memory.registerUser(username); // object
+  //   res.json(user);
+  // }
   // check if username typed in is in the cache:
   // if so, getScoreByUsername
   // if not, register
   // return {user, score}
 });
 
-app.post('/increment-score', (req, res) => {
+app.post('/increment-score', async (req, res) => {
   logger.trace(
     'increment input',
-    `${req.query.username} ${req.query.incrementamount}`
+    `${req.query.username} ${req.query.equation}`
   );
-  const userName = req.query.username;
-  const incrementAmount = Number(req.query.incrementamount);
+  const username = req.query.username;
+  const equation = req.query.equation;
 
-  const newScore = memory.incrementScoreForUser(userName, incrementAmount);
+  let [user] = await db
+    .select('*')
+    .from('users')
+    .where('username', username);
 
-  logger.trace('increment output', `${userName} ${newScore}`);
-  res.json({ userName, newScore }); // need username and score
+  await db('executions')
+    .insert({
+      equation: equation,
+      score: eval(equation).toString().length,
+      userId: user.id,
+    })
+    .returning('*');
+
+  let [score] = await db
+    .select('userId')
+    .sum('score')
+    .from('executions')
+    .groupBy('userId')
+    .where('userId', user.id);
+
+  let newScore = score.sum;
+  // const newScore = memory.incrementScoreForUser(username, equation);
+
+  logger.trace('increment output', `${username} ${newScore}`);
+  res.json({ username, newScore }); // need username and score
 });
 
 app.listen(PORT, () => console.log(`Listening on port ${PORT}!`));
