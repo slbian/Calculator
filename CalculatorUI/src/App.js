@@ -118,6 +118,7 @@ export default function App() {
     const activeUser = await postLogin(loginText);
     setActiveUser(activeUser.data);
     setLoginText('');
+    setDisplayText('');
   }
 
   async function mount() {
