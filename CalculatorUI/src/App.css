@@ -6,6 +6,13 @@
   height: 100vh;
 }
 
+.header {
+  text-align: center;
+  font-size: 50px;
+  font-weight: bold;
+  color: rosybrown;
+}
+
 .mainpanel {
   display: flex;
   justify-content: center;

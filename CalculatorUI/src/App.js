@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 import axios from 'axios';
 
@@ -7,130 +7,121 @@ import Scoreboard from './components/Scoreboard';
 import Profile from './components/Profile';
 import Login from './components/Login';
 
-//TODO: database, cleanup/layering, authorization, live data, error handling/defensive programming, styling, testing
-export default class App extends Component {
-  state = {
-    displayText: '',
-    isCleared: false,
-    activeUser: { username: 'sharonb', score: 1 },
-    users: null,
-    loginText: '',
-  };
+//TODO: styled components, use reducer hook, have a guest user that resets to 0 every time page is refreshed, cleanup/layering, authorization, live data, error handling/defensive programming, testing
+//DONE: database, add hooks,
+export default function App() {
+  const [displayText, setDisplayText] = useState('');
+  const [isCleared, setIsCleared] = useState(false);
+  const [activeUser, setActiveUser] = useState(null);
+  const [users, setUsers] = useState(null);
+  const [loginText, setLoginText] = useState('');
 
-  render() {
-    return (
-      <div className="App">
-        <head>
-          <title>
-            Welcome to ${this.state.activeUser.username}'s calculator!
-          </title>
-        </head>
-        <div className="mainpanel">
-          <Calculator
-            displayText={this.state.displayText}
-            addCharacter={this.addCharacter.bind(this)}
-            clearScreen={this.clearScreen.bind(this)}
-            evaluate={this.evaluate.bind(this)}
+  useEffect(() => {
+    if (!users) mount();
+  });
+
+  if (!users || !activeUser) return <p>Loading calculator...</p>;
+
+  return (
+    <div className="App">
+      <div className="header">Welcome to {activeUser.username}'s calculator!</div>
+      <div className="mainpanel">
+        <Calculator
+          displayText={displayText}
+          addCharacter={addCharacter}
+          clearScreen={clearScreen}
+          evaluate={evaluate}
+        />
+        <div className="login">
+          <Login
+            loginText={loginText}
+            changeLogin={handleChangeLogin}
+            requestLogin={handleLoginRequest}
           />
-          <div className="login">
-            <Login
-              loginText={this.state.loginText}
-              changeLogin={this.handleChangeLogin.bind(this)}
-              requestLogin={this.handleLoginRequest.bind(this)}
-            />
-          </div>
-        </div>
-        <div className="sidepanel">
-          <div className="profile">
-            <Profile
-              username={this.state.activeUser.username}
-              score={this.state.activeUser.score}
-            />
-          </div>
-          <div className="scoreboard">
-            <Scoreboard users={this.state.users} />
-          </div>
         </div>
       </div>
-    );
+      <div className="sidepanel">
+        <div className="profile">
+          <Profile username={activeUser.username} score={activeUser.score} />
+        </div>
+        <div className="scoreboard">
+          <Scoreboard users={users} />
+        </div>
+      </div>
+    </div>
+  );
+
+  function addCharacter(char) {
+    setDisplayText(isCleared ? `${char}` : `${displayText}${char}`);
+    setIsCleared(false);
   }
 
-  // this = app
-  addCharacter(char) {
-    this.setState({
-      displayText: this.state.isCleared
-        ? `${char}`
-        : `${this.state.displayText}${char}`,
-      isCleared: false,
-    });
+  function clearScreen() {
+    setDisplayText('');
   }
 
-  clearScreen() {
-    this.setState({ displayText: '' });
-  }
-
-  async evaluate() {
+  async function evaluate() {
     try {
-      if (this.state.isCleared) {
+      const evaluatedValue = eval(displayText);
+      if (isCleared || evaluatedValue == undefined) {
         return;
       }
-      console.log(this.state.displayText);
+      console.log('before POST. equation:', displayText);
       const userWithNewScore = await axios.post(
-        `http://localhost:3002/increment-score?username=${
-          this.state.activeUser.username
-        }&equation=${this.state.displayText}`
+        `http://localhost:3002/increment-score?username=${activeUser.username}&`,
+        { displayText }
       );
 
+      console.log('finished POST. evaluated value: ', evaluatedValue);
       const newActiveUser =
-        userWithNewScore.data.username === this.state.activeUser.username
+        userWithNewScore.data.username === activeUser.username
           ? {
-              username: this.state.activeUser.username,
-              score: userWithNewScore.data.newScore,
+              username: activeUser.username,
+              score: userWithNewScore.data.newScore
             }
-          : this.state.activeUser;
-      this.setState({
-        displayText: eval(this.state.displayText),
-        isCleared: true,
-        activeUser: newActiveUser,
-      });
-      this.getUsers();
+          : activeUser;
+      console.log('active user: ', newActiveUser, '   evaluated value:', evaluatedValue);
+      setDisplayText(evaluatedValue);
+      setIsCleared(true);
+      setActiveUser(newActiveUser);
+
+      getUsers();
     } catch (error) {
-      console.log('increment', error);
+      setDisplayText('');
+      console.log('Eval error');
     }
   }
 
-  async getUsers() {
+  async function getUsers() {
     try {
       const response = await axios.get('http://localhost:3002/all-users');
-
-      this.setState({ users: response.data });
-      return response;
+      await setUsers(response.data);
+      return response.data;
     } catch (error) {
       console.log(1, error);
     }
   }
 
-  handleChangeLogin(event) {
+  function handleChangeLogin(event) {
     const text = event.target.value;
-    this.setState({ loginText: text });
+    setLoginText(text);
   }
 
-  async postLogin(username) {
+  async function postLogin(username) {
     try {
-      const userObject = await axios.post(
-        `http://localhost:3002/login?username=${username}`
-      );
+      const userObject = await axios.post(`http://localhost:3002/login?username=${username}`);
       return userObject;
     } catch (error) {}
   }
 
-  async handleLoginRequest() {
-    const activeUser = await this.postLogin(this.state.loginText);
-    this.setState({ activeUser: activeUser.data, loginText: '' });
+  async function handleLoginRequest() {
+    const activeUser = await postLogin(loginText);
+    setActiveUser(activeUser.data);
+    setLoginText('');
   }
 
-  async componentDidMount() {
-    await this.getUsers();
-    this.setState({ activeUser: this.state.users[0] });
+  async function mount() {
+    let users_list = await getUsers();
+    setActiveUser(users_list[0]);
   }
 }

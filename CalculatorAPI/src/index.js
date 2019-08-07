@@ -1,5 +1,6 @@
 import express from '../node_modules/express';
 import cors from '../node_modules/cors/lib';
+import bodyParser from 'body-parser';
 import '../node_modules/dotenv/config';
 import Memory from './Memory';
 import logger from './Instances/logger';
@@ -12,6 +13,7 @@ const app = express();
 const memory = new Memory();
 // middleware
 app.use(cors());
+app.use(bodyParser.json());
 
 // routes
 app.get('/all-users', async (req, res) => {
@@ -36,7 +38,7 @@ app.get('/all-users', async (req, res) => {
     lastLogin: _.get(logins, `[${user.id}].created_at`, null),
   }));
 
-  logger.trace('count of users output: ', users.length);
+  logger.trace('how many users in db? ', users.length);
   return res.json(users);
   // setTimeout(() => res.json(users), 1000);
 });
@@ -104,16 +106,20 @@ app.post('/login', async (req, res) => {
 
 app.post('/increment-score', async (req, res) => {
   logger.trace(
-    'increment input',
-    `${req.query.username} ${req.query.equation}`
+    'user and equation:',
+    req.body
+    // `${req.query.username} ${req.body.displayText}`
   );
   const username = req.query.username;
-  const equation = req.query.equation;
+  const equation = req.body.displayText;
 
   let [user] = await db
     .select('*')
     .from('users')
     .where('username', username);
+
+  console.log('trying to evaluate');
+  console.log(eval(equation));
 
   await db('executions')
     .insert({
@@ -133,7 +139,7 @@ app.post('/increment-score', async (req, res) => {
   let newScore = score.sum;
   // const newScore = memory.incrementScoreForUser(username, equation);
 
-  logger.trace('increment output', `${username} ${newScore}`);
+  logger.trace('user and new score:', `${username} ${newScore}`);
   res.json({ username, newScore }); // need username and score
 });
 
