@@ -57,8 +57,6 @@ export default function App() {
 
   useEffect(() => {
     if (!state.users) {
-      console.log('i am the state ', state);
-      // console.log('GOT PAST PROTECTION **************************');
       mount();
     }
   });
@@ -108,21 +106,18 @@ export default function App() {
       if (state.isCleared || evaluatedValue === undefined) {
         return;
       }
-      // console.log('before POST. equation:', state.displayText);
       const userWithNewScore = await axios.post(
         `http://localhost:3002/increment-score?username=${state.activeUser.username}&`,
         { displayText: state.displayText }
       );
 
-      // console.log('finished POST. evaluated value: ', evaluatedValue);
       const newActiveUser =
         userWithNewScore.data.username === state.activeUser.username
           ? {
               username: state.activeUser.username,
-              score: userWithNewScore.data.newScore
+              score: Number(userWithNewScore.data.newScore)
             }
           : state.activeUser;
-      // console.log('active user: ', newActiveUser, '   evaluated value:', evaluatedValue);
 
       dispatch({ type: 'setDisplayText', evaluatedValue });
       dispatch({ type: 'setCleared' });
@@ -131,19 +126,16 @@ export default function App() {
       await getUsers();
     } catch (error) {
       clearScreen();
-      // console.log('Eval error');
     }
   }
 
   async function getUsers() {
     try {
-      // console.log('called getUsers');
       const response = await axios.get('http://localhost:3002/all-users');
-      // console.log('dispatched. ', response.data);
       await dispatch({ type: 'setUsers', payload: response.data });
       return response.data;
     } catch (error) {
-      // console.log(1, error);
+      console.log(1, error);
     }
   }
 
@@ -158,7 +150,7 @@ export default function App() {
       const userObject = await axios.post(`http://localhost:3002/login?username=${username}`);
       return userObject;
     } catch (error) {
-      // console.log(2, error);
+      console.log(2, error);
     }
   }
 
@@ -170,11 +162,8 @@ export default function App() {
   }
 
   async function mount() {
-    // console.log('called MOUNT');
     const usersList = await getUsers();
-    // console.log(usersList);
     dispatch({ type: 'setActiveUser', payload: usersList[0] });
-    // console.log('active user:', state.activeUser);
     dispatch({ type: 'mounted' });
   }
 }

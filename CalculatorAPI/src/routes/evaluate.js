@@ -19,13 +19,12 @@ router.post('/', async (req, res) => {
     .from('users')
     .where('username', username);
 
-  console.log('trying to evaluate');
   console.log(eval(equation));
 
   await db('executions')
     .insert({
       equation: equation,
-      score: eval(equation).toString().length,
+      score: Number(eval(equation).toString().length),
       userId: user.id,
     })
     .returning('*');
