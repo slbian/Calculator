@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useReducer } from 'react'; // useState
 import './App.css';
 import axios from 'axios';
 
@@ -7,34 +7,77 @@ import Scoreboard from './components/Scoreboard';
 import Profile from './components/Profile';
 import Login from './components/Login';
 
-//TODO: styled components, use reducer hook, have a guest user that resets to 0 every time page is refreshed, cleanup/layering, authorization, live data, error handling/defensive programming, testing
-//DONE: database, add hooks,
+// TODO: styled components, use reducer hook, have a guest user that resets to 0 every time page is refreshed, cleanup/layering, authorization, live data, error handling/defensive programming, testing
+// DONE: database, add useState hooks, refactor to useReducer
+
+const initialState = {
+  displayText: '',
+  isCleared: false,
+  activeUser: null,
+  users: null,
+  loginText: '',
+  componentDidMount: false
+};
+
+function reducer(state, action) {
+  switch (action.type) {
+    case 'mounted':
+      return { ...state, componentDidMount: true };
+    case 'addCharacter':
+      return {
+        ...state,
+        displayText: state.isCleared
+          ? `${action.payload}`
+          : `${state.displayText}${action.payload}`,
+        isCleared: false
+      };
+    case 'clearScreen':
+      return {
+        ...state,
+        displayText: ''
+        // isCleared: true
+      };
+    case 'setDisplayText':
+      return { ...state, displayText: action.payload };
+    case 'setCleared':
+      return { ...state, isCleared: true };
+    case 'setActiveUser':
+      return { ...state, activeUser: action.payload };
+    case 'setUsers':
+      return { ...state, users: action.payload };
+    case 'setLoginText':
+      return { ...state, loginText: action.payload };
+    default:
+      throw new Error();
+  }
+}
+
 export default function App() {
-  const [displayText, setDisplayText] = useState('');
-  const [isCleared, setIsCleared] = useState(false);
-  const [activeUser, setActiveUser] = useState(null);
-  const [users, setUsers] = useState(null);
-  const [loginText, setLoginText] = useState('');
+  const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
-    if (!users) mount();
+    if (!state.users) {
+      console.log('i am the state ', state);
+      // console.log('GOT PAST PROTECTION **************************');
+      mount();
+    }
   });
 
-  if (!users || !activeUser) return <p>Loading calculator...</p>;
+  if (!state.users || !state.activeUser) return <p> Loading calculator...</p>;
 
   return (
     <div className="App">
-      <div className="header">Welcome to {activeUser.username}'s calculator!</div>
+      <div className="header">Welcome to {state.activeUser.username}'s calculator!</div>
       <div className="mainpanel">
         <Calculator
-          displayText={displayText}
+          displayText={state.displayText}
           addCharacter={addCharacter}
           clearScreen={clearScreen}
           evaluate={evaluate}
         />
         <div className="login">
           <Login
-            loginText={loginText}
+            loginText={state.loginText}
             changeLogin={handleChangeLogin}
             requestLogin={handleLoginRequest}
           />
@@ -42,87 +85,96 @@ export default function App() {
       </div>
       <div className="sidepanel">
         <div className="profile">
-          <Profile username={activeUser.username} score={activeUser.score} />
+          <Profile username={state.activeUser.username} score={state.activeUser.score} />
         </div>
         <div className="scoreboard">
-          <Scoreboard users={users} />
+          <Scoreboard users={state.users} />
         </div>
       </div>
     </div>
   );
 
   function addCharacter(char) {
-    setDisplayText(isCleared ? `${char}` : `${displayText}${char}`);
-    setIsCleared(false);
+    dispatch({ type: 'addCharacter', payload: char });
   }
 
   function clearScreen() {
-    setDisplayText('');
+    dispatch({ type: 'clearScreen' });
   }
 
   async function evaluate() {
     try {
-      const evaluatedValue = eval(displayText);
-      if (isCleared || evaluatedValue == undefined) {
+      const evaluatedValue = eval(state.displayText);
+      if (state.isCleared || evaluatedValue === undefined) {
         return;
       }
-      console.log('before POST. equation:', displayText);
+      // console.log('before POST. equation:', state.displayText);
       const userWithNewScore = await axios.post(
-        `http://localhost:3002/increment-score?username=${activeUser.username}&`,
-        { displayText }
+        `http://localhost:3002/increment-score?username=${state.activeUser.username}&`,
+        { displayText: state.displayText }
       );
 
-      console.log('finished POST. evaluated value: ', evaluatedValue);
+      // console.log('finished POST. evaluated value: ', evaluatedValue);
       const newActiveUser =
-        userWithNewScore.data.username === activeUser.username
+        userWithNewScore.data.username === state.activeUser.username
           ? {
-              username: activeUser.username,
+              username: state.activeUser.username,
               score: userWithNewScore.data.newScore
             }
-          : activeUser;
-      console.log('active user: ', newActiveUser, '   evaluated value:', evaluatedValue);
-      setDisplayText(evaluatedValue);
-      setIsCleared(true);
-      setActiveUser(newActiveUser);
+          : state.activeUser;
+      // console.log('active user: ', newActiveUser, '   evaluated value:', evaluatedValue);
 
-      getUsers();
+      dispatch({ type: 'setDisplayText', evaluatedValue });
+      dispatch({ type: 'setCleared' });
+      dispatch({ type: 'setActiveUser', payload: newActiveUser });
+
+      await getUsers();
     } catch (error) {
-      setDisplayText('');
-      console.log('Eval error');
+      clearScreen();
+      // console.log('Eval error');
     }
   }
 
   async function getUsers() {
     try {
+      // console.log('called getUsers');
       const response = await axios.get('http://localhost:3002/all-users');
-      await setUsers(response.data);
+      // console.log('dispatched. ', response.data);
+      await dispatch({ type: 'setUsers', payload: response.data });
       return response.data;
     } catch (error) {
-      console.log(1, error);
+      // console.log(1, error);
     }
   }
 
+  // text in login box
   function handleChangeLogin(event) {
     const text = event.target.value;
-    setLoginText(text);
+    dispatch({ type: 'setLoginText', payload: text });
   }
 
   async function postLogin(username) {
     try {
       const userObject = await axios.post(`http://localhost:3002/login?username=${username}`);
       return userObject;
-    } catch (error) {}
+    } catch (error) {
+      // console.log(2, error);
+    }
   }
 
   async function handleLoginRequest() {
-    const activeUser = await postLogin(loginText);
-    setActiveUser(activeUser.data);
-    setLoginText('');
-    setDisplayText('');
+    const activeUser = await postLogin(state.loginText);
+    dispatch({ type: 'setActiveUser', payload: activeUser.data });
+    dispatch({ type: 'setLoginText', payload: '' });
+    clearScreen();
   }
 
   async function mount() {
-    let users_list = await getUsers();
-    setActiveUser(users_list[0]);
+    // console.log('called MOUNT');
+    const usersList = await getUsers();
+    // console.log(usersList);
+    dispatch({ type: 'setActiveUser', payload: usersList[0] });
+    // console.log('active user:', state.activeUser);
+    dispatch({ type: 'mounted' });
   }
 }

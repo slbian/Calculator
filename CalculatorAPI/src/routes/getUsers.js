@@ -28,7 +28,7 @@ router.get('/', async (req, res) => {
     lastLogin: _.get(logins, `[${user.id}].created_at`, null),
   }));
 
-  logger.trace('how many users in db? ', users.length);
+  logger.trace('# users in db? ', users.length);
   return res.json(users);
   // setTimeout(() => res.json(users), 1000);
 });
