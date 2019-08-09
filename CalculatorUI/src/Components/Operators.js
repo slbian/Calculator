@@ -1,4 +1,5 @@
 import React, { useContext } from 'react';
+import styled from 'styled-components';
 import Button from './Button';
 import {
   clearScreen,
@@ -12,18 +13,26 @@ import { Store } from '../state/store';
 import incrementScore from '../api/incrementScore';
 import getAllUsers from '../api/getAllUsers';
 
+const StyledDiv = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  overflow-wrap: normal;
+  justify-content: center;
+`;
+
 export default function Operators() {
   const { state, dispatch } = useContext(Store);
 
   const values = ['+', '-'];
   return (
-    <div className="operators">
+    <StyledDiv>
       <Button text="C" handleClick={handleClear} />
       {values.map(val => (
         <Button text={val} handleClick={handlePlusMinus} key={val} />
       ))}
       <Button text="=" handleClick={evaluate} />
-    </div>
+    </StyledDiv>
   );
 
   function handleClear() {

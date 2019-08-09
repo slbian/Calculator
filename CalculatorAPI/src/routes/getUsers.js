@@ -26,6 +26,7 @@ router.get('/', async (req, res) => {
     ...user,
     score: Number(_.get(score, `[${user.id}].sum`, 0)),
     lastLogin: _.get(logins, `[${user.id}].created_at`, null),
+    backgroundColor: 'pink',
   }));
 
   logger.trace('# users in db? ', users.length);

@@ -5,12 +5,14 @@ const initialState = {
   isCleared: false,
   activeUser: null,
   users: null,
-  loginText: ''
+  loginText: '',
+  profileConfigOpen: false
 };
 
 const reducer = (state, action) => {
   switch (action.type) {
     case 'addCharacter':
+      if (state.displayText.length > 15) return state;
       return {
         ...state,
         displayText: state.isCleared
@@ -27,8 +29,12 @@ const reducer = (state, action) => {
       return { ...state, displayText: action.payload };
     case 'setCleared':
       return { ...state, isCleared: true };
+    case 'pickColor':
+      return { ...state, activeUser: { ...state.activeUser, backgroundColor: action.payload } };
     case 'setActiveUser':
       return { ...state, activeUser: action.payload };
+    case 'toggleProfileConfig':
+      return { ...state, profileConfigOpen: !state.profileConfigOpen };
     case 'setUsers':
       return { ...state, users: action.payload };
     case 'setLoginText':
