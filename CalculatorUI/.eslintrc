@@ -8,6 +8,9 @@
     "react/no-unescaped-entities": "off",
     "no-console": "off",
     "consistent-return": "off",
+    "react/prop-types": "off",
+    "jsx-a11y/click-events-have-key-events": "off",
+    "import/newline-after-import": "off",
     "prettier/prettier": ["error"]
   }
 }

@@ -1,22 +1,17 @@
 import React from 'react';
-
 import Numbers from './Numbers';
 import Operators from './Operators';
 import Screen from './Screen';
 
-export default function Calculator(props) {
+export default function Calculator() {
   return (
     <div>
       My calculator
       <div className="calculator">
-        <Screen displayText={props.displayText} />
+        <Screen />
         <div className="controls">
-          <Numbers addCharacter={props.addCharacter} />
-          <Operators
-            addCharacter={props.addCharacter}
-            clearScreen={props.clearScreen}
-            evaluate={props.evaluate}
-          />
+          <Numbers />
+          <Operators />
         </div>
       </div>
     </div>

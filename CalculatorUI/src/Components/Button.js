@@ -1,9 +1,9 @@
 import React from 'react';
 
-export default function Operators(props) {
+export default function Operators({ handleClick, text }) {
   return (
-    <div className="button" onClick={() => props.handleClick(props.text)}>
-      {props.text}
+    <div className="button" onClick={() => handleClick(text)}>
+      {text}
     </div>
   );
 }
