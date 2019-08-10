@@ -31,7 +31,7 @@ const StyledContainer = styled.div`
 
 const availableColors = ['tomato', 'green', 'violet', 'pink'];
 
-export default function StylePicker() {
+export default function ThemePicker() {
   const { state, dispatch } = useContext(Store);
   return (
     <StyledContainer>

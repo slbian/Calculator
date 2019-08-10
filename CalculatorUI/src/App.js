@@ -6,7 +6,7 @@ import Calculator from './components/Calculator';
 import Scoreboard from './components/Scoreboard';
 import Profile from './components/Profile';
 import Login from './components/Login';
-import StylePicker from './components/StylePicker';
+import ThemePicker from './components/ThemePicker';
 import { Store } from './state/store';
 import { setActiveUser, setUsers } from './state/actions';
 import getAllUsers from './api/getAllUsers';
@@ -14,11 +14,6 @@ import getAllUsers from './api/getAllUsers';
 // NEXT TODO: alphabetize all imports, remove unecessary props
 // TODO: order the scoreboard, change eval, drop shadows, styled components w/ styling w database, cleanup/layering, authorization, live data, error handling/defensive programming, testing
 // DONE: database, add useState hooks, refactor to useReducer
-
-// styled components:
-// 1. make clickable circles under profile
-// 2. make database
-
 const StyledDiv = styled.div`
   background-color: ${props => props.theme};
   display: flex;
@@ -95,7 +90,7 @@ export default function App() {
         </div>
         <div className="profileConfig">
           <Login />
-          <StylePicker />
+          <ThemePicker />
         </div>
         <div className="scoreboard">
           <Scoreboard users={state.users} />
