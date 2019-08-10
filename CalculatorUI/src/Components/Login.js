@@ -10,12 +10,11 @@ const StyledDiv = styled.div`
   font-weight: bold;
   width: 220px;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
-  background-color: #962387;
   color: black;
   padding: 5px;
-  min-height: 30px;
+  min-height: 40px;
 
   input {
     height: 20px;
@@ -30,11 +29,16 @@ const StyledDiv = styled.div`
 
   button {
     border-radius: 0 20px 20px 0;
+    background-color: blueviolet;
     border: none;
     height: 22px;
-    font-size: 16px;
+    color: white;
+    text-transform: uppercase;
+    font-size: 12px;
+    font-weight: bold;
     box-shadow: 2px 2px 2px 1px rgba(0, 0, 255, 0.2);
     border-left: 1px solid #808080;
+    outline: none;
   }
 `;
 
@@ -45,7 +49,7 @@ export default function Login() {
     <StyledDiv>
       <input value={state.loginText} onChange={handleChangeLogin} />
       <button type="button" onClick={handleLoginRequest}>
-        Login
+        LOGIN
       </button>
     </StyledDiv>
   );

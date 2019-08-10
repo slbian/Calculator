@@ -12,9 +12,14 @@ const StyledDiv = styled.div`
   color: black;
   padding: 15px;
   min-height: 30px;
+  box-shadow: 2px 2px 2px 1px rgba(0, 0, 255, 0.2);
 
   span {
     margin-right: 10px;
+    text-transform: lowercase;
+    font-weight: 400;
+    letter-spacing: 2px;
+    text-align: center;
   }
 `;
 export default function Profile({ username, score }) {
@@ -24,7 +29,9 @@ export default function Profile({ username, score }) {
       <span role="img" aria-label="fire-emoji">
         🔥
       </span>
-      {username} : {score}
+      <span>
+        {username} : {score}
+      </span>
     </StyledDiv>
   );
 }

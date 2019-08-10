@@ -26,9 +26,8 @@ router.get('/', async (req, res) => {
     ...user,
     score: Number(_.get(score, `[${user.id}].sum`, 0)),
     lastLogin: _.get(logins, `[${user.id}].created_at`, null),
-    backgroundColor: 'pink',
   }));
-
+  users = _.sortBy(users, 'score').reverse();
   logger.trace('# users in db? ', users.length);
   return res.json(users);
   // setTimeout(() => res.json(users), 1000);

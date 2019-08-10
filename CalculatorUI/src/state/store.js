@@ -30,7 +30,7 @@ const reducer = (state, action) => {
     case 'setCleared':
       return { ...state, isCleared: true };
     case 'pickColor':
-      return { ...state, activeUser: { ...state.activeUser, backgroundColor: action.payload } };
+      return { ...state, activeUser: { ...state.activeUser, theme: action.payload } };
     case 'setActiveUser':
       return { ...state, activeUser: action.payload };
     case 'toggleProfileConfig':

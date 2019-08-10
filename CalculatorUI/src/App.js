@@ -20,7 +20,7 @@ import getAllUsers from './api/getAllUsers';
 // 2. make database
 
 const StyledDiv = styled.div`
-  background-color: ${props => props.backgroundColor};
+  background-color: ${props => props.theme};
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -31,6 +31,11 @@ const StyledDiv = styled.div`
     font-size: 50px;
     font-weight: bold;
     color: rosybrown;
+    text-transform: lowercase;
+    font-weight: 500;
+    letter-spacing: 3px;
+    text-align: center;
+    margin-bottom: 50px;
   }
 
   .mainpanel {
@@ -40,7 +45,11 @@ const StyledDiv = styled.div`
     align-items: center;
     height: 100vh;
     width: 100%;
+
+    /* div:first-of-type {flex-grow: 2}
+    div:last-of-type {flex-grow: 3} */
   }
+
   .sidepanel {
     background-color: #98cbec;
     display: flex;
@@ -51,11 +60,11 @@ const StyledDiv = styled.div`
     height: 100vh;
   }
   .profileConfig {
-    background-color: #909030;
     width: 230px;
     height: ${props => (props.isOpen ? '110px' : '0px')};
-    overflow: hidden;
     transition: all 0.5s;
+    /* box-shadow: 2px 2px 2px 1px rgba(0, 0, 255, 0.2); */
+    /* border-bottom: ${props => (props.isOpen ? `1px solid #e0e0e0` : 'none')}; */
   }
 `;
 
@@ -69,12 +78,16 @@ export default function App() {
   });
 
   if (!state.users || !state.activeUser) return <p> Loading calculator...</p>;
-
+  console.log(state);
   return (
-    <StyledDiv isOpen={state.profileConfigOpen} backgroundColor={state.activeUser.backgroundColor}>
-      <div className="header">Welcome to {state.activeUser.username}'s calculator!</div>
+    <StyledDiv isOpen={state.profileConfigOpen} theme={state.activeUser.theme}>
       <div className="mainpanel">
-        <Calculator />
+        <div>
+          <h1 className="header">Welcome to {state.activeUser.username}'s calculator!</h1>
+        </div>
+        <div>
+          <Calculator />
+        </div>
       </div>
       <div className="sidepanel">
         <div className="profile">

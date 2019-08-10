@@ -45,7 +45,7 @@ router.post('/', async (req, res) => {
     created_at: now,
     updated_at: now,
   });
-  return res.json({ username: username, score });
+  return res.json({ ...user, score });
 
   // before database - for memory
 

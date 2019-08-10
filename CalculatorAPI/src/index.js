@@ -7,6 +7,7 @@ import _ from 'lodash';
 import getUsers from './routes/getUsers';
 import postLogin from './routes/postLogin';
 import evaluate from './routes/evaluate';
+import setTheme from './routes/setTheme';
 // import Memory from './Memory';
 
 const PORT = process.env.PORT;
@@ -21,6 +22,7 @@ app.use(bodyParser.json());
 app.use('/all-users', getUsers);
 app.use('/login', postLogin);
 app.use('/increment-score', evaluate);
+app.use('/set-theme', setTheme);
 
 app.listen(PORT, () => console.log(`Listening on port ${PORT}!`));
 

@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import styled from 'styled-components';
 import { Store } from '../state/store';
 import { pickColor } from '../state/actions';
+import setTheme from '../api/setTheme';
 
 const StyledButton = styled.button`
   background: ${props => props.color};
@@ -12,6 +13,11 @@ const StyledButton = styled.button`
   margin: 5px;
   padding: 15px;
   color: white;
+  box-shadow: 2px 2px 2px 1px rgba(0, 0, 255, 0.2);
+
+  :active {
+    box-shadow: none;
+  }
 `;
 
 const StyledContainer = styled.div`
@@ -26,7 +32,7 @@ const StyledContainer = styled.div`
 const availableColors = ['tomato', 'green', 'violet', 'pink'];
 
 export default function StylePicker() {
-  const { dispatch } = useContext(Store);
+  const { state, dispatch } = useContext(Store);
   return (
     <StyledContainer>
       {availableColors.map(availableColor => (
@@ -36,6 +42,7 @@ export default function StylePicker() {
   );
 
   async function handleColorPick(color) {
-    dispatch(pickColor(color));
+    const response = await setTheme(state.activeUser.id, color);
+    dispatch(pickColor(response.data.theme));
   }
 }

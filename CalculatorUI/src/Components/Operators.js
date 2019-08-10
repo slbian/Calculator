@@ -55,7 +55,7 @@ export default function Operators() {
       const newActiveUser =
         userWithNewScore.data.username === state.activeUser.username
           ? {
-              username: state.activeUser.username,
+              ...userWithNewScore.data,
               score: Number(userWithNewScore.data.newScore)
             }
           : state.activeUser;

@@ -9,13 +9,11 @@ const StyledDiv = styled.div`
   text-align: center;
   background-color: orange;
   box-shadow: 2px 2px 2px 1px rgba(0, 0, 255, 0.2);
+  cursor: pointer;
   color: #252525;
 
   :active {
     box-shadow: none;
-  }
-  :hover {
-    cursor: pointer;
   }
 
   ::selection {

@@ -40,7 +40,7 @@ router.post('/', async (req, res) => {
   // const newScore = memory.incrementScoreForUser(username, equation);
 
   logger.trace('user and new score:', `${username} ${newScore}`);
-  res.json({ username, newScore }); // need username and score
+  res.json({ ...user, newScore }); // need username and score
 });
 
 export default router;
