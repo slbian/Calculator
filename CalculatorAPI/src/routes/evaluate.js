@@ -39,8 +39,13 @@ router.post('/', async (req, res) => {
   let newScore = score.sum;
   // const newScore = memory.incrementScoreForUser(username, equation);
 
+  let [theme] = await db
+    .select('themePath')
+    .from('themes')
+    .where('id', user.themeId);
+
   logger.trace('user and new score:', `${username} ${newScore}`);
-  res.json({ ...user, newScore }); // need username and score
+  res.json({ ...user, newScore, themePath: theme }); // need username and score
 });
 
 export default router;

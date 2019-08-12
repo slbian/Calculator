@@ -9,21 +9,21 @@ exports.seed = function(knex) {
           username: 'sbian',
           created_at: now,
           updated_at: now,
-          theme: 'pink',
+          themeId: 1,
         },
         {
           id: 2,
           username: 'chuck',
           created_at: now,
           updated_at: now,
-          theme: 'tomato',
+          themeId: 2,
         },
         {
           id: 3,
           username: 'ellen',
           created_at: now,
           updated_at: now,
-          theme: 'violet',
+          themeId: 3,
         },
       ]);
     });

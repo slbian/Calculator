@@ -9,6 +9,11 @@ const router = express.Router();
 router.get('/', async (req, res) => {
   let users = await db.select('*').from('users');
 
+  let themes = await db.select('*').from('themes');
+  // .where('color', req.query.theme);
+
+  themes = _.keyBy(themes, 'id');
+
   let score = await db
     .select('userId')
     .sum('score')
@@ -26,9 +31,11 @@ router.get('/', async (req, res) => {
     ...user,
     score: Number(_.get(score, `[${user.id}].sum`, 0)),
     lastLogin: _.get(logins, `[${user.id}].created_at`, null),
+    themePath: _.get(themes, `[${user.themeId}]`, null),
   }));
   users = _.sortBy(users, 'score').reverse();
   logger.trace('# users in db? ', users.length);
+  logger.trace('users:', users);
   return res.json(users);
   // setTimeout(() => res.json(users), 1000);
 });

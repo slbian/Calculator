@@ -1,19 +1,24 @@
 import * as express from 'express';
 import logger from '../Instances/logger';
 import db from '../Instances/db';
-import _ from 'lodash';
 
 const router = express.Router();
 
 router.post('/', async (req, res) => {
-  logger.trace('input setTheme: ', req.query);
+  let [theme] = await db
+    .select('*')
+    .from('themes')
+    .where('color', req.query.theme);
+
+  // let newThemePath = theme.themePath;
   let [user] = await db('users')
     .where('id', req.query.userId)
     .update({
-      theme: req.query.theme,
+      themeId: theme.id,
     })
     .returning('*');
-  logger.trace('input setTheme: ', user);
+  // let updatedUser = { ...user, themePath: newThemePath };
+  logger.trace('output setTheme: ', user);
   return res.json(user);
 });
 

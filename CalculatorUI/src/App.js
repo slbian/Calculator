@@ -1,21 +1,25 @@
 import React, { useEffect, useContext } from 'react'; // useState, useReducer
-import './App.css';
 import styled from 'styled-components';
 
-import Calculator from './components/Calculator';
-import Scoreboard from './components/Scoreboard';
-import Profile from './components/Profile';
-import Login from './components/Login';
-import ThemePicker from './components/ThemePicker';
-import { Store } from './state/store';
+import './App.css';
 import { setActiveUser, setUsers } from './state/actions';
+import { Store } from './state/store';
+import Calculator from './components/Calculator';
 import getAllUsers from './api/getAllUsers';
+import Login from './components/Login';
+import Profile from './components/Profile';
+import Scoreboard from './components/Scoreboard';
+import ThemePicker from './components/ThemePicker';
+// import green from ${state.activeUser};
 
 // NEXT TODO: alphabetize all imports, remove unecessary props
 // TODO: order the scoreboard, change eval, drop shadows, styled components w/ styling w database, cleanup/layering, authorization, live data, error handling/defensive programming, testing
 // DONE: database, add useState hooks, refactor to useReducer
+
+// PROPS ARE NOT RERENDERING WHEN STATE CHANGES - something async is off
 const StyledDiv = styled.div`
-  background-color: ${props => props.theme};
+  /* background-color: ${props => props.theme}; */
+  background-image: url(${props => props.themePath}) ;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -73,9 +77,9 @@ export default function App() {
   });
 
   if (!state.users || !state.activeUser) return <p> Loading calculator...</p>;
-  console.log(state);
+  console.log(state.activeUser.themePath);
   return (
-    <StyledDiv isOpen={state.profileConfigOpen} theme={state.activeUser.theme}>
+    <StyledDiv isOpen={state.profileConfigOpen} themePath={state.activeUser.themePath.themePath}>
       <div className="mainpanel">
         <div>
           <h1 className="header">Welcome to {state.activeUser.username}'s calculator!</h1>

@@ -24,6 +24,12 @@ router.post('/', async (req, res) => {
       })
       .returning('*');
   }
+  let [theme] = await db
+    .select('themePath')
+    .from('themes')
+    .where('id', user.themeId);
+
+  console.log('!!!!!!!!!!!!!!!!!!!!! theme', theme);
 
   let scores = await db
     .select('userId')
@@ -40,12 +46,7 @@ router.post('/', async (req, res) => {
     updated_at: now,
   });
 
-  await db('logins').insert({
-    userId: user.id,
-    created_at: now,
-    updated_at: now,
-  });
-  return res.json({ ...user, score });
+  return res.json({ ...user, score, themePath: theme });
 
   // before database - for memory
 

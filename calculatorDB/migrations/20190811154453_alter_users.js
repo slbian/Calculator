@@ -1,14 +1,16 @@
 exports.up = function(knex) {
   return knex.schema.table('users', function(table) {
     table
-      .string('theme', 30)
-      .notNullable()
-      .defaultTo('pink');
+      .integer('themeId')
+      .references('id')
+      .inTable('themes')
+      .defaultTo('1')
+      .onDelete('CASCADE');
   });
 };
 
 exports.down = function(knex) {
   return knex.schema.table('users', function(table) {
-    table.dropColumn('theme');
+    table.dropColumn('themeId');
   });
 };
