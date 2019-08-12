@@ -27,15 +27,19 @@ router.get('/', async (req, res) => {
     .from('logins');
   logins = _.keyBy(logins, 'userId');
 
-  users = users.map(user => ({
-    ...user,
-    score: Number(_.get(score, `[${user.id}].sum`, 0)),
-    lastLogin: _.get(logins, `[${user.id}].created_at`, null),
-    themePath: _.get(themes, `[${user.themeId}]`, null),
-  }));
+  users = users.map(user => {
+    const populatedUser = {
+      ...user,
+      score: Number(_.get(score, `[${user.id}].sum`, 0)),
+      lastLogin: _.get(logins, `[${user.id}].created_at`, null),
+      theme: _.get(themes, `[${user.themeId}]`, null),
+    };
+    delete populatedUser.themeId;
+    return populatedUser;
+  });
+
   users = _.sortBy(users, 'score').reverse();
   logger.trace('# users in db? ', users.length);
-  logger.trace('users:', users);
   return res.json(users);
   // setTimeout(() => res.json(users), 1000);
 });

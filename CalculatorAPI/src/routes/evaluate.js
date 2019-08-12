@@ -40,12 +40,13 @@ router.post('/', async (req, res) => {
   // const newScore = memory.incrementScoreForUser(username, equation);
 
   let [theme] = await db
-    .select('themePath')
+    .select('*')
     .from('themes')
     .where('id', user.themeId);
 
   logger.trace('user and new score:', `${username} ${newScore}`);
-  res.json({ ...user, newScore, themePath: theme }); // need username and score
+
+  res.json({ ...user, newScore, theme }); // need username and score
 });
 
 export default router;

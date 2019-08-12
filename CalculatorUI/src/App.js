@@ -12,7 +12,7 @@ import Scoreboard from './components/Scoreboard';
 import ThemePicker from './components/ThemePicker';
 // import green from ${state.activeUser};
 
-// NEXT TODO: alphabetize all imports, remove unecessary props
+// NEXT TODO: white box shadow, alphabetize all imports, remove unecessary props
 // TODO: order the scoreboard, change eval, drop shadows, styled components w/ styling w database, cleanup/layering, authorization, live data, error handling/defensive programming, testing
 // DONE: database, add useState hooks, refactor to useReducer
 
@@ -77,9 +77,9 @@ export default function App() {
   });
 
   if (!state.users || !state.activeUser) return <p> Loading calculator...</p>;
-  console.log(state.activeUser.themePath);
+  console.log(state.activeUser);
   return (
-    <StyledDiv isOpen={state.profileConfigOpen} themePath={state.activeUser.themePath.themePath}>
+    <StyledDiv isOpen={state.profileConfigOpen} themePath={state.activeUser.theme.themePath}>
       <div className="mainpanel">
         <div>
           <h1 className="header">Welcome to {state.activeUser.username}'s calculator!</h1>
@@ -104,7 +104,6 @@ export default function App() {
   );
 
   async function mount() {
-    console.log('MOUNT');
     const response = await getAllUsers();
     dispatch(setUsers(response.data));
     dispatch(setActiveUser(response.data[0]));

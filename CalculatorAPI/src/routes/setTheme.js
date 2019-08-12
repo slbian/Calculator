@@ -5,21 +5,22 @@ import db from '../Instances/db';
 const router = express.Router();
 
 router.post('/', async (req, res) => {
-  let [theme] = await db
+  const [theme] = await db
     .select('*')
     .from('themes')
     .where('color', req.query.theme);
 
-  // let newThemePath = theme.themePath;
-  let [user] = await db('users')
+  const [user] = await db('users')
     .where('id', req.query.userId)
     .update({
       themeId: theme.id,
     })
     .returning('*');
-  // let updatedUser = { ...user, themePath: newThemePath };
-  logger.trace('output setTheme: ', user);
-  return res.json(user);
+
+  const updatedUser = { ...user, theme };
+  delete updatedUser.themeId;
+  logger.trace('setTheme to: ', updatedUser.theme.color);
+  return res.json(updatedUser);
 });
 
 export default router;

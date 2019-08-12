@@ -24,21 +24,19 @@ router.post('/', async (req, res) => {
       })
       .returning('*');
   }
-  let [theme] = await db
-    .select('themePath')
+  const [theme] = await db
+    .select('*')
     .from('themes')
     .where('id', user.themeId);
 
-  console.log('!!!!!!!!!!!!!!!!!!!!! theme', theme);
-
-  let scores = await db
+  const scores = await db
     .select('userId')
     .sum('score')
     .from('executions')
     .groupBy('userId')
     .where('userId', user.id);
 
-  let score = scores[0] ? Number(scores[0].sum) : 0;
+  const score = scores[0] ? Number(scores[0].sum) : 0;
 
   await db('logins').insert({
     userId: user.id,
@@ -46,7 +44,9 @@ router.post('/', async (req, res) => {
     updated_at: now,
   });
 
-  return res.json({ ...user, score, themePath: theme });
+  const newUser = { ...user, score, theme };
+
+  return res.json(newUser);
 
   // before database - for memory
 
