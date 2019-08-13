@@ -1,7 +1,6 @@
 import * as express from 'express';
 import logger from '../Instances/logger';
 import db from '../Instances/db';
-import _ from 'lodash';
 
 const router = express.Router();
 

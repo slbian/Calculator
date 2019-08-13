@@ -3,7 +3,7 @@ import cors from '../node_modules/cors/lib';
 import bodyParser from 'body-parser';
 import '../node_modules/dotenv/config';
 import _ from 'lodash';
-
+import morgan from 'morgan';
 import getUsers from './routes/getUsers';
 import postLogin from './routes/postLogin';
 import evaluate from './routes/evaluate';
@@ -15,14 +15,15 @@ const app = express();
 
 // const memory = new Memory();
 // middleware
+app.use(morgan('dev'));
 app.use(cors());
 app.use(bodyParser.json());
 
 //routes
-app.use('/all-users', getUsers);
-app.use('/login', postLogin);
-app.use('/increment-score', evaluate);
-app.use('/set-theme', setTheme);
+app.use('/users', getUsers);
+app.use('/logins', postLogin);
+app.use('/executions', evaluate);
+app.use('/themes', setTheme);
 
 app.listen(PORT, () => console.log(`Listening on port ${PORT}!`));
 

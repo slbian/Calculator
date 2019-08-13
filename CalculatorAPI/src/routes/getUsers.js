@@ -40,6 +40,8 @@ router.get('/', async (req, res) => {
 
   users = _.sortBy(users, 'score').reverse();
   logger.trace('# users in db? ', users.length);
+
+  logger.trace('users:', users);
   return res.json(users);
   // setTimeout(() => res.json(users), 1000);
 });

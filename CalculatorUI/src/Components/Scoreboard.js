@@ -1,13 +1,14 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import styled from 'styled-components';
+import { Store } from '../state/store';
 
 const StyledDiv = styled.div`
   text-align: left;
   font-size: 20px;
   font-weight: bold;
   width: 200px;
-  background-color: #98cbec;
-  color: black;
+  background-color: ${props => props.secondaryColor};
+  color: white;
   padding: 15px;
   min-height: 30px;
   margin-top: 5px;
@@ -36,8 +37,9 @@ const StyledDiv = styled.div`
 `;
 
 export default function Scoreboard({ users }) {
+  const { state } = useContext(Store);
   return (
-    <StyledDiv>
+    <StyledDiv secondaryColor={state.activeUser.theme.secondaryColor}>
       <h3>Scoreboard</h3>
       <ol>
         {users ? (

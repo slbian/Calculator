@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from 'react'; // useState, useReducer
+import React, { useEffect, useContext, useSelector } from 'react'; // useState, useReducer
 import styled from 'styled-components';
 
 import './App.css';
@@ -12,14 +12,14 @@ import Scoreboard from './components/Scoreboard';
 import ThemePicker from './components/ThemePicker';
 // import green from ${state.activeUser};
 
-// NEXT TODO: white box shadow, alphabetize all imports, remove unecessary props
-// TODO: order the scoreboard, change eval, drop shadows, styled components w/ styling w database, cleanup/layering, authorization, live data, error handling/defensive programming, testing
-// DONE: database, add useState hooks, refactor to useReducer
+// NEXT TODO: rename based on best practices, do useSelector, alphabetize all imports, remove unecessary props
+// TODO: add different emojis, change eval,  cleanup/layering, authorization, live data, error handling/defensive programming, testing
+// DONE: database, add useState hooks, refactor to useReducer, refactor to useContext, styled components, add styling to database
 
-// PROPS ARE NOT RERENDERING WHEN STATE CHANGES - something async is off
 const StyledDiv = styled.div`
   /* background-color: ${props => props.theme}; */
-  background-image: url(${props => props.themePath}) ;
+  background-image: url(${props => props.themePath});
+  background-size: cover;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -29,12 +29,13 @@ const StyledDiv = styled.div`
     text-align: center;
     font-size: 50px;
     font-weight: bold;
-    color: rosybrown;
+    color: ${props => props.secondaryColor};
     text-transform: lowercase;
     font-weight: 500;
     letter-spacing: 3px;
     text-align: center;
     margin-bottom: 50px;
+    text-shadow: 1px 1px 1px white;
   }
 
   .mainpanel {
@@ -44,13 +45,10 @@ const StyledDiv = styled.div`
     align-items: center;
     height: 100vh;
     width: 100%;
-
-    /* div:first-of-type {flex-grow: 2}
-    div:last-of-type {flex-grow: 3} */
   }
 
   .sidepanel {
-    background-color: #98cbec;
+    background-color: ${props => props.secondaryColor};
     display: flex;
     justify-content: right;
     flex-direction: column;
@@ -62,8 +60,6 @@ const StyledDiv = styled.div`
     width: 230px;
     height: ${props => (props.isOpen ? '110px' : '0px')};
     transition: all 0.5s;
-    /* box-shadow: 2px 2px 2px 1px rgba(0, 0, 255, 0.2); */
-    /* border-bottom: ${props => (props.isOpen ? `1px solid #e0e0e0` : 'none')}; */
   }
 `;
 
@@ -75,11 +71,18 @@ export default function App() {
       mount();
     }
   });
+  // const selectorState = useSelector(state2 => state2.activeUser);
+  // console.log(selectorState);
 
   if (!state.users || !state.activeUser) return <p> Loading calculator...</p>;
-  console.log(state.activeUser);
+  // console.log(state.activeUser);
+
   return (
-    <StyledDiv isOpen={state.profileConfigOpen} themePath={state.activeUser.theme.themePath}>
+    <StyledDiv
+      isOpen={state.profileConfigOpen}
+      themePath={state.activeUser.theme.themePath}
+      secondaryColor={state.activeUser.theme.secondaryColor}
+    >
       <div className="mainpanel">
         <div>
           <h1 className="header">Welcome to {state.activeUser.username}'s calculator!</h1>

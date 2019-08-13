@@ -18,6 +18,13 @@ const StyledButton = styled.button`
   :active {
     box-shadow: none;
   }
+
+  .tooltip {
+    display: inline-block;
+    position: relative;
+    border-bottom: 1px dotted #666;
+    text-align: left;
+  }
 `;
 
 const StyledContainer = styled.div`
@@ -36,7 +43,9 @@ export default function ThemePicker() {
   return (
     <StyledContainer>
       {availableColors.map(availableColor => (
-        <StyledButton color={availableColor} onClick={() => handleColorPick(availableColor)} />
+        <div className="tooltip">
+          <StyledButton color={availableColor} onClick={() => handleColorPick(availableColor)} />
+        </div>
       ))}
     </StyledContainer>
   );
