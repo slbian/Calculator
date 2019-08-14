@@ -62,8 +62,16 @@ export default function Login() {
 
   async function handleLoginRequest() {
     const activeUser = await postLogin(state.loginText);
+
     dispatch(setActiveUser(activeUser.data));
     dispatch(setLoginText(''));
     dispatch(clearScreen());
   }
 }
+
+// function tokenSuccess(err, response) {
+//   if (err) {
+//     throw err;
+//   }
+//   $window.sessionStorage.accessToken = response.body.access_token;
+// }

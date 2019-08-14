@@ -7,7 +7,14 @@ import _ from 'lodash';
 const router = express.Router();
 
 router.get('/', async (req, res) => {
+  console.log('************', req.actor);
+
   let users = await db.select('*').from('users');
+
+  users = users.map(user => {
+    delete user.hashedPassword;
+    return user;
+  });
 
   let themes = await db.select('*').from('themes');
   // .where('color', req.query.theme);

@@ -10,12 +10,20 @@ router.post('/', async (req, res) => {
     .from('themes')
     .where('color', req.query.theme);
 
+  if (req.actor.id !== Number(req.query.userId)) {
+    console.log(req.actor.id);
+    console.log(req.query.userId);
+    res.status(401).send('UNAUTHORIZED');
+  }
+
   const [user] = await db('users')
     .where('id', req.query.userId)
     .update({
       themeId: theme.id,
     })
     .returning('*');
+
+  delete user.hashedPassword;
 
   const updatedUser = { ...user, theme };
   delete updatedUser.themeId;

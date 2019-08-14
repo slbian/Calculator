@@ -1,4 +1,4 @@
-import React, { useEffect, useContext, useSelector } from 'react'; // useState, useReducer
+import React, { useEffect, useContext } from 'react'; // useState, useReducer
 import styled from 'styled-components';
 
 import './App.css';

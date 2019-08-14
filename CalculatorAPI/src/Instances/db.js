@@ -1,6 +1,6 @@
 export default require('knex')({
   client: 'pg',
   connection: {
-    database: 'calculatordb',
+    database: process.env.DATABASE_NAME,
   },
 });
