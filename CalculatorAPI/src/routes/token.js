@@ -11,7 +11,6 @@ const JWT_SECRET = process.env.JWT_SECRET;
 router.post('/', async (req, res) => {
   const username = req.body.username;
   const password = req.body.password;
-
   const [user] = await db
     .select('*')
     .from('users')
@@ -19,6 +18,7 @@ router.post('/', async (req, res) => {
 
   if (!user) return res.status(401).send('Login error');
 
+  // hashed password - constant length
   const verified = await argon2.verify(user.hashedPassword, password);
 
   if (!verified) return res.status(401).send('Login error');
@@ -27,7 +27,6 @@ router.post('/', async (req, res) => {
     issuer: 'calculator',
     expiresIn: '12h',
   });
-
   return res.json(token);
 });
 

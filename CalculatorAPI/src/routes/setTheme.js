@@ -5,6 +5,7 @@ import db from '../Instances/db';
 const router = express.Router();
 
 router.post('/', async (req, res) => {
+  console.log('req header:', req.header);
   const [theme] = await db
     .select('*')
     .from('themes')

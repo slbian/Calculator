@@ -1,15 +1,16 @@
 import React, { useEffect, useContext } from 'react'; // useState, useReducer
 import styled from 'styled-components';
+import { Redirect } from 'react-router-dom';
 
-import './App.css';
-import { setActiveUser, setUsers } from './state/actions';
-import { Store } from './state/store';
-import Calculator from './components/Calculator';
-import getAllUsers from './api/getAllUsers';
-import Login from './components/Login';
-import Profile from './components/Profile';
-import Scoreboard from './components/Scoreboard';
-import ThemePicker from './components/ThemePicker';
+import './CalculatorApp.css';
+import { setActiveUser, setUsers } from '../state/actions';
+import { Store } from '../state/store';
+import Calculator from '../components/Calculator';
+import getAllUsers from '../api/getAllUsers';
+import Login from '../components/Login';
+import Profile from '../components/Profile';
+import Scoreboard from '../components/Scoreboard';
+import ThemePicker from '../components/ThemePicker';
 // import green from ${state.activeUser};
 
 // NEXT TODO: rename based on best practices, do useSelector, alphabetize all imports, remove unecessary props
@@ -24,7 +25,6 @@ const StyledDiv = styled.div`
   flex-direction: row;
   align-items: center;
   height: 100vh;
-
   .header {
     text-align: center;
     font-size: 50px;
@@ -37,7 +37,6 @@ const StyledDiv = styled.div`
     margin-bottom: 50px;
     text-shadow: 1px 1px 1px white;
   }
-
   .mainpanel {
     display: flex;
     justify-content: center;
@@ -46,7 +45,6 @@ const StyledDiv = styled.div`
     height: 100vh;
     width: 100%;
   }
-
   .sidepanel {
     background-color: ${props => props.secondaryColor};
     display: flex;
@@ -63,7 +61,7 @@ const StyledDiv = styled.div`
   }
 `;
 
-export default function App() {
+export default function CalculatorApp() {
   const { state, dispatch } = useContext(Store);
 
   useEffect(() => {
@@ -74,7 +72,10 @@ export default function App() {
   // const selectorState = useSelector(state2 => state2.activeUser);
   // console.log(selectorState);
 
-  if (!state.users || !state.activeUser) return <p> Loading calculator...</p>;
+  if (!state.users || !state.activeUser) {
+    console.log('trying to redirect');
+    return <Redirect to="/login" />;
+  }
   // console.log(state.activeUser);
 
   return (
@@ -111,4 +112,36 @@ export default function App() {
     dispatch(setUsers(response.data));
     dispatch(setActiveUser(response.data[0]));
   }
+
+  // async function mount() {
+  //   // first need to log in, get token
+  //   // const newToken = await getToken('chuck', 'welcome');
+  //   // put newToken in localstorage, then read from it
+  //   // if (newToken) {
+  //   // console.log('got new token: ', newToken.data);
+  //   // dispatch(setToken(newToken.data));
+  //   // need to put it in local storage - only client can read from window, then header
+  //   // window.localStorage.setItem('token', newToken.data);
+  //   const token = window.localStorage.getItem('token');
+  //   if (token) {
+  //     console.log('MOUNT: token - ', token);
+  //     const config = {
+  //       headers: { Authorization: 'bearer '.concat(token) }
+  //     };
+  //     // make an axios authenticationGET and POST wrapper - passes in config for you
+  //     // then get all users
+  //     const allUsers = await getAllUsers(config);
+
+  //     if (allUsers) {
+  //       dispatch(setUsers(allUsers.data));
+
+  //       // set active user
+  //       // dispatch(setActiveUser(allUsers.data[2]));
+  //     } else {
+  //       console.log('MOUNTING FAILED');
+  //     }
+  //   } else {
+  //     console.log('MOUNT: no token');
+  //   }
+  // }
 }

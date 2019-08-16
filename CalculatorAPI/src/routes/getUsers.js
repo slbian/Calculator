@@ -7,7 +7,7 @@ import _ from 'lodash';
 const router = express.Router();
 
 router.get('/', async (req, res) => {
-  console.log('************', req.actor);
+  // console.log('************', req.actor);
 
   let users = await db.select('*').from('users');
 

@@ -1,8 +1,14 @@
 import React, { useContext } from 'react';
 import styled from 'styled-components';
 import { Store } from '../state/store';
-import { clearScreen, setLoginText, setActiveUser } from '../state/actions';
+import {
+  clearScreen,
+  setLoginTextUsername,
+  setLoginTextPassword,
+  setActiveUser
+} from '../state/actions';
 import postLogin from '../api/postLogin';
+import getToken from '../api/getToken';
 
 const StyledDiv = styled.div`
   text-align: left;
@@ -46,26 +52,59 @@ export default function Login() {
   const { state, dispatch } = useContext(Store);
 
   return (
-    <StyledDiv>
-      <input value={state.loginText} onChange={handleChangeLogin} />
-      <button type="button" onClick={handleLoginRequest}>
-        LOGIN
-      </button>
-    </StyledDiv>
+    <div>
+      <StyledDiv>
+        <input value={state.loginTextUsername} onChange={handleChangeLoginUsername} />
+        <button type="button">USER</button>
+      </StyledDiv>
+      <StyledDiv>
+        <input value={state.loginTextPassword} onChange={handleChangeLoginPassword} />
+        <button type="button" onClick={handleLoginRequest}>
+          PASS
+        </button>
+      </StyledDiv>
+    </div>
   );
 
   // text in login box
-  function handleChangeLogin(event) {
+  function handleChangeLoginUsername(event) {
     const text = event.target.value;
-    dispatch(setLoginText(text));
+    dispatch(setLoginTextUsername(text));
+  }
+
+  function handleChangeLoginPassword(event) {
+    const text = event.target.value;
+    dispatch(setLoginTextPassword(text));
   }
 
   async function handleLoginRequest() {
-    const activeUser = await postLogin(state.loginText);
+    // first need to log in, get token
+    const newToken = await getToken(state.loginTextUsername, state.loginTextPassword);
+    // put newToken in localstorage, then read from it
+    console.log(
+      'username=',
+      state.loginTextUsername,
+      'password=',
+      state.loginTextPassword,
+      'token=',
+      newToken
+    );
+    if (newToken) {
+      window.localStorage.setItem('token', newToken.data);
+      const config = {
+        headers: { Authorization: 'bearer '.concat(window.localStorage.getItem('token')) }
+      };
 
-    dispatch(setActiveUser(activeUser.data));
-    dispatch(setLoginText(''));
-    dispatch(clearScreen());
+      const activeUser = await postLogin(state.loginTextUsername, config);
+      console.log('activeUser', activeUser);
+
+      if (activeUser) {
+        dispatch(setActiveUser(activeUser.data));
+        dispatch(setLoginTextUsername(''));
+        dispatch(setLoginTextPassword(''));
+        dispatch(clearScreen());
+      }
+    }
   }
 }
 

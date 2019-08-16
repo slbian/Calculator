@@ -21,7 +21,7 @@ passport.use(
 
       delete user.hashedPassword;
 
-      cb(null, user);
+      cb(null, user); // tacking on user on the request so we can use it elsewhere
     }
   )
 );

@@ -5,7 +5,8 @@ const initialState = {
   isCleared: false,
   activeUser: null,
   users: null,
-  loginText: '',
+  loginTextUsername: '',
+  loginTextPassword: '',
   profileConfigOpen: false
 };
 
@@ -37,8 +38,10 @@ const reducer = (state, action) => {
       return { ...state, profileConfigOpen: !state.profileConfigOpen };
     case 'setUsers':
       return { ...state, users: action.payload };
-    case 'setLoginText':
-      return { ...state, loginText: action.payload };
+    case 'setLoginTextUsername':
+      return { ...state, loginTextUsername: action.payload };
+    case 'setLoginTextPassword':
+      return { ...state, loginTextPassword: action.payload };
     default:
       throw new Error();
   }

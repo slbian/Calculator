@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { Store } from '../state/store';
 import { pickColor } from '../state/actions';
 import setTheme from '../api/setTheme';
+import getToken from '../api/getToken';
 
 const StyledButton = styled.button`
   background: ${props => props.color};
@@ -51,7 +52,11 @@ export default function ThemePicker() {
   );
 
   async function handleColorPick(color) {
-    const response = await setTheme(state.activeUser.id, color);
+    const newToken = await getToken('chuck', 'welcome');
+    const config = {
+      headers: { Authorization: 'bearer '.concat(newToken.data) }
+    };
+    const response = await setTheme(state.activeUser.id, color, config);
     dispatch(pickColor(response.data.theme));
   }
 }

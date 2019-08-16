@@ -1,14 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
+import AppRouter from './AppRouter';
 import * as serviceWorker from './serviceWorker';
 
 import { StoreProvider } from './state/store';
 
 ReactDOM.render(
   <StoreProvider>
-    <App />
+    <AppRouter />
   </StoreProvider>,
   document.getElementById('root')
 );
