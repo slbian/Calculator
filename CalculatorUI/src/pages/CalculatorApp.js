@@ -1,24 +1,28 @@
 import React, { useEffect, useContext } from 'react'; // useState, useReducer
 import styled from 'styled-components';
-import { Redirect } from 'react-router-dom';
 
 import './CalculatorApp.css';
 import { setActiveUser, setUsers } from '../state/actions';
 import { Store } from '../state/store';
 import Calculator from '../components/Calculator';
-import getAllUsers from '../api/getAllUsers';
-import Login from '../components/Login';
+import getScoreboardUsers from '../api/getScoreboardUsers';
+import getActiveUser from '../api/getActiveUser';
+import history from '../state/history';
 import Profile from '../components/Profile';
 import Scoreboard from '../components/Scoreboard';
 import ThemePicker from '../components/ThemePicker';
-// import green from ${state.activeUser};
 
 // NEXT TODO: rename based on best practices, do useSelector, alphabetize all imports, remove unecessary props
 // TODO: add different emojis, change eval,  cleanup/layering, authorization, live data, error handling/defensive programming, testing
 // DONE: database, add useState hooks, refactor to useReducer, refactor to useContext, styled components, add styling to database
 
+// error message in state
+// cleanup all logs, make sure organized
+// style login page, make sure it has messages (invalid credentials) - or different error like network error (force by shutting down server)
+// bring in that kind of error for the calculator, like if backend goes down while someone tries to evaluate
+// logout button - just push to login page, and clear local storage
+// add profile page
 const StyledDiv = styled.div`
-  /* background-color: ${props => props.theme}; */
   background-image: url(${props => props.themePath});
   background-size: cover;
   display: flex;
@@ -64,19 +68,16 @@ const StyledDiv = styled.div`
 export default function CalculatorApp() {
   const { state, dispatch } = useContext(Store);
 
+  console.log(state.activeUser);
   useEffect(() => {
     if (!state.users) {
       mount();
     }
-  });
-  // const selectorState = useSelector(state2 => state2.activeUser);
-  // console.log(selectorState);
+  }, []);
 
-  if (!state.users || !state.activeUser) {
-    console.log('trying to redirect');
-    return <Redirect to="/login" />;
+  if (!state.activeUser) {
+    return null;
   }
-  // console.log(state.activeUser);
 
   return (
     <StyledDiv
@@ -97,7 +98,6 @@ export default function CalculatorApp() {
           <Profile username={state.activeUser.username} score={state.activeUser.score} />
         </div>
         <div className="profileConfig">
-          <Login />
           <ThemePicker />
         </div>
         <div className="scoreboard">
@@ -108,40 +108,26 @@ export default function CalculatorApp() {
   );
 
   async function mount() {
-    const response = await getAllUsers();
-    dispatch(setUsers(response.data));
-    dispatch(setActiveUser(response.data[0]));
+    const token = window.localStorage.getItem('token');
+    if (token) {
+      console.log('MOUNT: token - ', token);
+      const config = {
+        headers: { Authorization: 'bearer '.concat(token) }
+      };
+
+      const activeUserResponse = await getActiveUser(config);
+
+      const allUsersResponse = await getScoreboardUsers(config);
+
+      if (activeUserResponse) {
+        dispatch(setUsers(allUsersResponse.data));
+        dispatch(setActiveUser(activeUserResponse.data));
+      } else {
+        console.log('MOUNTING FAILED');
+      }
+    } else {
+      history.push('/login');
+      console.log('MOUNT: no token');
+    }
   }
-
-  // async function mount() {
-  //   // first need to log in, get token
-  //   // const newToken = await getToken('chuck', 'welcome');
-  //   // put newToken in localstorage, then read from it
-  //   // if (newToken) {
-  //   // console.log('got new token: ', newToken.data);
-  //   // dispatch(setToken(newToken.data));
-  //   // need to put it in local storage - only client can read from window, then header
-  //   // window.localStorage.setItem('token', newToken.data);
-  //   const token = window.localStorage.getItem('token');
-  //   if (token) {
-  //     console.log('MOUNT: token - ', token);
-  //     const config = {
-  //       headers: { Authorization: 'bearer '.concat(token) }
-  //     };
-  //     // make an axios authenticationGET and POST wrapper - passes in config for you
-  //     // then get all users
-  //     const allUsers = await getAllUsers(config);
-
-  //     if (allUsers) {
-  //       dispatch(setUsers(allUsers.data));
-
-  //       // set active user
-  //       // dispatch(setActiveUser(allUsers.data[2]));
-  //     } else {
-  //       console.log('MOUNTING FAILED');
-  //     }
-  //   } else {
-  //     console.log('MOUNT: no token');
-  //   }
-  // }
 }

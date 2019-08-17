@@ -44,7 +44,7 @@ export default function ThemePicker() {
   return (
     <StyledContainer>
       {availableColors.map(availableColor => (
-        <div className="tooltip">
+        <div className="tooltip" key={availableColor}>
           <StyledButton color={availableColor} onClick={() => handleColorPick(availableColor)} />
         </div>
       ))}

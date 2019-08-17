@@ -3,23 +3,15 @@ import logger from '../Instances/logger';
 import db from '../Instances/db';
 import _ from 'lodash';
 
-// app.get('/all-users', async (req, res) =>
 const router = express.Router();
 
 router.get('/', async (req, res) => {
-  // console.log('************', req.actor);
-
   let users = await db.select('*').from('users');
 
   users = users.map(user => {
     delete user.hashedPassword;
     return user;
   });
-
-  let themes = await db.select('*').from('themes');
-  // .where('color', req.query.theme);
-
-  themes = _.keyBy(themes, 'id');
 
   let score = await db
     .select('userId')
@@ -39,9 +31,7 @@ router.get('/', async (req, res) => {
       ...user,
       score: Number(_.get(score, `[${user.id}].sum`, 0)),
       lastLogin: _.get(logins, `[${user.id}].created_at`, null),
-      theme: _.get(themes, `[${user.themeId}]`, null),
     };
-    delete populatedUser.themeId;
     return populatedUser;
   });
 
@@ -51,6 +41,18 @@ router.get('/', async (req, res) => {
   logger.trace('users:', users);
   return res.json(users);
   // setTimeout(() => res.json(users), 1000);
+});
+
+router.get('/active', async (req, res) => {
+  let user = req.actor;
+  const [theme] = await db
+    .select('*')
+    .from('themes')
+    .where('id', req.actor.themeId);
+
+  user.theme = theme;
+  delete user.themeId;
+  return res.json(user);
 });
 
 export default router;

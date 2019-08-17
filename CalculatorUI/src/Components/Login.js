@@ -1,17 +1,10 @@
-import React, { useContext } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
-import { Store } from '../state/store';
-import {
-  clearScreen,
-  setLoginTextUsername,
-  setLoginTextPassword,
-  setActiveUser
-} from '../state/actions';
-import postLogin from '../api/postLogin';
 import getToken from '../api/getToken';
+import history from '../state/history';
 
 const StyledDiv = styled.div`
-  text-align: left;
+  text-align: center;
   font-size: 20px;
   font-weight: bold;
   width: 220px;
@@ -20,7 +13,7 @@ const StyledDiv = styled.div`
   justify-content: center;
   color: black;
   padding: 5px;
-  min-height: 40px;
+  min-height: 200px;
 
   input {
     height: 20px;
@@ -49,68 +42,46 @@ const StyledDiv = styled.div`
 `;
 
 export default function Login() {
-  const { state, dispatch } = useContext(Store);
+  console.log(history);
+  const [username, setUsername] = useState('chuck');
+  const [password, setPassword] = useState('welcome');
 
   return (
     <div>
-      <StyledDiv>
-        <input value={state.loginTextUsername} onChange={handleChangeLoginUsername} />
-        <button type="button">USER</button>
-      </StyledDiv>
-      <StyledDiv>
-        <input value={state.loginTextPassword} onChange={handleChangeLoginPassword} />
-        <button type="button" onClick={handleLoginRequest}>
-          PASS
-        </button>
-      </StyledDiv>
+      <form>
+        <StyledDiv>
+          <input value={username} type="text" onChange={handleChangeLoginUsername} />
+          <button type="button">USER</button>
+          <input value={password} type="password" onChange={handleChangeLoginPassword} />
+          <button type="submit" onClick={handleLoginRequest}>
+            PASS
+          </button>
+        </StyledDiv>
+      </form>
     </div>
   );
 
   // text in login box
   function handleChangeLoginUsername(event) {
     const text = event.target.value;
-    dispatch(setLoginTextUsername(text));
+    setUsername(text);
   }
 
   function handleChangeLoginPassword(event) {
     const text = event.target.value;
-    dispatch(setLoginTextPassword(text));
+    setPassword(text);
   }
 
-  async function handleLoginRequest() {
+  async function handleLoginRequest(event) {
+    event.preventDefault();
     // first need to log in, get token
-    const newToken = await getToken(state.loginTextUsername, state.loginTextPassword);
+    const newToken = await getToken(username, password);
     // put newToken in localstorage, then read from it
-    console.log(
-      'username=',
-      state.loginTextUsername,
-      'password=',
-      state.loginTextPassword,
-      'token=',
-      newToken
-    );
     if (newToken) {
       window.localStorage.setItem('token', newToken.data);
-      const config = {
-        headers: { Authorization: 'bearer '.concat(window.localStorage.getItem('token')) }
-      };
-
-      const activeUser = await postLogin(state.loginTextUsername, config);
-      console.log('activeUser', activeUser);
-
-      if (activeUser) {
-        dispatch(setActiveUser(activeUser.data));
-        dispatch(setLoginTextUsername(''));
-        dispatch(setLoginTextPassword(''));
-        dispatch(clearScreen());
-      }
+      history.push('/');
+    } else {
+      console.log('error');
     }
   }
 }
-
-// function tokenSuccess(err, response) {
-//   if (err) {
-//     throw err;
-//   }
-//   $window.sessionStorage.accessToken = response.body.access_token;
-// }

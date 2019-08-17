@@ -10,8 +10,8 @@ import {
   setUsers
 } from '../state/actions';
 import { Store } from '../state/store';
-import incrementScore from '../api/incrementScore';
-import getAllUsers from '../api/getAllUsers';
+import postExecution from '../api/postExecution';
+import getScoreboardUsers from '../api/getScoreboardUsers';
 
 const StyledDiv = styled.div`
   display: flex;
@@ -50,7 +50,7 @@ export default function Operators() {
         return;
       }
 
-      const userWithNewScore = await incrementScore(state.activeUser.username, state.displayText);
+      const userWithNewScore = await postExecution(state.displayText);
 
       const newActiveUser =
         userWithNewScore.data.username === state.activeUser.username
@@ -64,7 +64,7 @@ export default function Operators() {
       dispatch(setCleared());
       dispatch(setActiveUser(newActiveUser));
 
-      const response = await getAllUsers();
+      const response = await getScoreboardUsers();
       dispatch(setUsers(response.data));
     } catch (error) {
       console.log('ERROR FROM EVAL', error);

@@ -1,14 +1,10 @@
 import * as express from 'express';
 import logger from '../Instances/logger';
 import db from '../Instances/db';
-// import passport from 'passport';
-// import { Strategy } from 'passport-local';
 
 const router = express.Router();
-// need a register new user route
-// check for duplicate username - 409
 
-// TODO: add trigger for logins
+// TODO: need a register new user route, check for duplicate username - 409, add trigger for logins
 router.post('/', async (req, res) => {
   const username = req.body.username;
   logger.trace('attempted login', username);
@@ -51,23 +47,6 @@ router.post('/', async (req, res) => {
   const newUser = { ...user, score, theme };
 
   return res.json(newUser);
-
-  // before database - for memory
-
-  // const username = req.query.username;
-  // logger.trace('login', username);
-
-  // const score = memory.getScoreByUsername(username);
-  // if (score !== undefined) {
-  //   res.json({ username, score });
-  // } else {
-  //   const user = memory.registerUser(username); // object
-  //   res.json(user);
-  // }
-  // check if username typed in is in the cache:
-  // if so, getScoreByUsername
-  // if not, register
-  // return {user, score}
 });
 
 export default router;
