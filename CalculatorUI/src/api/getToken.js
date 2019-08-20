@@ -2,12 +2,12 @@ import axios from 'axios';
 
 export default async function getToken(username, password) {
   try {
-    const response = await axios.post(`http://localhost:3002/token`, {
+    const newToken = await axios.post(`http://localhost:3002/token`, {
       username,
       password
     });
-    return response;
+    return { newToken };
   } catch (error) {
-    console.log(3, error);
+    return { errorCode: error.response ? error.response.status : 500 };
   }
 }

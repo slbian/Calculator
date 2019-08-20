@@ -5,23 +5,23 @@ import './CalculatorApp.css';
 import { setActiveUser, setUsers } from '../state/actions';
 import { Store } from '../state/store';
 import Calculator from '../components/Calculator';
-import getScoreboardUsers from '../api/getScoreboardUsers';
 import getActiveUser from '../api/getActiveUser';
+import getScoreboardUsers from '../api/getScoreboardUsers';
 import history from '../state/history';
 import Profile from '../components/Profile';
 import Scoreboard from '../components/Scoreboard';
 import ThemePicker from '../components/ThemePicker';
 
 // NEXT TODO: rename based on best practices, do useSelector, alphabetize all imports, remove unecessary props
-// TODO: add different emojis, change eval,  cleanup/layering, authorization, live data, error handling/defensive programming, testing
-// DONE: database, add useState hooks, refactor to useReducer, refactor to useContext, styled components, add styling to database
+// TODO: add different emojis, change eval, live data, error handling/defensive programming, testing
+// DONE: database, add useState hooks, refactor to useReducer, refactor to useContext, styled components, add styling to database, authentication w argon2
 
 // error message in state
-// cleanup all logs, make sure organized
 // style login page, make sure it has messages (invalid credentials) - or different error like network error (force by shutting down server)
 // bring in that kind of error for the calculator, like if backend goes down while someone tries to evaluate
 // logout button - just push to login page, and clear local storage
 // add profile page
+// cleanup all logs, make sure organized
 const StyledDiv = styled.div`
   background-image: url(${props => props.themePath});
   background-size: cover;
@@ -126,8 +126,8 @@ export default function CalculatorApp() {
         console.log('MOUNTING FAILED');
       }
     } else {
-      history.push('/login');
       console.log('MOUNT: no token');
+      history.push('/login');
     }
   }
 }

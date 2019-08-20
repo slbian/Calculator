@@ -1,7 +1,6 @@
-import React from 'react'; // useState, useReducer
-import { Router, Switch, Route } from 'react-router-dom';
-
+import React from 'react';
 import './AppRouter.css';
+import { Router, Switch, Route } from 'react-router-dom';
 import CalculatorApp from './pages/CalculatorApp';
 import history from './state/history';
 import LoginPage from './pages/LoginPage';

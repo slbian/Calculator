@@ -1,14 +1,13 @@
-import express from '../node_modules/express';
-import cors from '../node_modules/cors/lib';
-import bodyParser from 'body-parser';
 import '../node_modules/dotenv/config';
+import bodyParser from 'body-parser';
+import cors from '../node_modules/cors/lib';
+import executionsRouter from './routes/executions';
+import express from '../node_modules/express';
 import morgan from 'morgan';
-import usersRouter from './routes/usersRouter';
 import passport from './Passport/jwtStrategy';
-import postLogin from './routes/postLogin';
-import evaluate from './routes/evaluate';
-import setTheme from './routes/setTheme';
+import themesRouter from './routes/themes';
 import token from './routes/token';
+import usersRouter from './routes/users';
 
 const PORT = process.env.PORT;
 const app = express();
@@ -43,9 +42,8 @@ app.use('/', (req, res, next) => {
 // check if user/pass is in right format, if there even is user/pass
 
 app.use('/users', usersRouter);
-app.use('/logins', postLogin); // Re-use for registering new users
-app.use('/executions', evaluate);
-app.use('/themes', setTheme);
+app.use('/executions', executionsRouter);
+app.use('/themes', themesRouter);
 
 app.listen(PORT, () => console.log(`Listening on port ${PORT}!`));
 

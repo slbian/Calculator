@@ -1,13 +1,14 @@
 import React, { createContext, useReducer } from 'react';
 
 const initialState = {
+  activeUser: null,
   displayText: '',
   isCleared: false,
-  activeUser: null,
-  users: null,
-  loginTextUsername: '',
+  errorMessage: '',
   loginTextPassword: '',
-  profileConfigOpen: false
+  loginTextUsername: '',
+  profileConfigOpen: false,
+  users: null
 };
 
 const reducer = (state, action) => {
@@ -22,26 +23,25 @@ const reducer = (state, action) => {
         isCleared: false
       };
     case 'clearScreen':
-      return {
-        ...state,
-        displayText: ''
-      };
-    case 'setDisplayText':
-      return { ...state, displayText: action.payload };
-    case 'setCleared':
-      return { ...state, isCleared: true };
+      return { ...state, displayText: '' };
     case 'pickColor':
       return { ...state, activeUser: { ...state.activeUser, theme: action.payload } };
     case 'setActiveUser':
       return { ...state, activeUser: action.payload };
-    case 'toggleProfileConfig':
-      return { ...state, profileConfigOpen: !state.profileConfigOpen };
-    case 'setUsers':
-      return { ...state, users: action.payload };
-    case 'setLoginTextUsername':
-      return { ...state, loginTextUsername: action.payload };
+    case 'setCleared':
+      return { ...state, isCleared: true };
+    case 'setDisplayText':
+      return { ...state, displayText: action.payload };
+    case 'setErrorMessage':
+      return { ...state, errorMessage: action.payload };
     case 'setLoginTextPassword':
       return { ...state, loginTextPassword: action.payload };
+    case 'setLoginTextUsername':
+      return { ...state, loginTextUsername: action.payload };
+    case 'setUsers':
+      return { ...state, users: action.payload };
+    case 'toggleProfileConfig':
+      return { ...state, profileConfigOpen: !state.profileConfigOpen };
     default:
       throw new Error();
   }

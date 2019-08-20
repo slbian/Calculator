@@ -16,11 +16,14 @@ export const setCleared = () => {
 export const setDisplayText = evaluatedValue => {
   return { type: 'setDisplayText', payload: evaluatedValue };
 };
-export const setLoginTextUsername = usernameText => {
-  return { type: 'setLoginTextUsername', payload: usernameText };
+export const setErrorMessage = error => {
+  return { type: 'setErrorMessage', payload: error };
 };
 export const setLoginTextPassword = passwordText => {
   return { type: 'setLoginTextPassword', payload: passwordText };
+};
+export const setLoginTextUsername = usernameText => {
+  return { type: 'setLoginTextUsername', payload: usernameText };
 };
 export const setUsers = allUsers => {
   return { type: 'setUsers', payload: allUsers };

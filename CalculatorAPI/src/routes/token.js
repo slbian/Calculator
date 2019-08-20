@@ -1,8 +1,6 @@
 import * as express from 'express';
-import db from '../Instances/db';
 import argon2 from 'argon2';
-// import passport from 'passport';
-// import { Strategy } from 'passport-local';
+import db from '../Instances/db';
 import jwt from 'jsonwebtoken';
 
 const router = express.Router();
