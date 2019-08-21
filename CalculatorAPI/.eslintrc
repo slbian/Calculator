@@ -17,6 +17,5 @@
     "sourceType": "module"
   },
   "parser": "babel-eslint",
-
   "rules": {}
 }
