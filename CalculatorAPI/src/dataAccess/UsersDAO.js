@@ -1,8 +1,8 @@
 import EntityDAO from './EntityDAO';
 
 export default class UsersDAO extends EntityDAO {
-  constructor({ logger, db }) {
-    super({ logger, db }); // before I do this constructor, I call parent's constructor
+  constructor({ logger, db, entityName }) {
+    super({ logger, db, entityName }); // before I do this constructor, I call parent's constructor
   }
 
   async updateThemeByUserId(userId, color) {

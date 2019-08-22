@@ -1,7 +1,8 @@
 export default class EntityDAO {
-  constructor({ logger, db }) {
+  constructor({ logger, db, entityName }) {
     this.logger = logger;
     this.db = db;
+    this.entityName = entityName;
   }
 
   // getById

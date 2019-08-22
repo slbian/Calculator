@@ -1,8 +1,8 @@
 import EntityDAO from './EntityDAO';
 
 export default class ThemesDAO extends EntityDAO {
-  constructor({ logger, db }) {
-    super({ logger, db }); // before I do this constructor, I call parent's constructor
+  constructor({ logger, db, entityName }) {
+    super({ logger, db, entityName }); // before I do this constructor, I call parent's constructor
   }
 
   async getThemeByThemeId(themeId) {
@@ -13,7 +13,7 @@ export default class ThemesDAO extends EntityDAO {
       }
       const [theme] = await this.db
         .select('*')
-        .from('themes')
+        .from(this.entityName)
         .where('id', themeId);
       this.logger.trace('ThemesDAO.getThemesByUserId/output: ', theme);
       return theme;

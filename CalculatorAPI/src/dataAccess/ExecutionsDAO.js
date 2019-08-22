@@ -8,8 +8,8 @@
 import EntityDAO from './EntityDAO';
 
 export default class ExecutionsDAO extends EntityDAO {
-  constructor({ logger, db }) {
-    super({ logger, db }); // before I do this constructor, I call parent's constructor
+  constructor({ logger, db, entityName }) {
+    super({ logger, db, entityName }); // before I do this constructor, I call parent's constructor
   }
 
   async getScoreByUserId(userId) {
@@ -21,7 +21,7 @@ export default class ExecutionsDAO extends EntityDAO {
       const [scores] = await this.db
         .select('userId')
         .sum('score')
-        .from('executions')
+        .from(this.entityName)
         .groupBy('userId')
         .where('userId', userId);
 
@@ -44,7 +44,7 @@ export default class ExecutionsDAO extends EntityDAO {
         throw this.createErrorInvalidInput('userId');
       }
 
-      const [executions] = await this.db('executions')
+      const [executions] = await this.db(this.entityName)
         .insert({
           equation: equation,
           score: Number(eval(equation).toString().length),

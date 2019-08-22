@@ -1,12 +1,12 @@
 import EntityService from './EntityService';
 
 export default class ThemesService extends EntityService {
-  constructor({ themesDAO, logger }) {
+  constructor({ logger, themesDao }) {
     super({ logger }); // before I do this constructor, I call parent's constructor
-    this.themesDAO = themesDAO;
+    this.themesDao = themesDao;
   }
 
-  getThemeByUserId({ actor, userId }) {
+  async getThemeByUserId({ actor, userId }) {
     try {
       this.logger.trace('ThemesService.getThemeByUserId/input: ', {
         actor,
@@ -19,7 +19,7 @@ export default class ThemesService extends EntityService {
         throw this.createErrorPermissionDenied('actor.id != userId');
       }
 
-      const theme = this.themesDAO.getThemeByThemeId(actor.themeId);
+      const theme = await this.themesDao.getThemeByThemeId(actor.themeId);
 
       this.logger.trace('ThemesService.getThemeByUserId/output: ', theme);
       return theme;
@@ -27,4 +27,26 @@ export default class ThemesService extends EntityService {
       this.logger.trace('ThemesService.getThemeByUserId/error: ', { err });
     }
   }
+
+  // getThemeByColor(color) {
+  //   try {
+  //     this.logger.trace('ThemesService.getThemeByColor/input: ', {
+  //       actor,
+  //       userId,
+  //     });
+  //     if (!actor || !userId) {
+  //       throw this.createErrorInvalidInput('actor, userId');
+  //     }
+  //     if (actor.id !== userId) {
+  //       throw this.createErrorPermissionDenied('actor.id != userId');
+  //     }
+
+  //     const theme = this.themesDao.getThemeByThemeId(actor.themeId);
+
+  //     this.logger.trace('ThemesService.getThemeByColor/output: ', theme);
+  //     return theme;
+  //   } catch (err) {
+  //     this.logger.trace('ThemesService.getThemeByColor/error: ', { err });
+  //   }
+  // }
 }

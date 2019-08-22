@@ -11,7 +11,7 @@ export default class UsersController extends EntityController {
 
   // all we send is a token, we just get back the user who is logged in
   // strictly packaging + http management (request, response) - lower levels doesn't know abt express
-  getActiveUser = (req, res) => {
+  getActiveUser = async (req, res) => {
     try {
       // get the user, their score, their theme, their last login
       const actor = req.actor;
@@ -25,7 +25,7 @@ export default class UsersController extends EntityController {
 
       const user = actor;
 
-      user.score = this.executionsService.getScoreByUserId({
+      user.score = await this.executionsService.getScoreByUserId({
         actor,
         userId: actor.id,
       });
@@ -33,9 +33,9 @@ export default class UsersController extends EntityController {
         throw this.createErrorUnexpected('score');
       }
 
-      user.theme = this.themesService.getThemeByUserId({
+      user.theme = await this.themesService.getThemeByUserId({
         actor,
-        themeId: actor.themeId,
+        userId: actor.id,
       });
       if (!user.theme) {
         throw this.createErrorUnexpected('theme');
@@ -52,6 +52,7 @@ export default class UsersController extends EntityController {
     try {
       // get the user, their score, their theme, their last login
       const actor = req.actor;
+      const color = req.query.theme;
 
       // TODO: make logger take in name of the class
       this.logger.trace('UsersController.updateThemeByUserId/input: ', {
@@ -62,9 +63,16 @@ export default class UsersController extends EntityController {
         throw this.createErrorInvalidInput('actor');
       }
 
-      const newTheme = this.themesService.updateThemeByUserId({
+      const themeId = this.themesService.getThemeByColor({
         actor,
         userId: actor.id,
+        color: color,
+      });
+
+      const newTheme = this.usersService.updateThemeByUserId({
+        actor,
+        userId: actor.id,
+        themeId: themeId,
       });
       if (!newTheme) {
         throw this.createErrorUnexpected('newTheme');
@@ -73,7 +81,7 @@ export default class UsersController extends EntityController {
       this.logger.trace('UsersController.updateThemeByUserId/output: ', {
         newTheme,
       });
-      res.json(true);
+      res.json(newTheme);
     } catch (err) {
       this.logger.trace('UsersController.updateThemeByUserId/error: ', { err });
     }

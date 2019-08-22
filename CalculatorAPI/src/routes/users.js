@@ -2,6 +2,7 @@ import * as express from 'express';
 import logger from '../Instances/logger';
 import db from '../Instances/db';
 import _ from 'lodash';
+import usersController from '../Instances/usersController';
 
 const router = express.Router();
 
@@ -43,16 +44,17 @@ router.get('/', async (req, res) => {
   // setTimeout(() => res.json(users), 1000);
 });
 
-router.get('/active', async (req, res) => {
-  let user = req.actor;
-  const [theme] = await db
-    .select('*')
-    .from('themes')
-    .where('id', req.actor.themeId);
+router.get('/active', usersController.getActiveUser);
+// router.get('/active', async (req, res) => {
+//   let user = req.actor;
+//   const [theme] = await db
+//     .select('*')
+//     .from('themes')
+//     .where('id', req.actor.themeId);
 
-  user.theme = theme;
-  delete user.themeId;
-  return res.json(user);
-});
+//   user.theme = theme;
+//   delete user.themeId;
+//   return res.json(user);
+// });
 
 export default router;
