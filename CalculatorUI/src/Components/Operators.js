@@ -12,6 +12,7 @@ import {
 import { Store } from '../state/store';
 import postExecution from '../api/postExecution';
 import getScoreboardUsers from '../api/getScoreboardUsers';
+import getActiveUser from '../api/getActiveUser';
 
 const StyledDiv = styled.div`
   display: flex;
@@ -50,19 +51,14 @@ export default function Operators() {
         return;
       }
 
-      const userWithNewScore = await postExecution(state.displayText);
+      const successfulExecution = await postExecution(state.displayText);
+      const activeUserResponse = await getActiveUser();
 
-      const newActiveUser =
-        userWithNewScore.data.username === state.activeUser.username
-          ? {
-              ...userWithNewScore.data,
-              score: Number(userWithNewScore.data.newScore)
-            }
-          : state.activeUser;
+      if (!successfulExecution || !activeUserResponse) throw new Error();
 
+      dispatch(setActiveUser(activeUserResponse.data));
       dispatch(setDisplayText(evaluatedValue));
       dispatch(setCleared());
-      dispatch(setActiveUser(newActiveUser));
 
       const response = await getScoreboardUsers();
       dispatch(setUsers(response.data));

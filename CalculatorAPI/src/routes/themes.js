@@ -5,7 +5,7 @@ import logger from '../Instances/logger';
 const router = express.Router();
 
 router.post('/', async (req, res) => {
-  console.log('req header:', req.header);
+  // console.log('req header:', req.header);
   const [theme] = await db
     .select('*')
     .from('themes')

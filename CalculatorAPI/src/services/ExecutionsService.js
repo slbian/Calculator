@@ -32,4 +32,31 @@ export default class ExecutionsService extends EntityService {
       this.logger.trace('ExecutionsService.getScoreByUserId/error: ', { err });
     }
   }
+
+  async recordExecution({ actor, userId, equation }) {
+    try {
+      this.logger.trace('ExecutionsService.recordExecution/input: ', {
+        actor,
+        userId,
+      });
+      if (!actor || !userId || !equation) {
+        throw this.createErrorInvalidInput('actor, userId, equation');
+      }
+      if (actor.id !== userId) {
+        throw this.createErrorPermissionDenied('actor.id != userId');
+      }
+      const newExecution = await this.executionsDao.recordExecution(
+        userId,
+        equation
+      );
+      this.logger.trace(
+        'ExecutionsService.recordExecution/output: ',
+        newExecution
+      );
+      return newExecution;
+    } catch (err) {
+      console.log(err);
+      this.logger.trace('ExecutionsService.recordExecution/error: ', { err });
+    }
+  }
 }

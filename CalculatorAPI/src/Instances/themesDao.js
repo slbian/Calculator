@@ -1,4 +1,4 @@
-import ThemesDao from '../dataAccess/ThemesDAO';
+import ThemesDao from '../dataAccess/ThemesDao';
 import db from './db';
 import logger from './logger';
 

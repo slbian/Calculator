@@ -1,13 +1,13 @@
-import EntityDAO from './EntityDAO';
+import EntityDao from './EntityDao';
 
-export default class ThemesDAO extends EntityDAO {
+export default class ThemesDao extends EntityDao {
   constructor({ logger, db, entityName }) {
     super({ logger, db, entityName }); // before I do this constructor, I call parent's constructor
   }
 
   async getThemeByThemeId(themeId) {
     try {
-      this.logger.trace('ThemesDAO.getThemeByUserId/input: ', themeId);
+      this.logger.trace('ThemesDao.getThemeByUserId/input: ', themeId);
       if (!themeId) {
         throw this.createErrorInvalidInput('userId');
       }
@@ -15,10 +15,10 @@ export default class ThemesDAO extends EntityDAO {
         .select('*')
         .from(this.entityName)
         .where('id', themeId);
-      this.logger.trace('ThemesDAO.getThemesByUserId/output: ', theme);
+      this.logger.trace('ThemesDao.getThemesByUserId/output: ', theme);
       return theme;
     } catch (err) {
-      this.logger.trace('ThemesDAO.getThemesByUserId/error: ', { err });
+      this.logger.trace('ThemesDao.getThemesByUserId/error: ', { err });
     }
   }
 }

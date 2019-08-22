@@ -87,7 +87,7 @@ export default class UsersController extends EntityController {
     }
   };
 
-  getAllUsers = (req, res) => {
+  getAllUsers = async (req, res) => {
     try {
       // get the user, their score, their theme, their last login
       const actor = req.actor;
@@ -101,7 +101,7 @@ export default class UsersController extends EntityController {
         throw this.createErrorInvalidInput('actor');
       }
 
-      const allUsers = this.usersService.getAllUsers({
+      const allUsers = await this.usersService.getAllUsers({
         actor,
         userId: actor.id,
       });
@@ -116,7 +116,7 @@ export default class UsersController extends EntityController {
       });
       res.json(orderedUsers);
     } catch (err) {
-      this.logger.trace('UsersController.getAllUsers/error: ', { err });
+      this.logger.trace('UsersController.getAllUsers/error: ', err);
     }
   };
 }

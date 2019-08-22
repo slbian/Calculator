@@ -1,6 +1,7 @@
-import axios from 'axios';
+import authenticatedClient from './authenticatedClient';
 
-export default async function getActiveUser(config) {
-  const response = await axios.get('http://localhost:3002/users/active', config);
+export default async function getActiveUser() {
+  const path = 'http://localhost:3002/users/active';
+  const response = await authenticatedClient.get(path);
   return response;
 }

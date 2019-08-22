@@ -58,7 +58,7 @@ const StyledDiv = styled.div`
 `;
 
 export default function Login() {
-  console.log(history);
+  // console.log(history);
   const { state, dispatch } = useContext(Store);
   // TODO: refactor to just useContext
   const [username, setUsername] = useState('chuck');

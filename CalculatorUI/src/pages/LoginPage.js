@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 
 import Login from '../components/Login';
@@ -12,9 +12,9 @@ const StyledDiv = styled.div`
 `;
 
 export default function LoginPage() {
-  // useEffect(() => {
-  //   window.localStorage.clear();
-  // }, []);
+  useEffect(() => {
+    window.localStorage.clear();
+  }, []);
 
   return (
     <StyledDiv>

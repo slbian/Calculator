@@ -1,4 +1,4 @@
-export default class EntityDAO {
+export default class EntityDao {
   constructor({ logger, db, entityName }) {
     this.logger = logger;
     this.db = db;

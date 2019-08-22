@@ -1,9 +1,11 @@
 import EntityService from './EntityService';
+import _ from 'lodash';
 
 export default class UsersService extends EntityService {
-  constructor({ themesDao, usersDao, logger }) {
+  constructor({ logger, themesDao, executionsDao, usersDao }) {
     super({ logger }); // before I do this constructor, I call parent's constructor
     this.themesDao = themesDao;
+    this.executionsDao = executionsDao;
     this.usersDao = usersDao;
   }
 
@@ -30,7 +32,7 @@ export default class UsersService extends EntityService {
   //   }
   // }
 
-  getAllUsers({ actor, userId }) {
+  async getAllUsers({ actor, userId }) {
     try {
       this.logger.trace('UsersService.getAllUsers/input: ', {
         actor,
@@ -43,10 +45,25 @@ export default class UsersService extends EntityService {
         throw this.createErrorPermissionDenied('actor.id != userId');
       }
 
-      const allUsers = this.usersDao.getAllUsers();
+      const allUsers = await this.usersDao.getAllUsers();
+      console.log('>>> allUsers', allUsers);
 
-      this.logger.trace('UsersService.getAllUsers/output: ', allUsers);
-      return allUsers;
+      let scores = await this.executionsDao.getAllScores();
+      console.log('>>> scores', scores);
+      scores = _.keyBy(scores, 'userId');
+
+      let scoreboardUsers = allUsers.map(user => {
+        const populatedUser = {
+          ...user,
+          score: Number(_.get(scores, `[${user.id}].sum`, 0)),
+        };
+        return populatedUser;
+      });
+
+      scoreboardUsers = _.sortBy(scoreboardUsers, 'score').reverse();
+
+      this.logger.trace('UsersService.getAllUsers/output: ', scoreboardUsers);
+      return scoreboardUsers;
     } catch (err) {
       this.logger.trace('UsersService.getAllUsers/error: ', { err });
     }

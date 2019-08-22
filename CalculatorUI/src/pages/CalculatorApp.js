@@ -74,6 +74,7 @@ export default function CalculatorApp() {
       mount();
     }
   }, []);
+  // mount();
 
   if (!state.activeUser) {
     return null;
@@ -110,16 +111,11 @@ export default function CalculatorApp() {
   async function mount() {
     const token = window.localStorage.getItem('token');
     if (token) {
-      console.log('MOUNT: token - ', token);
-      const config = {
-        headers: { Authorization: 'bearer '.concat(token) }
-      };
+      const activeUserResponse = await getActiveUser();
 
-      const activeUserResponse = await getActiveUser(config);
+      const allUsersResponse = await getScoreboardUsers();
 
-      const allUsersResponse = await getScoreboardUsers(config);
-
-      if (activeUserResponse) {
+      if (activeUserResponse && allUsersResponse) {
         dispatch(setUsers(allUsersResponse.data));
         dispatch(setActiveUser(activeUserResponse.data));
       } else {
