@@ -9,28 +9,34 @@ export default class UsersService extends EntityService {
     this.usersDao = usersDao;
   }
 
-  // updateThemeByUserId({ actor, userId }) {
-  //   try {
-  //     this.logger.trace('UsersService.updateThemeByUserId/input: ', {
-  //       actor,
-  //       userId,
-  //       theme,
-  //     });
-  //     if (!actor || !userId) {
-  //       throw this.createErrorInvalidInput('actor, userId, color');
-  //     }
-  //     if (actor.id !== userId) {
-  //       throw this.createErrorPermissionDenied('actor.id != userId');
-  //     }
+  async updateActiveUserTheme({ actor, userId, themeId }) {
+    try {
+      this.logger.trace('UsersService.updateActiveUserTheme/input: ', {
+        actor,
+        userId,
+        themeId,
+      });
+      if (!actor || !userId || !themeId) {
+        throw this.createErrorInvalidInput('actor, userId, color');
+      }
+      if (actor.id !== userId) {
+        throw this.createErrorPermissionDenied('actor.id != userId');
+      }
 
-  //     const theme = this.themesDao.getThemeByThemeId(color);
+      const successfulThemeUpdate = this.usersDao.updateActiveUserTheme(
+        userId,
+        themeId
+      );
 
-  //     this.logger.trace('UsersService.updateThemeByUserId/output: ', theme);
-  //     return theme;
-  //   } catch (err) {
-  //     this.logger.trace('UsersService.updateThemeByUserId/error: ', { err });
-  //   }
-  // }
+      this.logger.trace(
+        'UsersService.updateActiveUserTheme/output: ',
+        successfulThemeUpdate
+      );
+      return successfulThemeUpdate;
+    } catch (err) {
+      this.logger.trace('UsersService.updateActiveUserTheme/error: ', { err });
+    }
+  }
 
   async getAllUsers({ actor, userId }) {
     try {
@@ -46,10 +52,8 @@ export default class UsersService extends EntityService {
       }
 
       const allUsers = await this.usersDao.getAllUsers();
-      console.log('>>> allUsers', allUsers);
 
       let scores = await this.executionsDao.getAllScores();
-      console.log('>>> scores', scores);
       scores = _.keyBy(scores, 'userId');
 
       let scoreboardUsers = allUsers.map(user => {

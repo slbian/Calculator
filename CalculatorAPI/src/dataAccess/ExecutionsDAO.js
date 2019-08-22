@@ -25,6 +25,11 @@ export default class ExecutionsDao extends EntityDao {
         .groupBy('userId')
         .where('userId', userId);
 
+      if (!scores) {
+        this.logger.trace('ExecutionsDao.getScoreByUserId/output: ', 0);
+        return 0;
+      }
+
       const score = scores.sum;
       this.logger.trace('ExecutionsDao.getScoreByUserId/output: ', score);
       return score;
@@ -57,17 +62,20 @@ export default class ExecutionsDao extends EntityDao {
         equation
       );
       if (!userId || !equation) {
-        throw this.createErrorInvalidInput('userId, equation');
+        throw this.createErrorInvalidInput('userId');
       }
 
       const [executions] = await this.db(this.entityName)
         .insert({
+          userId: userId,
           equation: equation,
           score: Number(eval(equation).toString().length),
-          userId: userId,
         })
         .returning('*');
 
+      if (!executions) {
+        throw this.createErrorEntityNotFound('insert execution');
+      }
       this.logger.trace('ExecutionsDao.recordEquation/output: ', executions);
       return executions;
     } catch (err) {

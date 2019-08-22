@@ -28,25 +28,57 @@ export default class ThemesService extends EntityService {
     }
   }
 
-  // getThemeByColor(color) {
-  //   try {
-  //     this.logger.trace('ThemesService.getThemeByColor/input: ', {
-  //       actor,
-  //       userId,
-  //     });
-  //     if (!actor || !userId) {
-  //       throw this.createErrorInvalidInput('actor, userId');
-  //     }
-  //     if (actor.id !== userId) {
-  //       throw this.createErrorPermissionDenied('actor.id != userId');
-  //     }
+  getThemeByColor({ actor, userId, color }) {
+    try {
+      this.logger.trace('ThemesService.getThemeByColor/input: ', {
+        actor,
+        userId,
+        color,
+      });
+      if (!actor || !userId || !color) {
+        throw this.createErrorInvalidInput('actor, userId, color');
+      }
+      if (actor.id !== userId) {
+        throw this.createErrorPermissionDenied('actor.id != userId');
+      }
 
-  //     const theme = this.themesDao.getThemeByThemeId(actor.themeId);
+      const theme = this.themesDao.getThemeByThemeId(actor.themeId);
+      if (!theme) {
+        throw this.createErrorUnexpected('getThemeByTHemeId');
+      }
 
-  //     this.logger.trace('ThemesService.getThemeByColor/output: ', theme);
-  //     return theme;
-  //   } catch (err) {
-  //     this.logger.trace('ThemesService.getThemeByColor/error: ', { err });
-  //   }
-  // }
+      this.logger.trace('ThemesService.getThemeByColor/output: ', theme);
+      return theme;
+    } catch (err) {
+      this.logger.trace('ThemesService.getThemeByColor/error: ', { err });
+    }
+  }
+
+  getAllThemes({ actor, userId }) {
+    try {
+      this.logger.trace('ThemesService.getAllThemes/input: ', {
+        actor,
+        userId,
+      });
+      if (!actor || !userId) {
+        throw this.createErrorInvalidInput('actor, userId');
+      }
+      if (actor.id !== userId) {
+        throw this.createErrorPermissionDenied('actor.id != userId');
+      }
+
+      const themes = this.themesDao.getAllThemes();
+      if (!themes) {
+        this.logger.trace('ThemesService.getAllThemes/ themes error: ', {
+          themes,
+        });
+        throw this.createErrorUnexpected('getAllThemes');
+      }
+
+      this.logger.trace('ThemesService.getAllThemes/output: ', { themes });
+      return themes;
+    } catch (err) {
+      this.logger.trace('ThemesService.getAllThemes/error: ', { err });
+    }
+  }
 }

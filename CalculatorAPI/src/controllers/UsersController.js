@@ -1,5 +1,5 @@
 import EntityController from './EntityController';
-import _ from 'lodash';
+import { sortBy } from 'lodash';
 
 export default class UsersController extends EntityController {
   constructor({ usersService, themesService, executionsService, logger }) {
@@ -12,6 +12,7 @@ export default class UsersController extends EntityController {
   // all we send is a token, we just get back the user who is logged in
   // strictly packaging + http management (request, response) - lower levels doesn't know abt express
   getActiveUser = async (req, res) => {
+    // route: "/active"
     try {
       // get the user, their score, their theme, their last login
       const actor = req.actor;
@@ -29,8 +30,9 @@ export default class UsersController extends EntityController {
         actor,
         userId: actor.id,
       });
-      if (!user.score) {
-        throw this.createErrorUnexpected('score');
+
+      if (user.score === undefined) {
+        throw this.createErrorUnexpected('score'); // TODO: errors dont actually show up
       }
 
       user.theme = await this.themesService.getThemeByUserId({
@@ -48,46 +50,51 @@ export default class UsersController extends EntityController {
     }
   };
 
-  updateThemeByUserId = (req, res) => {
+  // get rid of this themes route, only themes route should be
+  updateActiveUserTheme = async (req, res) => {
+    // route "/changeTheme"
     try {
       // get the user, their score, their theme, their last login
       const actor = req.actor;
-      const color = req.query.theme;
+      const themeId = req.query.themeId; // new color
+      // const userId = req.query.themeId;
 
       // TODO: make logger take in name of the class
-      this.logger.trace('UsersController.updateThemeByUserId/input: ', {
+      this.logger.trace('UsersController.updateActiveUserTheme/input: ', {
         actor,
+        themeId,
       });
 
-      if (!actor) {
-        throw this.createErrorInvalidInput('actor');
+      if (!actor || !themeId) {
+        throw this.createErrorInvalidInput('actor, themeId');
       }
 
-      const themeId = this.themesService.getThemeByColor({
-        actor,
-        userId: actor.id,
-        color: color,
-      });
-
-      const newTheme = this.usersService.updateThemeByUserId({
+      const newThemeSuccess = this.usersService.updateActiveUserTheme({
         actor,
         userId: actor.id,
         themeId: themeId,
       });
-      if (!newTheme) {
-        throw this.createErrorUnexpected('newTheme');
+      if (!newThemeSuccess) {
+        this.logger.trace('UsersController.updateActiveUserTheme/error: ', {
+          newThemeSuccess,
+        });
+        throw this.createErrorUnexpected('newThemeSuccess');
       }
 
-      this.logger.trace('UsersController.updateThemeByUserId/output: ', {
-        newTheme,
+      this.logger.trace('UsersController.updateActiveUserTheme/output: ', {
+        newThemeSuccess,
       });
-      res.json(newTheme);
+      res.json(newThemeSuccess);
     } catch (err) {
-      this.logger.trace('UsersController.updateThemeByUserId/error: ', { err });
+      this.logger.trace('UsersController.updateActiveUserTheme/error: ', {
+        err,
+      });
     }
   };
 
+  // should i just have getUserById
   getAllUsers = async (req, res) => {
+    // route: "/"
     try {
       // get the user, their score, their theme, their last login
       const actor = req.actor;
@@ -109,7 +116,7 @@ export default class UsersController extends EntityController {
         throw this.createErrorUnexpected('allUsers');
       }
 
-      const orderedUsers = _.sortBy(allUsers, 'score').reverse();
+      const orderedUsers = sortBy(allUsers, 'score').reverse();
 
       this.logger.trace('UsersController.getAllUsers/output: ', {
         orderedUsers,

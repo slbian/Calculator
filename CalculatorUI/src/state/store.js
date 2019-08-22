@@ -8,6 +8,7 @@ const initialState = {
   loginTextPassword: '',
   loginTextUsername: '',
   profileConfigOpen: false,
+  themes: null,
   users: null
 };
 
@@ -26,6 +27,13 @@ const reducer = (state, action) => {
       return { ...state, displayText: '' };
     case 'pickColor':
       return { ...state, activeUser: { ...state.activeUser, theme: action.payload } };
+    case 'mountCalculator':
+      return {
+        ...state,
+        activeUser: action.payload.activeUser,
+        users: action.payload.users,
+        themes: action.payload.themes
+      };
     case 'setActiveUser':
       return { ...state, activeUser: action.payload };
     case 'setCleared':
@@ -38,6 +46,8 @@ const reducer = (state, action) => {
       return { ...state, loginTextPassword: action.payload };
     case 'setLoginTextUsername':
       return { ...state, loginTextUsername: action.payload };
+    case 'setThemes':
+      return { ...state, themes: action.payload };
     case 'setUsers':
       return { ...state, users: action.payload };
     case 'toggleProfileConfig':

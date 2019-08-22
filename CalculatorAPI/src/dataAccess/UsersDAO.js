@@ -5,11 +5,38 @@ export default class UsersDao extends EntityDao {
     super({ logger, db, entityName }); // before I do this constructor, I call parent's constructor
   }
 
-  async updateThemeByUserId(userId) {
+  async updateActiveUserTheme(userId, themeId) {
     try {
-      return userId;
+      this.logger.trace('UsersDao.updateActiveUserTheme/input ', {
+        userId,
+        themeId,
+      });
+
+      if (!userId || !themeId) {
+        this.logger.trace(
+          'UsersDao.updateActiveUserTheme/error: ',
+          userId,
+          themeId
+        );
+        throw this.createErrorInvalidInput('userId, themeId');
+      }
+      const [user] = await this.db(this.entityName)
+        .where('id', userId)
+        .update({
+          themeId: themeId,
+        })
+        .returning('*');
+
+      if (!user) {
+        this.logger.trace('UsersDao.updateActiveUserTheme/error: ', user);
+        throw this.createErrorEntityNotFound('userId');
+      }
+
+      delete user.hashedPassword;
+      this.logger.trace('UsersDao.updateActiveUserTheme/output: ', { user });
+      return user;
     } catch (err) {
-      this.logger.trace('UsersDao.updateThemeByUserId/error: ', { err });
+      this.logger.trace('UsersDao.updateActiveUserTheme/error: ', { err });
     }
   }
 

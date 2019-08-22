@@ -1,9 +1,9 @@
 import React, { useContext } from 'react';
 import styled from 'styled-components';
 import { Store } from '../state/store';
-import { pickColor } from '../state/actions';
-import setTheme from '../api/setTheme';
-import getToken from '../api/getToken';
+import { setActiveUser } from '../state/actions';
+import updateActiveUserTheme from '../api/updateActiveUserTheme';
+import getActiveUser from '../api/getActiveUser';
 
 const StyledButton = styled.button`
   background: ${props => props.color};
@@ -20,12 +20,12 @@ const StyledButton = styled.button`
     box-shadow: none;
   }
 
-  .tooltip {
+  /* .tooltip {
     display: inline-block;
     position: relative;
     border-bottom: 1px dotted #666;
     text-align: left;
-  }
+  } */
 `;
 
 const StyledContainer = styled.div`
@@ -37,26 +37,30 @@ const StyledContainer = styled.div`
   align-items: center;
 `;
 
-const availableColors = ['tomato', 'green', 'violet', 'pink'];
-
 export default function ThemePicker() {
   const { state, dispatch } = useContext(Store);
+
   return (
     <StyledContainer>
-      {availableColors.map(availableColor => (
-        <div className="tooltip" key={availableColor}>
-          <StyledButton color={availableColor} onClick={() => handleColorPick(availableColor)} />
-        </div>
+      {state.themes.map(theme => (
+        // <div className="tooltip" key={availableColor}>
+
+        <StyledButton
+          key={theme.color}
+          color={theme.color}
+          onClick={() => handleColorPick(theme.id)}
+        />
       ))}
     </StyledContainer>
   );
 
-  async function handleColorPick(color) {
-    const newToken = await getToken('chuck', 'welcome');
-    const config = {
-      headers: { Authorization: 'bearer '.concat(newToken.data) }
-    };
-    const response = await setTheme(state.activeUser.id, color, config);
-    dispatch(pickColor(response.data.theme));
+  async function handleColorPick(themeId) {
+    const response = await updateActiveUserTheme(state.activeUser.id, themeId);
+    if (!response) {
+      console.log('Could not update theme');
+      throw new Error();
+    }
+    const activeUserResponse = await getActiveUser();
+    dispatch(setActiveUser(activeUserResponse.data));
   }
 }

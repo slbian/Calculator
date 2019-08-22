@@ -2,11 +2,12 @@ import React, { useEffect, useContext } from 'react'; // useState, useReducer
 import styled from 'styled-components';
 
 import './CalculatorApp.css';
-import { setActiveUser, setUsers } from '../state/actions';
+import { mountCalculator } from '../state/actions';
 import { Store } from '../state/store';
 import Calculator from '../components/Calculator';
 import getActiveUser from '../api/getActiveUser';
 import getScoreboardUsers from '../api/getScoreboardUsers';
+import getAllThemes from '../api/getAllThemes';
 import history from '../state/history';
 import Profile from '../components/Profile';
 import Scoreboard from '../components/Scoreboard';
@@ -68,15 +69,13 @@ const StyledDiv = styled.div`
 export default function CalculatorApp() {
   const { state, dispatch } = useContext(Store);
 
-  console.log(state.activeUser);
   useEffect(() => {
-    if (!state.users) {
+    if (!state.activeUser || !state.users || !state.themes) {
       mount();
     }
-  }, []);
-  // mount();
+  }, []); // [] means can only get called once
 
-  if (!state.activeUser) {
+  if (!state.activeUser || !state.users || !state.themes) {
     return null;
   }
 
@@ -112,12 +111,23 @@ export default function CalculatorApp() {
     const token = window.localStorage.getItem('token');
     if (token) {
       const activeUserResponse = await getActiveUser();
-
       const allUsersResponse = await getScoreboardUsers();
+      const allThemesResponse = await getAllThemes(); // return [ {id: 1, color: 'tomato}...
 
-      if (activeUserResponse && allUsersResponse) {
-        dispatch(setUsers(allUsersResponse.data));
-        dispatch(setActiveUser(activeUserResponse.data));
+      if (activeUserResponse.data && allUsersResponse.data && allThemesResponse) {
+        dispatch(
+          mountCalculator({
+            activeUser: activeUserResponse.data,
+            users: allUsersResponse.data,
+            themes: allThemesResponse.data
+          })
+        );
+        // dispatch(setUsers(allUsersResponse.data));
+        // console.log('this all users, ', state.users);
+        // dispatch(setActiveUser(activeUserResponse.data));
+        // console.log('this is the active user, ', state.activeUser);
+        // dispatch(setThemes(allThemesResponse.data));
+        // console.log('this is all themes, ', state.themes);
       } else {
         console.log('MOUNTING FAILED');
       }

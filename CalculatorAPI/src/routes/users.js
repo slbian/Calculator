@@ -54,5 +54,6 @@ router.get('/active', usersController.getActiveUser);
 //   delete user.themeId;
 //   return res.json(user);
 // });
+router.post('/updateActiveUserTheme', usersController.updateActiveUserTheme);
 
 export default router;

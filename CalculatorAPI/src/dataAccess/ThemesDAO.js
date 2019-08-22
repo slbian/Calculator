@@ -21,4 +21,16 @@ export default class ThemesDao extends EntityDao {
       this.logger.trace('ThemesDao.getThemesByUserId/error: ', { err });
     }
   }
+
+  async getAllThemes() {
+    try {
+      this.logger.trace('ThemesDao.getAllThemes/called');
+
+      const themes = await this.db.select('*').from(this.entityName);
+      this.logger.trace('ThemesDao.getAllThemes/output: ', themes);
+      return themes;
+    } catch (err) {
+      this.logger.trace('ThemesDao.getAllThemes/error: ', { err });
+    }
+  }
 }
