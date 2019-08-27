@@ -3,8 +3,8 @@ import React, { createContext, useReducer } from 'react';
 const initialState = {
   activeUser: null,
   displayText: '',
-  isCleared: false,
   errorMessage: '',
+  isCleared: false,
   loginTextPassword: '',
   loginTextUsername: '',
   profileConfigOpen: false,
@@ -25,8 +25,6 @@ const reducer = (state, action) => {
       };
     case 'clearScreen':
       return { ...state, displayText: '' };
-    case 'pickColor':
-      return { ...state, activeUser: { ...state.activeUser, theme: action.payload } };
     case 'mountCalculator':
       return {
         ...state,

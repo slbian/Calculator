@@ -4,10 +4,6 @@ export const addCharacter = char => {
 export const clearScreen = () => {
   return { type: 'clearScreen' };
 };
-export const pickColor = newBackgroundColor => {
-  // TODO: rename to setTheme
-  return { type: 'pickColor', payload: newBackgroundColor };
-};
 export const mountCalculator = pageLoad => {
   return { type: 'mountCalculator', payload: pageLoad };
 };

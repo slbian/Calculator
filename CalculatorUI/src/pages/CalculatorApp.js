@@ -9,13 +9,13 @@ import getActiveUser from '../api/getActiveUser';
 import getScoreboardUsers from '../api/getScoreboardUsers';
 import getAllThemes from '../api/getAllThemes';
 import history from '../state/history';
+import Logout from '../components/Logout';
 import Profile from '../components/Profile';
 import Scoreboard from '../components/Scoreboard';
 import ThemePicker from '../components/ThemePicker';
 
-// NEXT TODO: rename based on best practices, do useSelector, alphabetize all imports, remove unecessary props
 // TODO: add different emojis, change eval, live data, error handling/defensive programming, testing
-// DONE: database, add useState hooks, refactor to useReducer, refactor to useContext, styled components, add styling to database, authentication w argon2
+// DONE: database, add useState hooks, refactor to useReducer, refactor to useContext, styled components, add styling to database, authentication w argon2, layered route/controller/service/data access object API,
 
 // error message in state
 // style login page, make sure it has messages (invalid credentials) - or different error like network error (force by shutting down server)
@@ -99,6 +99,7 @@ export default function CalculatorApp() {
         </div>
         <div className="profileConfig">
           <ThemePicker />
+          <Logout />
         </div>
         <div className="scoreboard">
           <Scoreboard users={state.users} />
@@ -122,12 +123,6 @@ export default function CalculatorApp() {
             themes: allThemesResponse.data
           })
         );
-        // dispatch(setUsers(allUsersResponse.data));
-        // console.log('this all users, ', state.users);
-        // dispatch(setActiveUser(activeUserResponse.data));
-        // console.log('this is the active user, ', state.activeUser);
-        // dispatch(setThemes(allThemesResponse.data));
-        // console.log('this is all themes, ', state.themes);
       } else {
         console.log('MOUNTING FAILED');
       }

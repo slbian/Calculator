@@ -8,7 +8,6 @@ export default class ThemesController extends EntityController {
 
   getAllThemes = async (req, res) => {
     try {
-      // get the user, their score, their theme, their last login
       const actor = req.actor;
 
       // TODO: make logger take in name of the class

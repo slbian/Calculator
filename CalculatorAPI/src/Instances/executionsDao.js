@@ -5,4 +5,8 @@ import logger from './logger';
 // TODO: lowercase Dao
 // dependency injection
 // entityname is just name of the table
-export default new ExecutionsDao({ logger, db, entityName: 'executions' });
+export default new ExecutionsDao({
+  logger,
+  db,
+  entityName: 'executions',
+});

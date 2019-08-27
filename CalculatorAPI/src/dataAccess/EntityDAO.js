@@ -5,8 +5,6 @@ export default class EntityDao {
     this.entityName = entityName;
   }
 
-  // getById
-
   // column does not exist
   createErrorInvalidInput(details) {
     return new Error(`INVALID_INPUT / ${details}`);

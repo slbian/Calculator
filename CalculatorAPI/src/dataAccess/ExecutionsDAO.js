@@ -8,13 +8,13 @@
 import EntityDao from './EntityDao';
 
 export default class ExecutionsDao extends EntityDao {
-  constructor({ logger, db, entityName }) {
-    super({ logger, db, entityName }); // before I do this constructor, I call parent's constructor
+  constructor({ logger, db, entityName, dao }) {
+    super({ logger, db, entityName, dao }); // before I do this constructor, I call parent's constructor
   }
 
   async getScoreByUserId(userId) {
     try {
-      this.logger.trace('ExecutionsDao.getScoreByUserId/input: ', userId);
+      this.logger.trace(this.dao + '.getScoreByUserId/input: ', userId);
       if (!userId) {
         throw this.createErrorInvalidInput('userId');
       }
@@ -26,41 +26,37 @@ export default class ExecutionsDao extends EntityDao {
         .where('userId', userId);
 
       if (!scores) {
-        this.logger.trace('ExecutionsDao.getScoreByUserId/output: ', 0);
+        this.logger.trace(this.dao + '.getScoreByUserId/output: ', 0);
         return 0;
       }
 
       const score = scores.sum;
-      this.logger.trace('ExecutionsDao.getScoreByUserId/output: ', score);
+      this.logger.trace(this.dao + '.getScoreByUserId/output: ', score);
       return score;
     } catch (err) {
-      this.logger.trace('ExecutionsDao.getScoreByUserId/error: ', { err });
+      this.logger.trace(this.dao + '.getScoreByUserId/error: ', { err });
     }
   }
 
   async getAllScores() {
     try {
-      this.logger.trace('ExecutionsDao.getAllScores/called');
+      this.logger.trace(this.dao + '.getAllScores/called');
       const score = await this.db
         .select('userId')
         .sum('score')
         .from(this.entityName)
         .groupBy('userId');
 
-      this.logger.trace('ExecutionsDao.getAllScores/output: ', score);
+      this.logger.trace(this.dao + '.getAllScores/output: ', score);
       return score;
     } catch (err) {
-      this.logger.trace('ExecutionsDao.getAllScores/error: ', { err });
+      this.logger.trace(this.dao + '.getAllScores/error: ', { err });
     }
   }
 
   async recordExecution(userId, equation) {
     try {
-      this.logger.trace(
-        'ExecutionsDao.recordEquation/input: ',
-        userId,
-        equation
-      );
+      this.logger.trace(this.dao + '.recordEquation/input: ', userId, equation);
       if (!userId || !equation) {
         throw this.createErrorInvalidInput('userId');
       }
@@ -76,10 +72,10 @@ export default class ExecutionsDao extends EntityDao {
       if (!executions) {
         throw this.createErrorEntityNotFound('insert execution');
       }
-      this.logger.trace('ExecutionsDao.recordEquation/output: ', executions);
+      this.logger.trace(this.dao + '.recordEquation/output: ', executions);
       return executions;
     } catch (err) {
-      this.logger.trace('ExecutionsDao.recordEquation/error: ', { err });
+      this.logger.trace(this.dao + '.recordEquation/error: ', { err });
     }
   }
 }

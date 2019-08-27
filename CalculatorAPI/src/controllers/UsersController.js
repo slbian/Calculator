@@ -14,7 +14,6 @@ export default class UsersController extends EntityController {
   getActiveUser = async (req, res) => {
     // route: "/active"
     try {
-      // get the user, their score, their theme, their last login
       const actor = req.actor;
 
       // TODO: make logger take in name of the class
@@ -50,11 +49,9 @@ export default class UsersController extends EntityController {
     }
   };
 
-  // get rid of this themes route, only themes route should be
   updateActiveUserTheme = async (req, res) => {
     // route "/changeTheme"
     try {
-      // get the user, their score, their theme, their last login
       const actor = req.actor;
       const themeId = req.query.themeId; // new color
       // const userId = req.query.themeId;
@@ -92,11 +89,9 @@ export default class UsersController extends EntityController {
     }
   };
 
-  // should i just have getUserById
   getAllUsers = async (req, res) => {
     // route: "/"
     try {
-      // get the user, their score, their theme, their last login
       const actor = req.actor;
 
       // TODO: make logger take in name of the class
@@ -127,6 +122,3 @@ export default class UsersController extends EntityController {
     }
   };
 }
-
-// service does permissioning - are you allowed ot hit this route?
-// users = _.sortBy(users, 'score').reverse();

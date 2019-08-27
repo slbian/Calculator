@@ -6,10 +6,8 @@ export default class ExecutionsController extends EntityController {
     this.executionsService = executionsService;
   }
 
-  // TODO: does it makes sense to have an executionController?
   recordExecution = async (req, res) => {
     try {
-      // get the user, their score, their theme, their last login
       const actor = req.actor;
       const equation = req.body.displayText;
 
