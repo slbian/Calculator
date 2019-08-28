@@ -12,10 +12,9 @@ const StyledDiv = styled.div`
   justify-content: center;
   color: black;
   padding: 5px;
-  min-height: 200px;
 
   button {
-    border-radius: 0 20px 20px 0;
+    border-radius: 20px 20px 20px 20px;
     background-color: blueviolet;
     border: none;
     height: 22px;
@@ -24,7 +23,6 @@ const StyledDiv = styled.div`
     font-size: 12px;
     font-weight: bold;
     box-shadow: 2px 2px 2px 1px rgba(0, 0, 255, 0.2);
-    border-left: 1px solid #808080;
     outline: none;
 
     :active {

@@ -1,3 +1,4 @@
+import argon2 from 'argon2';
 import EntityDao from './EntityDao';
 
 export default class UsersDao extends EntityDao {
@@ -37,6 +38,41 @@ export default class UsersDao extends EntityDao {
       return user;
     } catch (err) {
       this.logger.trace('UsersDao.updateActiveUserTheme/error: ', { err });
+    }
+  }
+
+  async addUser(username, password) {
+    try {
+      this.logger.trace('UsersDao.addUser/input ', { username, password });
+
+      if (!username || !password) {
+        this.logger.trace('UsersDao.addUser/error: ', { username, password });
+        throw this.createErrorInvalidInput('username');
+      }
+
+      const now = new Date().toISOString();
+
+      const hashedPassword = await argon2.hash(password);
+
+      const [user] = await this.db(this.entityName)
+        .insert({
+          username: username,
+          created_at: now,
+          updated_at: now,
+          hashedPassword: hashedPassword,
+        })
+        .returning('*');
+
+      if (!user) {
+        this.logger.trace('UsersDao.addUser/no user: ', { user });
+        throw this.createErrorEntityNotFound('userId');
+      }
+
+      delete user.hashedPassword;
+      this.logger.trace('UsersDao.addUser/output: ', { user });
+      return user;
+    } catch (err) {
+      this.logger.trace('UsersDao.addUser/error: ', { err });
     }
   }
 

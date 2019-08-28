@@ -23,7 +23,6 @@ export default class Memory {
   }
 
   incrementScoreForUser(username, charQuantity) {
-    // TODO: protect against username not in cache
     this.cache[username] += charQuantity; // [x] makes x evaluate, if you didn't have [] it would look for "username"
     return this.cache[username]; // returns score
   }

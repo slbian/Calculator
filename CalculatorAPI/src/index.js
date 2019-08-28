@@ -8,6 +8,7 @@ import passport from './Passport/jwtStrategy';
 import themesRouter from './routes/themes';
 import token from './routes/token';
 import usersRouter from './routes/users';
+import registerRouter from './routes/register';
 
 const PORT = process.env.PORT;
 const app = express();
@@ -20,6 +21,7 @@ app.use(cors());
 app.use(bodyParser.json());
 
 //routes - if the path is /token, do this. if not, ignore
+app.use('/register', registerRouter);
 app.use('/token', token);
 
 // ^ public

@@ -10,4 +10,8 @@ export default class EntityController {
   createErrorUnexpected(details) {
     return new Error(`UNEXPECTED_ERROR / ${details}`);
   }
+
+  createErrorDuplicateUsername(details) {
+    return new Error(`UNEXPECTED_ERROR / ${details}`);
+  }
 }

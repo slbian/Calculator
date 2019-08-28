@@ -2,11 +2,9 @@ import React, { createContext, useReducer } from 'react';
 
 const initialState = {
   activeUser: null,
+  authChoice: 'login',
   displayText: '',
-  errorMessage: '',
   isCleared: false,
-  loginTextPassword: '',
-  loginTextUsername: '',
   profileConfigOpen: false,
   themes: null,
   users: null
@@ -38,16 +36,12 @@ const reducer = (state, action) => {
       return { ...state, isCleared: true };
     case 'setDisplayText':
       return { ...state, displayText: action.payload };
-    case 'setErrorMessage':
-      return { ...state, errorMessage: action.payload };
-    case 'setLoginTextPassword':
-      return { ...state, loginTextPassword: action.payload };
-    case 'setLoginTextUsername':
-      return { ...state, loginTextUsername: action.payload };
     case 'setThemes':
       return { ...state, themes: action.payload };
     case 'setUsers':
       return { ...state, users: action.payload };
+    case 'toggleAuth':
+      return { ...state, authChoice: action.payload };
     case 'toggleProfileConfig':
       return { ...state, profileConfigOpen: !state.profileConfigOpen };
     default:

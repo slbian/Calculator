@@ -3,7 +3,7 @@ import executionsController from '../Instances/ExecutionsController';
 
 const router = express.Router();
 
-router.post('/', executionsController.recordExecution);
+router.post('/', executionsController.addExecution);
 //   async (req, res) => {
 //   logger.trace('user and equation:', req.body);
 //   const equation = req.body.displayText;

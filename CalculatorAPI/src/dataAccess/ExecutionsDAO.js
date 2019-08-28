@@ -54,7 +54,7 @@ export default class ExecutionsDao extends EntityDao {
     }
   }
 
-  async recordExecution(userId, equation) {
+  async addExecution(userId, equation) {
     try {
       this.logger.trace(this.dao + '.recordEquation/input: ', userId, equation);
       if (!userId || !equation) {

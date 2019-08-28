@@ -5,7 +5,6 @@ exports.seed = function(knex) {
     .then(function() {
       return knex('users').insert([
         {
-          id: 1,
           username: 'sbian',
           created_at: now,
           updated_at: now,
@@ -14,7 +13,6 @@ exports.seed = function(knex) {
             '$argon2i$v=19$m=4096,t=3,p=1$FjfnJA8D++gR6u+MM4Cd0Q$zHfv7F6dFAfNZdrTv0fvbVJ/IPJQI/s8j5m9vt5WGGM',
         },
         {
-          id: 2,
           username: 'chuck',
           created_at: now,
           updated_at: now,
@@ -23,7 +21,6 @@ exports.seed = function(knex) {
             '$argon2i$v=19$m=4096,t=3,p=1$FjfnJA8D++gR6u+MM4Cd0Q$zHfv7F6dFAfNZdrTv0fvbVJ/IPJQI/s8j5m9vt5WGGM',
         },
         {
-          id: 3,
           username: 'ellen',
           created_at: now,
           updated_at: now,

@@ -6,13 +6,13 @@ export default class ExecutionsController extends EntityController {
     this.executionsService = executionsService;
   }
 
-  recordExecution = async (req, res) => {
+  addExecution = async (req, res) => {
     try {
       const actor = req.actor;
       const equation = req.body.displayText;
 
       // TODO: make logger take in name of the class
-      this.logger.trace('ExecutionsController.recordExecution/input: ', {
+      this.logger.trace('ExecutionsController.addExecution/input: ', {
         actor,
         equation,
       });
@@ -21,7 +21,7 @@ export default class ExecutionsController extends EntityController {
         throw this.createErrorInvalidInput('actor, equation');
       }
 
-      const newExecution = await this.executionsService.recordExecution({
+      const newExecution = await this.executionsService.addExecution({
         actor,
         userId: actor.id,
         equation: equation,
@@ -30,12 +30,12 @@ export default class ExecutionsController extends EntityController {
         throw this.createErrorUnexpected('newExecution');
       }
 
-      this.logger.trace('ExecutionsController.recordExecution/output: ', {
+      this.logger.trace('ExecutionsController.addExecution/output: ', {
         newExecution,
       });
       res.json(newExecution);
     } catch (err) {
-      this.logger.trace('ExecutionsController.recordExecution/error: ', {
+      this.logger.trace('ExecutionsController.addExecution/error: ', {
         err,
       });
     }

@@ -66,7 +66,7 @@ export default class UsersController extends EntityController {
         throw this.createErrorInvalidInput('actor, themeId');
       }
 
-      const newThemeSuccess = this.usersService.updateActiveUserTheme({
+      const newThemeSuccess = await this.usersService.updateActiveUserTheme({
         actor,
         userId: actor.id,
         themeId: themeId,

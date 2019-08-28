@@ -14,7 +14,7 @@ import Profile from '../components/Profile';
 import Scoreboard from '../components/Scoreboard';
 import ThemePicker from '../components/ThemePicker';
 
-// TODO: add different emojis, change eval, live data, error handling/defensive programming, testing
+// TODO: memoization, add different emojis, change eval, live data, error handling/defensive programming, testing
 // DONE: database, add useState hooks, refactor to useReducer, refactor to useContext, styled components, add styling to database, authentication w argon2, layered route/controller/service/data access object API,
 
 // error message in state
@@ -70,9 +70,7 @@ export default function CalculatorApp() {
   const { state, dispatch } = useContext(Store);
 
   useEffect(() => {
-    if (!state.activeUser || !state.users || !state.themes) {
-      mount();
-    }
+    mount();
   }, []); // [] means can only get called once
 
   if (!state.activeUser || !state.users || !state.themes) {

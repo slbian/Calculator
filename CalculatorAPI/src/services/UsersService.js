@@ -23,18 +23,38 @@ export default class UsersService extends EntityService {
         throw this.createErrorPermissionDenied('actor.id != userId');
       }
 
-      const successfulThemeUpdate = this.usersDao.updateActiveUserTheme(
+      const successfulThemeUpdate = await this.usersDao.updateActiveUserTheme(
         userId,
         themeId
       );
 
-      this.logger.trace(
-        'UsersService.updateActiveUserTheme/output: ',
-        successfulThemeUpdate
-      );
+      this.logger.trace('UsersService.updateActiveUserTheme/output: ', {
+        successfulThemeUpdate,
+      });
       return successfulThemeUpdate;
     } catch (err) {
       this.logger.trace('UsersService.updateActiveUserTheme/error: ', { err });
+    }
+  }
+
+  async addUser({ username, password }) {
+    try {
+      this.logger.trace('UsersService.addUser/input: ', { username, password });
+      if (!username || !password) {
+        throw this.createErrorInvalidInput('username');
+      }
+      const newUserResponse = await this.usersDao.addUser(username, password);
+
+      if (!newUserResponse) {
+        throw this.createErrorInvalidInput('cannot add user');
+      }
+      this.logger.trace('UsersService.addUser/output: ', { newUserResponse });
+      return newUserResponse;
+    } catch (err) {
+      console.log({ err });
+      this.logger.trace('UsersService.addUser/catch error: ', {
+        err,
+      });
     }
   }
 

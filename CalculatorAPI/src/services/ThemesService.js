@@ -28,7 +28,7 @@ export default class ThemesService extends EntityService {
     }
   }
 
-  getThemeByColor({ actor, userId, color }) {
+  async getThemeByColor({ actor, userId, color }) {
     try {
       this.logger.trace('ThemesService.getThemeByColor/input: ', {
         actor,
@@ -42,7 +42,7 @@ export default class ThemesService extends EntityService {
         throw this.createErrorPermissionDenied('actor.id != userId');
       }
 
-      const theme = this.themesDao.getThemeByThemeId(actor.themeId);
+      const theme = await this.themesDao.getThemeByThemeId(actor.themeId);
       if (!theme) {
         throw this.createErrorUnexpected('getThemeByTHemeId');
       }
@@ -54,7 +54,7 @@ export default class ThemesService extends EntityService {
     }
   }
 
-  getAllThemes({ actor, userId }) {
+  async getAllThemes({ actor, userId }) {
     try {
       this.logger.trace('ThemesService.getAllThemes/input: ', {
         actor,
@@ -67,7 +67,7 @@ export default class ThemesService extends EntityService {
         throw this.createErrorPermissionDenied('actor.id != userId');
       }
 
-      const themes = this.themesDao.getAllThemes();
+      const themes = await this.themesDao.getAllThemes();
       if (!themes) {
         this.logger.trace('ThemesService.getAllThemes/ themes error: ', {
           themes,

@@ -33,9 +33,9 @@ export default class ExecutionsService extends EntityService {
     }
   }
 
-  async recordExecution({ actor, userId, equation }) {
+  async addExecution({ actor, userId, equation }) {
     try {
-      this.logger.trace('ExecutionsService.recordExecution/input: ', {
+      this.logger.trace('ExecutionsService.addExecution/input: ', {
         actor,
         userId,
       });
@@ -45,18 +45,18 @@ export default class ExecutionsService extends EntityService {
       if (actor.id !== userId) {
         throw this.createErrorPermissionDenied('actor.id != userId');
       }
-      const newExecution = await this.executionsDao.recordExecution(
+      const newExecution = await this.executionsDao.addExecution(
         userId,
         equation
       );
       this.logger.trace(
-        'ExecutionsService.recordExecution/output: ',
+        'ExecutionsService.addExecution/output: ',
         newExecution
       );
       return newExecution;
     } catch (err) {
       console.log(err);
-      this.logger.trace('ExecutionsService.recordExecution/error: ', { err });
+      this.logger.trace('ExecutionsService.addExecution/error: ', { err });
     }
   }
 }
