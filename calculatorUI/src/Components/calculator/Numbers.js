@@ -1,8 +1,8 @@
 import React, { useContext } from 'react';
 import styled from 'styled-components';
 import Button from './Button';
-import { addCharacter } from '../state/actions';
-import { Store } from '../state/store';
+import { addCharacter } from '../../state/actions';
+import { Store } from '../../state/store';
 
 const StyledDiv = styled.div`
   display: flex;

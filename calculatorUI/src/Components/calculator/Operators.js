@@ -8,11 +8,11 @@ import {
   setCleared,
   setActiveUser,
   setUsers
-} from '../state/actions';
-import { Store } from '../state/store';
-import postExecution from '../api/postExecution';
-import getScoreboardUsers from '../api/getScoreboardUsers';
-import getActiveUser from '../api/getActiveUser';
+} from '../../state/actions';
+import { Store } from '../../state/store';
+import postExecution from '../../api/postExecution';
+import getScoreboardUsers from '../../api/getScoreboardUsers';
+import getActiveUser from '../../api/getActiveUser';
 
 const StyledDiv = styled.div`
   display: flex;

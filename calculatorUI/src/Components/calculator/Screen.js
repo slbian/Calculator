@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import styled from 'styled-components';
-import { Store } from '../state/store';
+import { Store } from '../../state/store';
 
 const StyledDiv = styled.div`
   text-align: right;

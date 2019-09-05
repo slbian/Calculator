@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import './CalculatorApp.css';
 import { mountCalculator } from '../state/actions';
 import { Store } from '../state/store';
-import Calculator from '../components/Calculator';
+import Calculator from '../components/calculator/Calculator';
 import getActiveUser from '../api/getActiveUser';
 import getScoreboardUsers from '../api/getScoreboardUsers';
 import getAllThemes from '../api/getAllThemes';
