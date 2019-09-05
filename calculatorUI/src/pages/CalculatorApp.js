@@ -73,7 +73,7 @@ export default function CalculatorApp() {
     mount();
   }, []); // [] means can only get called once
 
-  if (!state.activeUser || !state.users || !state.themes) {
+  if (!state || !state.activeUser || !state.users || !state.themes) {
     return null;
   }
 

@@ -35,6 +35,12 @@ const StyledDiv = styled.div`
 `;
 
 export default function Logout() {
+  async function handleLogoutRequest(event) {
+    event.preventDefault();
+    window.localStorage.clear();
+    history.push('/login');
+  }
+
   return (
     <div>
       <StyledDiv>
@@ -44,10 +50,4 @@ export default function Logout() {
       </StyledDiv>
     </div>
   );
-
-  async function handleLogoutRequest(event) {
-    event.preventDefault();
-    window.localStorage.clear();
-    history.push('/login');
-  }
 }

@@ -65,6 +65,33 @@ export default function Login() {
   const [loginPassword, setLoginPassword] = useState('welcome');
   const [loginMessage, setLoginMessage] = useState('');
 
+  function handleChangeLoginPassword(event) {
+    const text = event.target.value;
+    setLoginPassword(text);
+  }
+
+  function handleChangeLoginUsername(event) {
+    const text = event.target.value;
+    setLoginUsername(text);
+  }
+
+  async function handleLoginRequest(event) {
+    event.preventDefault();
+    // first need to log in, get token
+    const { newToken, errorCode } = await getToken(loginUsername, loginPassword);
+    // put newToken in localstorage, then read from it
+    if (newToken) {
+      window.localStorage.setItem('token', newToken.data);
+      // console.log('login ', newToken.data);
+      history.push('/');
+    }
+    if (errorCode === 401) {
+      setLoginMessage(copytext.errorMessage_auth);
+    } else {
+      setLoginMessage(copytext.errorMessage_default);
+    }
+  }
+
   return (
     <div>
       <form>
@@ -91,30 +118,4 @@ export default function Login() {
   );
 
   // text in login box
-  function handleChangeLoginUsername(event) {
-    const text = event.target.value;
-    setLoginUsername(text);
-  }
-
-  function handleChangeLoginPassword(event) {
-    const text = event.target.value;
-    setLoginPassword(text);
-  }
-
-  async function handleLoginRequest(event) {
-    event.preventDefault();
-    // first need to log in, get token
-    const { newToken, errorCode } = await getToken(loginUsername, loginPassword);
-    // put newToken in localstorage, then read from it
-    if (newToken) {
-      window.localStorage.setItem('token', newToken.data);
-      // console.log('login ', newToken.data);
-      history.push('/');
-    }
-    if (errorCode === 401) {
-      setLoginMessage(copytext.errorMessage_auth);
-    } else {
-      setLoginMessage(copytext.errorMessage_default);
-    }
-  }
 }

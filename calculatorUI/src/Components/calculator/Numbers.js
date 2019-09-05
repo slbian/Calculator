@@ -16,6 +16,11 @@ export default function Numbers() {
   const { dispatch } = useContext(Store);
 
   const values = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
+
+  function handleClick(text) {
+    dispatch(addCharacter(text));
+  }
+
   return (
     <StyledDiv>
       {values.map(val => (
@@ -23,8 +28,4 @@ export default function Numbers() {
       ))}
     </StyledDiv>
   );
-
-  function handleClick(text) {
-    dispatch(addCharacter(text));
-  }
 }
