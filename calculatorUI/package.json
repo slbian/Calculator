@@ -10,7 +10,7 @@
     "react-dom": "^16.8.6",
     "react-router-dom": "^5.0.1",
     "react-router-redux": "^5.0.0-alpha.9",
-    "react-scripts": "3.0.1",
+    "react-scripts": "^3.0.1",
     "styled-components": "^4.3.2",
     "styled-tooltip-component": "^3.0.1"
   },
@@ -33,7 +33,7 @@
     ]
   },
   "devDependencies": {
-    "eslint": "^5.16.0",
+    "eslint": "^6.1.0",
     "eslint-config-airbnb": "^17.1.1",
     "eslint-config-prettier": "^6.0.0",
     "eslint-plugin-import": "^2.18.2",
