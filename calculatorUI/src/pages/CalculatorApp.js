@@ -69,6 +69,30 @@ const StyledDiv = styled.div`
 export default function CalculatorApp() {
   const { state, dispatch } = useContext(Store);
 
+  async function mount() {
+    const token = window.localStorage.getItem('token');
+    if (token) {
+      const activeUserResponse = await getActiveUser();
+      const allUsersResponse = await getScoreboardUsers();
+      const allThemesResponse = await getAllThemes(); // return [ {id: 1, color: 'tomato}...
+
+      if (activeUserResponse.data && allUsersResponse.data && allThemesResponse) {
+        dispatch(
+          mountCalculator({
+            activeUser: activeUserResponse.data,
+            users: allUsersResponse.data,
+            themes: allThemesResponse.data
+          })
+        );
+      } else {
+        console.log('MOUNTING FAILED');
+      }
+    } else {
+      console.log('MOUNT: no token');
+      history.push('/login');
+    }
+  }
+
   useEffect(() => {
     mount();
   }, []); // [] means can only get called once
@@ -105,28 +129,4 @@ export default function CalculatorApp() {
       </div>
     </StyledDiv>
   );
-
-  async function mount() {
-    const token = window.localStorage.getItem('token');
-    if (token) {
-      const activeUserResponse = await getActiveUser();
-      const allUsersResponse = await getScoreboardUsers();
-      const allThemesResponse = await getAllThemes(); // return [ {id: 1, color: 'tomato}...
-
-      if (activeUserResponse.data && allUsersResponse.data && allThemesResponse) {
-        dispatch(
-          mountCalculator({
-            activeUser: activeUserResponse.data,
-            users: allUsersResponse.data,
-            themes: allThemesResponse.data
-          })
-        );
-      } else {
-        console.log('MOUNTING FAILED');
-      }
-    } else {
-      console.log('MOUNT: no token');
-      history.push('/login');
-    }
-  }
 }

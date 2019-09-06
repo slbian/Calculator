@@ -1,10 +1,11 @@
 import React, { useEffect, useContext } from 'react';
 import styled from 'styled-components';
-import { Store } from '../state/store';
 
+import { logout } from '../state/actions';
+import { Store } from '../state/store';
+import AuthChoices from '../components/AuthChoices';
 import Login from '../components/Login';
 import Register from '../components/Register';
-import AuthChoices from '../components/AuthChoices';
 
 const StyledDiv = styled.div`
   background-color: seagreen;
@@ -17,9 +18,10 @@ const StyledDiv = styled.div`
 `;
 
 export default function AuthPage() {
-  const { state } = useContext(Store);
+  const { state, dispatch } = useContext(Store);
   useEffect(() => {
     window.localStorage.clear();
+    dispatch(logout());
   }, []);
 
   const form = state.authChoice === 'login' ? <Login /> : <Register />;

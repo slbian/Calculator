@@ -4,6 +4,9 @@ export const addCharacter = char => {
 export const clearScreen = () => {
   return { type: 'clearScreen' };
 };
+export const logout = () => {
+  return { type: 'logout' };
+};
 export const mountCalculator = pageLoad => {
   return { type: 'mountCalculator', payload: pageLoad };
 };

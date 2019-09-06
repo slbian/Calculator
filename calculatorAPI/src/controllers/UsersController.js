@@ -43,9 +43,10 @@ export default class UsersController extends EntityController {
       }
 
       this.logger.trace('UsersController.getActiveUser/output: ', { user });
-      res.json(user);
+      return res.json(user);
     } catch (err) {
       this.logger.trace('UsersController.getActiveUser/error: ', { err });
+      return res.status(500);
     }
   };
 

@@ -23,6 +23,8 @@ const reducer = (state, action) => {
       };
     case 'clearScreen':
       return { ...state, displayText: '' };
+    case 'logout':
+      return initialState;
     case 'mountCalculator':
       return {
         ...state,

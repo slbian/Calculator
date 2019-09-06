@@ -37,7 +37,6 @@ const StyledDiv = styled.div`
 export default function Logout() {
   async function handleLogoutRequest(event) {
     event.preventDefault();
-    window.localStorage.clear();
     history.push('/login');
   }
 

@@ -3,11 +3,6 @@ module.exports = {
   clearMocks: true,
   restoreMocks: true,
   collectCoverage: true,
-  collectCoverageFrom: [
-    '**/*.{js,jsx}',
-    '!**/node_modules/**',
-    '!**/vendor/**',
-  ],
   moduleNameMapper: {
     '.(scss)$': '/config/module-mock.js',
   },

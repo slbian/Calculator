@@ -42,6 +42,7 @@ router.get('/', usersController.getAllUsers);
 //   // setTimeout(() => res.json(users), 1000);
 // });
 
+// express calls 2nd method and passes req, res object
 router.get('/active', usersController.getActiveUser);
 // router.get('/active', async (req, res) => {
 //   let user = req.actor;
