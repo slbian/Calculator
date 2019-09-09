@@ -54,17 +54,15 @@ export default class UsersController extends EntityController {
     // route "/changeTheme"
     try {
       const actor = req.actor;
-      const themeId = req.query.themeId; // new color
-      // const userId = req.query.themeId;
+      const themeId = req.query ? req.query.themeId : undefined; // new color
 
-      // TODO: make logger take in name of the class
       this.logger.trace('UsersController.updateActiveUserTheme/input: ', {
         actor,
         themeId,
       });
 
-      if (!actor || !themeId) {
-        throw this.createErrorInvalidInput('actor, themeId');
+      if (actor === undefined || themeId === undefined) {
+        throw this.createErrorInvalidInput('actor', 'themeId');
       }
 
       const newThemeSuccess = await this.usersService.updateActiveUserTheme({
@@ -82,11 +80,12 @@ export default class UsersController extends EntityController {
       this.logger.trace('UsersController.updateActiveUserTheme/output: ', {
         newThemeSuccess,
       });
-      res.json(newThemeSuccess);
+      return res.json(newThemeSuccess);
     } catch (err) {
       this.logger.trace('UsersController.updateActiveUserTheme/error: ', {
         err,
       });
+      return res.status(500);
     }
   };
 
@@ -117,9 +116,10 @@ export default class UsersController extends EntityController {
       this.logger.trace('UsersController.getAllUsers/output: ', {
         orderedUsers,
       });
-      res.json(orderedUsers);
+      return res.json(orderedUsers);
     } catch (err) {
       this.logger.trace('UsersController.getAllUsers/error: ', err);
+      return res.status(500);
     }
   };
 }
