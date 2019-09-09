@@ -96,8 +96,7 @@ describe('updateActiveUserTheme - UsersController', () => {
     const req = {};
     const actual = await usersController.updateActiveUserTheme(req, res);
     expect(usersController.createErrorInvalidInput).toHaveBeenCalledWith(
-      'actor',
-      'themeId'
+      'actor, themeId'
     );
     expect(usersController.createErrorInvalidInput).toHaveBeenCalledTimes(1);
     expect(actual).toEqual(500);
@@ -144,8 +143,7 @@ describe('updateActiveUserTheme - UsersController', () => {
     const req = {};
     const actual = await usersController.updateActiveUserTheme(req, res);
     expect(usersController.createErrorInvalidInput).toHaveBeenCalledWith(
-      'actor',
-      'themeId'
+      'actor, themeId'
     );
     expect(usersController.createErrorInvalidInput).toHaveBeenCalledTimes(1);
     expect(actual).toEqual(500);

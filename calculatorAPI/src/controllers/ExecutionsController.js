@@ -9,7 +9,7 @@ export default class ExecutionsController extends EntityController {
   addExecution = async (req, res) => {
     try {
       const actor = req.actor;
-      const equation = req.body.displayText;
+      const equation = req.body ? req.body.displayText : undefined;
 
       // TODO: make logger take in name of the class
       this.logger.trace('ExecutionsController.addExecution/input: ', {
@@ -33,11 +33,12 @@ export default class ExecutionsController extends EntityController {
       this.logger.trace('ExecutionsController.addExecution/output: ', {
         newExecution,
       });
-      res.json(newExecution);
+      return res.json(newExecution);
     } catch (err) {
       this.logger.trace('ExecutionsController.addExecution/error: ', {
         err,
       });
+      return res.status(500);
     }
   };
 }

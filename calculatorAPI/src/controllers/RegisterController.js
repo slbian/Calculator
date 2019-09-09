@@ -37,7 +37,7 @@ export default class UsersController extends EntityController {
         newUserResponse,
       });
 
-      res.json(newUserResponse);
+      return res.json(newUserResponse);
     } catch (err) {
       return res.status(409).send('Username taken');
       // this.logger.trace('RegisterController.addUser/error: ', {

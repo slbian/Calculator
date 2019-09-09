@@ -62,7 +62,7 @@ export default class UsersController extends EntityController {
       });
 
       if (actor === undefined || themeId === undefined) {
-        throw this.createErrorInvalidInput('actor', 'themeId');
+        throw this.createErrorInvalidInput('actor, themeId');
       }
 
       const newThemeSuccess = await this.usersService.updateActiveUserTheme({

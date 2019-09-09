@@ -30,11 +30,12 @@ export default class ThemesController extends EntityController {
       this.logger.trace('ThemesController.getAllThemes/output: ', {
         allThemes,
       });
-      res.json(allThemes);
+      return res.json(allThemes);
     } catch (err) {
       this.logger.trace('ThemesController.getAllThemes/error: ', {
         err,
       });
+      return res.status(500);
     }
   };
 }
