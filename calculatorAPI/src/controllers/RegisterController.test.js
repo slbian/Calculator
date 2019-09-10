@@ -1,7 +1,7 @@
 import RegisterController from './RegisterController';
 
 // https://jestjs.io/docs/en/expect
-describe.only('addUser - RegisterController', () => {
+describe('addUser - RegisterController', () => {
   const usersService = {
     addUser: jest.fn(
       () =>
@@ -24,8 +24,7 @@ describe.only('addUser - RegisterController', () => {
   const req = { body: { username: 'fake', password: 'fake' } };
   const res = {
     json: () => 200,
-    status: () => 409,
-    send: () => 'Username taken',
+    status: () => 409, //send: {() => 'Username taken'}
   };
   it('returns as expected', async () => {
     const actual = await registerController.addUser(req, res);

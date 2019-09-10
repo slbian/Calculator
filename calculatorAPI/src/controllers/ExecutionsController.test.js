@@ -1,7 +1,25 @@
 import ExecutionsController from './ExecutionsController';
 
+// import axios from 'axios';
+// import express from 'express';
+// let app = express();
+
 // https://jestjs.io/docs/en/expect
+
 describe('addExecution - ExecutionsController', () => {
+  // beforeAll(() => {
+  //   app.get('/', (req, res) => res.send('Hi there friend'));
+  //   return app.listen(100);
+  // });
+
+  // afterAll(() => {
+  //   try {
+  //     app = {};
+  //   } catch (e) {
+  //     console.log('> > > ', e);
+  //   }
+  // });
+
   const executionsService = {
     addExecution: jest.fn(() => new Promise(resolve => resolve(3))),
   };
@@ -21,6 +39,9 @@ describe('addExecution - ExecutionsController', () => {
   const res = { json: () => 200, status: () => 500 };
   it('returns as expected', async () => {
     const actual = await executionsController.addExecution(req, res);
+
+    // const response = await axios.get('http://localhost:100/');
+    // console.log('>>>>>>>>>>>>>>> ', response.data);
 
     expect(executionsService.addExecution).toHaveBeenCalledTimes(1);
     expect(executionsService.addExecution).toHaveBeenCalledWith({

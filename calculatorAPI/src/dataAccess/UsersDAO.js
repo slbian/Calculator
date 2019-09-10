@@ -8,14 +8,14 @@ export default class UsersDao extends EntityDao {
 
   async updateActiveUserTheme(userId, themeId) {
     try {
-      this.logger.trace('UsersDao.updateActiveUserTheme/input ', {
+      this.logger.trace(this.name + '.updateActiveUserTheme/input ', {
         userId,
         themeId,
       });
 
       if (!userId || !themeId) {
         this.logger.trace(
-          'UsersDao.updateActiveUserTheme/error: ',
+          this.name + '.updateActiveUserTheme/error: ',
           userId,
           themeId
         );
@@ -29,25 +29,30 @@ export default class UsersDao extends EntityDao {
         .returning('*');
 
       if (!user) {
-        this.logger.trace('UsersDao.updateActiveUserTheme/error: ', user);
+        this.logger.trace(this.name + '.updateActiveUserTheme/error: ', user);
         throw this.createErrorEntityNotFound('userId');
       }
 
       delete user.hashedPassword;
-      this.logger.trace('UsersDao.updateActiveUserTheme/output: ', { user });
+      this.logger.trace(this.name + '.updateActiveUserTheme/output: ', {
+        user,
+      });
       return user;
     } catch (err) {
-      this.logger.trace('UsersDao.updateActiveUserTheme/error: ', { err });
+      this.logger.trace(this.name + '.updateActiveUserTheme/error: ', { err });
     }
   }
 
   async addUser(username, password) {
     try {
-      this.logger.trace('UsersDao.addUser/input ', { username, password });
+      this.logger.trace(this.name + '.addUser/input ', { username, password });
 
       if (!username || !password) {
-        this.logger.trace('UsersDao.addUser/error: ', { username, password });
-        throw this.createErrorInvalidInput('username');
+        this.logger.trace(this.name + '.addUser/error: ', {
+          username,
+          password,
+        });
+        throw this.createErrorInvalidInput('username, password');
       }
 
       const now = new Date().toISOString();
@@ -64,31 +69,31 @@ export default class UsersDao extends EntityDao {
         .returning('*');
 
       if (!user) {
-        this.logger.trace('UsersDao.addUser/no user: ', { user });
+        this.logger.trace(this.name + '.addUser/no user: ', { user });
         throw this.createErrorEntityNotFound('userId');
       }
 
       delete user.hashedPassword;
-      this.logger.trace('UsersDao.addUser/output: ', { user });
+      this.logger.trace(this.name + '.addUser/output: ', { user });
       return user;
     } catch (err) {
-      this.logger.trace('UsersDao.addUser/error: ', { err });
+      this.logger.trace(this.name + '.addUser/error: ', { err });
     }
   }
 
   async getAllUsers() {
     try {
-      this.logger.trace('UsersDao.getAllUsers/called');
+      this.logger.trace(this.name + '.getAllUsers/called');
       let users = await this.db.select('*').from(this.entityName);
 
       users = users.map(user => {
         delete user.hashedPassword;
         return user;
       });
-      this.logger.trace('UsersDao.getAllUsers/output ', users);
+      this.logger.trace(this.name + '.getAllUsers/output ', users);
       return users;
     } catch (err) {
-      this.logger.trace('UsersDao.getAllUsers/error: ', { err });
+      this.logger.trace(this.name + '.getAllUsers/error: ', { err });
     }
   }
 }

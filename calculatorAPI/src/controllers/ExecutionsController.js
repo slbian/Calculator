@@ -9,7 +9,7 @@ export default class ExecutionsController extends EntityController {
   addExecution = async (req, res) => {
     try {
       const actor = req.actor;
-      const equation = req.body ? req.body.displayText : undefined;
+      const equation = req.body ? req.body.displayText : undefined; //TODO: lodas
 
       // TODO: make logger take in name of the class
       this.logger.trace('ExecutionsController.addExecution/input: ', {

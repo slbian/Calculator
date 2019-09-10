@@ -8,13 +8,14 @@
 import EntityDao from './EntityDao';
 
 export default class ExecutionsDao extends EntityDao {
-  constructor({ logger, db, entityName, dao }) {
-    super({ logger, db, entityName, dao }); // before I do this constructor, I call parent's constructor
+  constructor({ logger, db, entityName }) {
+    super({ logger, db, entityName }); // before I do this constructor, I call parent's constructor
   }
+  name = this.constructor.name;
 
   async getScoreByUserId(userId) {
     try {
-      this.logger.trace(this.dao + '.getScoreByUserId/input: ', userId);
+      this.logger.trace(this.name + '.getScoreByUserId/input: ', userId);
       if (!userId) {
         throw this.createErrorInvalidInput('userId');
       }
@@ -26,56 +27,62 @@ export default class ExecutionsDao extends EntityDao {
         .where('userId', userId);
 
       if (!scores) {
-        this.logger.trace(this.dao + '.getScoreByUserId/output: ', 0);
+        this.logger.trace(this.name + '.getScoreByUserId/output: ', 0);
         return 0;
       }
-
       const score = scores.sum;
-      this.logger.trace(this.dao + '.getScoreByUserId/output: ', score);
+
+      this.logger.trace(this.name + '.getScoreByUserId/output: ', score);
+
       return score;
     } catch (err) {
-      this.logger.trace(this.dao + '.getScoreByUserId/error: ', { err });
+      this.logger.trace(this.name + '.getScoreByUserId/error: ', { err });
+      throw err;
     }
   }
 
   async getAllScores() {
     try {
-      this.logger.trace(this.dao + '.getAllScores/called');
-      const score = await this.db
+      this.logger.trace(this.name + '.getAllScores/called');
+      const scores = await this.db
         .select('userId')
         .sum('score')
         .from(this.entityName)
         .groupBy('userId');
 
-      this.logger.trace(this.dao + '.getAllScores/output: ', score);
-      return score;
+      this.logger.trace(this.name + '.getAllScores/output: ', scores);
+      return scores;
     } catch (err) {
-      this.logger.trace(this.dao + '.getAllScores/error: ', { err });
+      this.logger.trace(this.name + '.getAllScores/error: ', { err });
+      throw err;
     }
   }
 
   async addExecution(userId, equation) {
     try {
-      this.logger.trace(this.dao + '.recordEquation/input: ', userId, equation);
+      this.logger.trace(
+        this.name + '.recordEquation/input: ',
+        userId,
+        equation
+      );
       if (!userId || !equation) {
-        throw this.createErrorInvalidInput('userId');
+        throw this.createErrorInvalidInput('userId, equation');
       }
-
-      const [executions] = await this.db(this.entityName)
+      const executions = await this.db(this.entityName)
         .insert({
           userId: userId,
           equation: equation,
           score: Number(eval(equation).toString().length),
         })
         .returning('*');
-
       if (!executions) {
         throw this.createErrorEntityNotFound('insert execution');
       }
-      this.logger.trace(this.dao + '.recordEquation/output: ', executions);
+      this.logger.trace(this.name + '.recordEquation/output: ', executions);
       return executions;
     } catch (err) {
-      this.logger.trace(this.dao + '.recordEquation/error: ', { err });
+      this.logger.trace(this.name + '.recordEquation/error: ', { err });
+      throw err;
     }
   }
 }

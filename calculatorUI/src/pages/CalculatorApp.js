@@ -76,7 +76,13 @@ export default function CalculatorApp() {
       const allUsersResponse = await getScoreboardUsers();
       const allThemesResponse = await getAllThemes(); // return [ {id: 1, color: 'tomato}...
 
-      if (activeUserResponse.data && allUsersResponse.data && allThemesResponse) {
+      if (
+        activeUserResponse &&
+        allUsersResponse &&
+        activeUserResponse.data &&
+        allUsersResponse.data &&
+        allThemesResponse
+      ) {
         dispatch(
           mountCalculator({
             activeUser: activeUserResponse.data,

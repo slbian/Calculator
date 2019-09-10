@@ -51,7 +51,6 @@ export default class UsersService extends EntityService {
       this.logger.trace('UsersService.addUser/output: ', { newUserResponse });
       return newUserResponse;
     } catch (err) {
-      console.log({ err });
       this.logger.trace('UsersService.addUser/catch error: ', {
         err,
       });

@@ -28,8 +28,8 @@ export default class ExecutionsService extends EntityService {
       this.logger.trace('ExecutionsService.getScoreByUserId/output: ', score);
       return score;
     } catch (err) {
-      console.log(err);
       this.logger.trace('ExecutionsService.getScoreByUserId/error: ', { err });
+      throw err;
     }
   }
 
@@ -55,8 +55,8 @@ export default class ExecutionsService extends EntityService {
       );
       return newExecution;
     } catch (err) {
-      console.log(err);
       this.logger.trace('ExecutionsService.addExecution/error: ', { err });
+      throw err;
     }
   }
 }

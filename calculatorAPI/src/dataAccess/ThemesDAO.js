@@ -7,7 +7,7 @@ export default class ThemesDao extends EntityDao {
 
   async getThemeByThemeId(themeId) {
     try {
-      this.logger.trace('ThemesDao.getThemeByUserId/input: ', themeId);
+      this.logger.trace(this.name + '.getThemeByUserId/input: ', themeId);
       if (!themeId) {
         throw this.createErrorInvalidInput('userId');
       }
@@ -15,22 +15,24 @@ export default class ThemesDao extends EntityDao {
         .select('*')
         .from(this.entityName)
         .where('id', themeId);
-      this.logger.trace('ThemesDao.getThemesByUserId/output: ', theme);
+      this.logger.trace(this.name + '.getThemesByUserId/output: ', theme);
       return theme;
     } catch (err) {
-      this.logger.trace('ThemesDao.getThemesByUserId/error: ', { err });
+      this.logger.trace(this.name + '.getThemesByUserId/error: ', { err });
+      throw err;
     }
   }
 
   async getAllThemes() {
     try {
-      this.logger.trace('ThemesDao.getAllThemes/called');
+      this.logger.trace(this.name + '.getAllThemes/called');
 
       const themes = await this.db.select('*').from(this.entityName);
-      this.logger.trace('ThemesDao.getAllThemes/output: ', themes);
+      this.logger.trace(this.name + '.getAllThemes/output: ', themes);
       return themes;
     } catch (err) {
-      this.logger.trace('ThemesDao.getAllThemes/error: ', { err });
+      this.logger.trace(this.name + '.getAllThemes/error: ', { err });
+      throw err;
     }
   }
 }
