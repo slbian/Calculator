@@ -28,32 +28,6 @@ export default class ThemesService extends EntityService {
     }
   }
 
-  async getThemeByColor({ actor, userId, color }) {
-    try {
-      this.logger.trace('ThemesService.getThemeByColor/input: ', {
-        actor,
-        userId,
-        color,
-      });
-      if (!actor || !userId || !color) {
-        throw this.createErrorInvalidInput('actor, userId, color');
-      }
-      if (actor.id !== userId) {
-        throw this.createErrorPermissionDenied('actor.id != userId');
-      }
-
-      const theme = await this.themesDao.getThemeByThemeId(actor.themeId);
-      if (!theme) {
-        throw this.createErrorUnexpected('getThemeByTHemeId');
-      }
-
-      this.logger.trace('ThemesService.getThemeByColor/output: ', theme);
-      return theme;
-    } catch (err) {
-      this.logger.trace('ThemesService.getThemeByColor/error: ', { err });
-    }
-  }
-
   async getAllThemes({ actor, userId }) {
     try {
       this.logger.trace('ThemesService.getAllThemes/input: ', {

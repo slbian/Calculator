@@ -70,7 +70,7 @@ describe('UsersDao', () => {
       expect(actual).toEqual(user);
     });
 
-    it('throws createErrorInvalidInput when no userId', async () => {
+    it('throws createErrorInvalidInput when no username/password', async () => {
       try {
         await usersDao.addUser(undefined);
 

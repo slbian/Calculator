@@ -44,7 +44,7 @@ describe('ThemesDao', () => {
       expect(actual).toEqual(theme);
     });
 
-    it('throws createErrorInvalidInput when no userId', async () => {
+    it('throws createErrorInvalidInput when no themeId', async () => {
       try {
         await themesDao.getThemeByThemeId(undefined);
 

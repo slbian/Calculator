@@ -22,6 +22,7 @@ export default class UsersService extends EntityService {
       if (actor.id !== userId) {
         throw this.createErrorPermissionDenied('actor.id != userId');
       }
+      console.log(actor, userId, themeId);
 
       const successfulThemeUpdate = await this.usersDao.updateActiveUserTheme(
         userId,
@@ -41,7 +42,7 @@ export default class UsersService extends EntityService {
     try {
       this.logger.trace('UsersService.addUser/input: ', { username, password });
       if (!username || !password) {
-        throw this.createErrorInvalidInput('username');
+        throw this.createErrorInvalidInput('username, password');
       }
       const newUserResponse = await this.usersDao.addUser(username, password);
 
