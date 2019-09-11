@@ -14,7 +14,6 @@ const StyledDiv = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  /* min-height: 50vh; */
 `;
 
 export default function AuthPage() {
@@ -28,6 +27,7 @@ export default function AuthPage() {
 
   return (
     <StyledDiv>
+      <h1>Welcome!</h1>
       <p>Sign-in required to use calculator!</p>
       <AuthChoices />
       {form}
