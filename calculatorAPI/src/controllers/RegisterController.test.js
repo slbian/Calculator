@@ -1,12 +1,9 @@
 import RegisterController from './RegisterController';
 
-// https://jestjs.io/docs/en/expect
 describe('addUser - RegisterController', () => {
+  const fakeNewUser = { id: 1, themeId: 1, username: 'fake' };
   const usersService = {
-    addUser: jest.fn(
-      () =>
-        new Promise(resolve => resolve({ id: 1, themeId: 1, username: 'fake' }))
-    ),
+    addUser: jest.fn().mockReturnValue(fakeNewUser),
   };
 
   const logger = {
@@ -21,13 +18,22 @@ describe('addUser - RegisterController', () => {
     registerController.createErrorInvalidInput
   );
 
-  const req = { body: { username: 'fake', password: 'fake' } };
-  const res = {
-    json: () => 200,
-    status: () => 409, //send: {() => 'Username taken'}
+  const mockRequest = fakeReq => fakeReq;
+  const mockResponse = () => {
+    const res = {};
+    // mock return of res to allow for chaining of methods (ex res.status().send().json()...)
+    res.status = jest.fn().mockReturnValue(res);
+    res.json = jest.fn().mockReturnValue(res);
+    res.send = jest.fn().mockReturnValue(res);
+    return res;
   };
-  it('returns as expected', async () => {
-    const actual = await registerController.addUser(req, res);
+  it.only('returns as expected', async () => {
+    const fakeReq = { body: { username: 'fake', password: 'fake' } };
+
+    const req = mockRequest(fakeReq);
+    const res = mockResponse(newUserResponse);
+
+    await registerController.addUser(req, res);
 
     expect(usersService.addUser).toHaveBeenCalledTimes(1);
     expect(usersService.addUser).toHaveBeenCalledWith({
@@ -35,12 +41,15 @@ describe('addUser - RegisterController', () => {
       password: req.body.password,
     });
 
-    expect(actual).toEqual(200);
+    expect(res.json).toHaveBeenCalledWith(newUserResponse);
   });
 
   it('throws createErrorInvalidInput when no actor on req body', async () => {
-    const req = { body: {} };
-    const actual = await registerController.addUser(req, res);
+    const fakeReq = { body: {} };
+    const req = mockRequest(fakeReq);
+    const res = mockResponse();
+    await registerController.addUser(req, res);
+
     expect(registerController.createErrorInvalidInput).toHaveBeenCalledTimes(1);
     expect(registerController.createErrorInvalidInput).toHaveBeenCalledWith(
       'username, password'

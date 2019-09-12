@@ -1,30 +1,12 @@
 import ExecutionsController from './ExecutionsController';
 
-// import axios from 'axios';
-// import express from 'express';
-// let app = express();
-
-// https://jestjs.io/docs/en/expect
-
 describe('addExecution - ExecutionsController', () => {
-  // beforeAll(() => {
-  //   app.get('/', (req, res) => res.send('Hi there friend'));
-  //   return app.listen(100);
-  // });
-
-  // afterAll(() => {
-  //   try {
-  //     app = {};
-  //   } catch (e) {
-  //     console.log('> > > ', e);
-  //   }
-  // });
-
+  const newExecution = { id: 3, equation: '3+4' };
   const executionsService = {
-    addExecution: jest.fn(() => new Promise(resolve => resolve(3))),
+    addExecution: jest.fn().mockReturnValue(newExecution),
   };
   const logger = {
-    trace: jest.fn(() => {}),
+    trace: jest.fn().mockReturnValue({}),
   };
   const executionsController = new ExecutionsController({
     executionsService,
@@ -34,14 +16,22 @@ describe('addExecution - ExecutionsController', () => {
   executionsController.createErrorInvalidInput = jest.fn(
     executionsController.createErrorInvalidInput
   );
-
-  const req = { actor: { id: 2 }, body: { displayText: '3+4=' } };
-  const res = { json: () => 200, status: () => 500 };
+  const mockRequest = fakeReq => fakeReq;
+  const mockResponse = () => {
+    const res = {};
+    // mock return of res to allow for chaining of methods (ex res.status().send().json()...)
+    res.status = jest.fn().mockReturnValue(res);
+    res.json = jest.fn().mockReturnValue(res);
+    return res;
+  };
   it('returns as expected', async () => {
-    const actual = await executionsController.addExecution(req, res);
-
-    // const response = await axios.get('http://localhost:100/');
-    // console.log('>>>>>>>>>>>>>>> ', response.data);
+    const fakeReq = {
+      actor: { id: 2 },
+      body: { displayText: '3+4' },
+    };
+    const req = mockRequest(fakeReq);
+    const res = mockResponse(newExecution);
+    await executionsController.addExecution(req, res);
 
     expect(executionsService.addExecution).toHaveBeenCalledTimes(1);
     expect(executionsService.addExecution).toHaveBeenCalledWith({
@@ -50,18 +40,20 @@ describe('addExecution - ExecutionsController', () => {
       equation: req.body.displayText,
     });
 
-    expect(actual).toEqual(200);
+    expect(res.json).toHaveBeenCalledWith(newExecution);
   });
 
   it('throws createErrorInvalidInput when no actor on req body', async () => {
-    const req = {};
-    const actual = await executionsController.addExecution(req, res);
+    const fakeReq = {};
+    const req = mockRequest(fakeReq);
+    const res = mockResponse();
+    await executionsController.addExecution(req, res);
     expect(executionsController.createErrorInvalidInput).toHaveBeenCalledTimes(
       1
     );
     expect(executionsController.createErrorInvalidInput).toHaveBeenCalledWith(
       'actor, equation'
     );
-    expect(actual).toEqual(500);
+    expect(res.status).toHaveBeenCalledWith(500);
   });
 });
