@@ -33,7 +33,7 @@ export default class ExecutionsController extends EntityController {
       this.logger.trace('ExecutionsController.addExecution/output: ', {
         newExecution,
       });
-      return res.json(newExecution);
+      return res.status(200).json(newExecution);
     } catch (err) {
       this.logger.trace('ExecutionsController.addExecution/error: ', {
         err,
