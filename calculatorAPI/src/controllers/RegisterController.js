@@ -30,7 +30,8 @@ export default class UsersController extends EntityController {
           newUserResponse,
         });
         // throw this.createErrorUnexpected('newUserResponse');
-        return res.status(409).send('Username taken');
+        // .send('Username taken')
+        return res.status(409);
       }
 
       this.logger.trace('RegisterController.addUser/output: ', {
@@ -39,7 +40,8 @@ export default class UsersController extends EntityController {
 
       return res.json(newUserResponse);
     } catch (err) {
-      return res.status(409).send('Username taken');
+      return res.status(409);
+      // .send('Username taken');
       // this.logger.trace('RegisterController.addUser/error: ', {
       //   err,
       // });
