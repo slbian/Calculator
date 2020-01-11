@@ -41,6 +41,7 @@ const StyledDiv = styled.div`
 `;
 export default function Profile({ username, score }) {
   const { state, dispatch } = useContext(Store);
+  
   const arrow=state.profileConfigOpen ? 'https://image.flaticon.com/icons/png/512/25/25649.png' : 'https://image.flaticon.com/icons/png/512/25/25629.png';
   return (
     <StyledDiv onClick={() => dispatch(toggleProfileConfig())}>

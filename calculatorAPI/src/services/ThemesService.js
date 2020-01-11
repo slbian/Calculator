@@ -6,6 +6,7 @@ export default class ThemesService extends EntityService {
     this.themesDao = themesDao;
   }
 
+  // used by UsersController
   async getThemeByUserId({ actor, userId }) {
     try {
       this.logger.trace('ThemesService.getThemeByUserId/input: ', {
