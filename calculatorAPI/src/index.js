@@ -3,8 +3,8 @@ import bodyParser from 'body-parser';
 import cors from '../node_modules/cors/lib';
 import executionsRouter from './routes/executions';
 import express from '../node_modules/express';
-// import socketIo from '../node_modules/socket.io'; // socket.io
-// import http from 'http'; // socket.io
+import socketIo from '../node_modules/socket.io'; // socket.io
+import http from 'http'; // socket.io
 import morgan from 'morgan';
 import passport from './Passport/jwtStrategy';
 import themesRouter from './routes/themes';
@@ -15,24 +15,26 @@ import registerRouter from './routes/register';
 const PORT = process.env.PORT || 3002;
 const app = express();
 
+// Sharon
 // const server = http.createServer(app);
 // const io = socketIo(server);
 
+
 // io.on("connection", socket => {
-//   console.log("New client connected");
+  //   console.log("New client connected");
+  //   //Here we broadcast it out to all other sockets EXCLUDING the socket which sent us the data
+  //   socket.broadcast.emit("outgoing data", {num: 12});
+  // });
+  
+  // server.listen(PORT, () => console.log(`http listening on port ${PORT}`));
+  
+  // chuck
+  export const socketServer = http.Server(); // create a server
+  export const io = socketIo(socketServer);
 
-//   //Here we listen on a new namespace called "incoming data"
-//   socket.on("incoming data", (data)=>{
-//       //Here we broadcast it out to all other sockets EXCLUDING the socket which sent us the data
-//      socket.broadcast.emit("outgoing data", {num: data});
-//   });
-
-//   //A special namespace "disconnect" for when a client disconnects
-//   socket.on("disconnect", () => console.log("Client disconnected"));
-// });
-
-// server.listen(PORT, () => console.log(`http listening on port ${PORT}`));
-
+  socketServer.listen(3003, "127.0.0.1", () => { // different port, anyone can listen to it
+    console.log("UNAUTHENTICATED SOCKET LISTENING ON 3003");
+  });
 
 // const memory = new Memory();
 

@@ -11,6 +11,7 @@
     "react-router-dom": "^5.0.1",
     "react-router-redux": "^5.0.0-alpha.9",
     "react-scripts": "^3.0.1",
+    "socket.io-client": "^2.3.0",
     "styled-components": "^4.3.2",
     "styled-tooltip-component": "^3.0.1"
   },

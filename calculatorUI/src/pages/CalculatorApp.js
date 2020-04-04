@@ -2,7 +2,7 @@ import React, { useEffect, useContext } from 'react'; // useState, useReducer
 import styled from 'styled-components';
 
 import './CalculatorApp.css';
-import { mountCalculator } from '../state/actions';
+import { mountCalculator, setUsers } from '../state/actions';
 import { Store } from '../state/store';
 import Calculator from '../components/calculator/Calculator';
 import getActiveUser from '../api/getActiveUser';
@@ -13,6 +13,8 @@ import Logout from '../components/Logout';
 import Profile from '../components/Profile';
 import Scoreboard from '../components/Scoreboard';
 import ThemePicker from '../components/ThemePicker';
+
+import socketIOClient from 'socket.io-client';
 
 // TODO: memoization, add different emojis, change eval, live data, error handling/defensive programming, testing
 // DONE: database, add useState hooks, refactor to useReducer, refactor to useContext, styled components, add styling to database, authentication w argon2, layered route/controller/service/data access object API,
@@ -101,7 +103,17 @@ export default function CalculatorApp() {
 
   useEffect(() => {
     mount();
-  }, []); // [] means can only get called once
+
+    const socket = socketIOClient('http://localhost:3003'); // looking at port 3003
+    
+    socket.on('update-scoreboard', data => {
+      console.log('socket data = ', data)
+
+      dispatch(setUsers(data.users));
+    }); // if we hear 'update-scoreboard' event, do console log
+
+  //eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // [] means can only get called once 
 
   if (!state || !state.activeUser || !state.users || !state.themes) {
     return null;

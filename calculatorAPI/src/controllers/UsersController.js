@@ -1,5 +1,6 @@
-import EntityController from './EntityController';
 import { sortBy } from 'lodash';
+
+import EntityController from './EntityController';
 
 export default class UsersController extends EntityController {
   constructor({ usersService, themesService, executionsService, logger }) {

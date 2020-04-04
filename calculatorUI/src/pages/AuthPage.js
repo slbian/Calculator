@@ -21,6 +21,7 @@ export default function AuthPage() {
   useEffect(() => {
     window.localStorage.clear();
     dispatch(logout());
+    //eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const form = state.authChoice === 'login' ? <Login /> : <Register />;

@@ -87,7 +87,7 @@ export default function Login() {
     }
     if (errorCode === 401) {
       setLoginMessage(copytext.errorMessage_auth);
-    } else {
+    } else if (errorCode) {
       setLoginMessage(copytext.errorMessage_default);
     }
   }

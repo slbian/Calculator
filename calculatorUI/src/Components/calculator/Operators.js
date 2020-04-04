@@ -53,15 +53,16 @@ export default function Operators() {
 
       const successfulExecution = await postExecution(state.displayText);
       const activeUserResponse = await getActiveUser();
-
+      
       if (!successfulExecution || !activeUserResponse) throw new Error();
+
+      // const response = await getScoreboardUsers();
+      // dispatch(setUsers(response.data));
 
       dispatch(setActiveUser(activeUserResponse.data));
       dispatch(setDisplayText(evaluatedValue));
       dispatch(setCleared());
 
-      const response = await getScoreboardUsers();
-      dispatch(setUsers(response.data));
     } catch (error) {
       console.log('ERROR FROM EVAL', error);
       dispatch(clearScreen());

@@ -45,13 +45,13 @@ export default function Profile({ username, score }) {
   const arrow=state.profileConfigOpen ? 'https://image.flaticon.com/icons/png/512/25/25649.png' : 'https://image.flaticon.com/icons/png/512/25/25629.png';
   return (
     <StyledDiv onClick={() => dispatch(toggleProfileConfig())}>
-      <upper><span role="img" aria-label="fire-emoji">
+      <div><span className="upper" role="img" aria-label="fire-emoji">
         🔥
       </span>
       <span>
         {username} : {score}
-      </span></upper>
-      <img src={arrow} ></img>
+      </span></div>
+      <img src={arrow} alt="arrow"></img>
     </StyledDiv>
   );
 }
