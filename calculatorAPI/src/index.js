@@ -11,6 +11,10 @@ import themesRouter from './routes/themes';
 import token from './routes/token';
 import usersRouter from './routes/users';
 import registerRouter from './routes/register';
+import jwt from 'jsonwebtoken';
+
+var jwtAuth = require('socketio-jwt-auth');
+
 
 const PORT = process.env.PORT || 3002;
 const app = express();
@@ -18,23 +22,14 @@ const app = express();
 // Sharon
 // const server = http.createServer(app);
 // const io = socketIo(server);
-
-
-// io.on("connection", socket => {
-  //   console.log("New client connected");
-  //   //Here we broadcast it out to all other sockets EXCLUDING the socket which sent us the data
-  //   socket.broadcast.emit("outgoing data", {num: 12});
-  // });
-  
-  // server.listen(PORT, () => console.log(`http listening on port ${PORT}`));
   
   // chuck
-  export const socketServer = http.Server(); // create a server
-  export const io = socketIo(socketServer);
+  // export const socketServer = http.Server(); // create an empty new server
+  // export const io = socketIo(socketServer);
 
-  socketServer.listen(3003, "127.0.0.1", () => { // different port, anyone can listen to it
-    console.log("UNAUTHENTICATED SOCKET LISTENING ON 3003");
-  });
+  // socketServer.listen(3003, "127.0.0.1", () => { // different port, anyone can listen to it
+  //   console.log("UNAUTHENTICATED SOCKET LISTENING ON 3003");
+  // });
 
 // const memory = new Memory();
 
@@ -71,6 +66,60 @@ app.use('/users', usersRouter);
 app.use('/executions', executionsRouter);
 app.use('/themes', themesRouter);
 
-app.listen(PORT, () => console.log(`Listening on port ${PORT}!`));
+// app.listen(PORT, () => console.log(`Listening on port ${PORT}!`)); // pre-sockets listener
 
-export default app;
+// Socket stuff below
+const socketServer = http.createServer(app); // new server based on our original express app
+
+// console.log(typeof app)
+// console.log("!!!", app)
+
+export const io = socketIo(socketServer, {
+  // get past cors
+  handlePreflightRequest: (req, res) => {
+    const headers = {
+      "Access-Control-Allow-Headers": "Content-Type, Authorization, x-auth-token",  // list of acceptable headers
+      "Access-Control-Allow-Origin": req.headers.origin,
+      "Access-Control-Allow-Credentials": true,
+    };
+    res.writeHead(200, headers);
+    res.end();
+  },
+});
+
+// New Authenticate package
+io.use((packet, next) => {
+  if(!packet.handshake || !packet.handshake.query.auth_token) {
+    return;
+  }
+
+  try{
+    console.log(packet, ">>>");
+    const decodedToken = jwt.verify(packet.handshake.query.auth_token, process.env.JWT_SECRET);
+    console.log('SUCCESS', decodedToken);
+
+    // TODO
+    // log id of the user
+    // publish the id of connected people, and show a popup for other users when someone logs in
+    // same for when someone logs out
+    // query the user from userservice
+    // something with next() to pass user object
+
+    next();
+  } catch(err) {
+    console.log(err);
+    next(err);
+  }
+})
+
+// useful log
+io.on("connection", () => {
+  console.log("Connected Successfully!");
+});
+
+io.on('error', function(err) {
+  throw new Error(err);
+});
+
+// new server that wraps the app
+socketServer.listen(PORT, () => console.log(`Listening on port ${PORT}!`));
