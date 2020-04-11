@@ -94,7 +94,7 @@ io.use((packet, next) => {
   }
 
   try{
-    console.log(packet, ">>>");
+    // console.log(packet.handshake.query.auth_token, ">>>");
     const decodedToken = jwt.verify(packet.handshake.query.auth_token, process.env.JWT_SECRET);
     console.log('SUCCESS', decodedToken);
 

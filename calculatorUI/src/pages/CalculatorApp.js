@@ -104,7 +104,6 @@ export default function CalculatorApp() {
   useEffect(() => {
     mount();
     const token = window.localStorage.getItem('token');
-    console.log(token, ">>>>>");
     const socket = socketIOClient('http://localhost:3002',{query: `auth_token=${token}`}); // looking at port 3003 (hacky way) // TODO: PORT environment variable
 
     socket.on('update-scoreboard', data => {
