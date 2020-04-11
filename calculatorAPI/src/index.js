@@ -98,7 +98,7 @@ io.use((packet, next) => {
     const decodedToken = jwt.verify(packet.handshake.query.auth_token, process.env.JWT_SECRET);
     console.log('SUCCESS', decodedToken);
 
-    // TODO
+    // TODO sockets
     // log id of the user
     // publish the id of connected people, and show a popup for other users when someone logs in
     // same for when someone logs out

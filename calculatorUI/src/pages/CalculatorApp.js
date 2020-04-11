@@ -92,6 +92,9 @@ export default function CalculatorApp() {
             themes: allThemesResponse.data
           })
         );
+
+        // log the active user
+
       } else {
         console.log('MOUNTING FAILED');
       }
@@ -105,9 +108,17 @@ export default function CalculatorApp() {
     mount();
     const token = window.localStorage.getItem('token');
     const socket = socketIOClient('http://localhost:3002',{query: `auth_token=${token}`}); // looking at port 3003 (hacky way) // TODO: PORT environment variable
+    
+    console.log("use effect");
+
+    socket.on('new-login', data => {
+      console.log('login socket data = ', data.user.username)
+      
+    }); 
 
     socket.on('update-scoreboard', data => {
-      console.log('socket data = ', data)
+      // console.log('socket data = ', data)
+      // data is all the active users
 
       dispatch(setUsers(data.users));
     }); // if we hear 'update-scoreboard' event, do console log
