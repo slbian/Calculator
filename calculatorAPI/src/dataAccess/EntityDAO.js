@@ -5,6 +5,11 @@ export default class EntityDao {
     this.entityName = entityName;
   }
 
+  async getById(id) {
+    const entity = await this.db.select('*').from(this.entityName).where({id});
+    return entity;
+  }
+
   // column does not exist
   createErrorInvalidInput(details) {
     return new Error(`INVALID_INPUT / ${details}`);

@@ -10,8 +10,10 @@ import passport from './Passport/jwtStrategy';
 import themesRouter from './routes/themes';
 import token from './routes/token';
 import usersRouter from './routes/users';
+import usersDao from './Instances/usersDao'
 import registerRouter from './routes/register';
 import jwt from 'jsonwebtoken';
+import { emit } from 'cluster';
 
 var jwtAuth = require('socketio-jwt-auth');
 
@@ -88,15 +90,19 @@ export const io = socketIo(socketServer, {
 });
 
 // New Authenticate package
-io.use((packet, next) => {
-  if(!packet.handshake || !packet.handshake.query.auth_token) {
+io.use(async (socket, next) => {
+  if(!socket.handshake || !socket.handshake.query.auth_token) {
     return;
   }
 
   try{
-    // console.log(packet.handshake.query.auth_token, ">>>");
-    const decodedToken = jwt.verify(packet.handshake.query.auth_token, process.env.JWT_SECRET);
+    // console.log(socket.handshake.query.auth_token, ">>>");
+    const decodedToken = jwt.verify(socket.handshake.query.auth_token, process.env.JWT_SECRET); // ensuring it was signed by my secret
     console.log('SUCCESS', decodedToken);
+
+    // got the user from dao
+    const actor = await usersDao.getById(decodedToken.userId);
+    socket.actor = actor; // TODO: if we want to share sockets this will break
 
     // TODO sockets
     // log id of the user
@@ -113,8 +119,15 @@ io.use((packet, next) => {
 })
 
 // useful log
-io.on("connection", () => {
-  console.log("Connected Successfully!");
+// listening to an event of its own ('connection') , and disconnection, on UI be prepared to receive 
+// this happens after authentication
+// 'new connection' msg
+// just emit here
+// do same for disconnect
+// how do i know who you are
+io.on("connection", socket => {
+  console.log("Connected Successfully!", socket.actor);
+  socket.broadcast.emit('new-connection', socket.actor) // emit to everyone except the one connecting (socket.broadcast means emit outwards)
 });
 
 io.on('error', function(err) {

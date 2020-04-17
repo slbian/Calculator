@@ -111,8 +111,8 @@ export default function CalculatorApp() {
     
     console.log("use effect");
 
-    socket.on('new-login', data => {
-      console.log('login socket data = ', data.user.username)
+    socket.on('new-connection', data => {
+      console.log('connection socket data = ', data)
       
     }); 
 
@@ -120,7 +120,7 @@ export default function CalculatorApp() {
       // console.log('socket data = ', data)
       // data is all the active users
 
-      dispatch(setUsers(data.users));
+      dispatch(setUsers(data.users)); 
     }); // if we hear 'update-scoreboard' event, do console log
 
   //eslint-disable-next-line react-hooks/exhaustive-deps

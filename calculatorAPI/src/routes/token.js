@@ -1,5 +1,3 @@
-import { io } from "../index";
-
 import * as express from 'express';
 import argon2 from 'argon2';
 import db from '../Instances/db';
@@ -28,8 +26,6 @@ router.post('/', async (req, res) => {
       issuer: 'calculator',
       expiresIn: '12h',
     });
-
-    io.sockets.emit('new-login', { user });
 
     return res.json(token);
   }
