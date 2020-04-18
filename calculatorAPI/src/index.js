@@ -77,6 +77,9 @@ const socketServer = http.createServer(app); // new server based on our original
 // console.log("!!!", app)
 
 export const io = socketIo(socketServer, {
+  pingTimeout: 20,
+  // pingInterval: 200,
+
   // get past cors
   handlePreflightRequest: (req, res) => {
     const headers = {
@@ -105,7 +108,7 @@ io.use(async (socket, next) => {
     socket.actor = actor; // TODO: if we want to share sockets this will break
 
     // TODO sockets
-    // log id of the user
+    // log id of the user (done)
     // publish the id of connected people, and show a popup for other users when someone logs in
     // same for when someone logs out
     // query the user from userservice
@@ -121,13 +124,17 @@ io.use(async (socket, next) => {
 // useful log
 // listening to an event of its own ('connection') , and disconnection, on UI be prepared to receive 
 // this happens after authentication
-// 'new connection' msg
-// just emit here
-// do same for disconnect
-// how do i know who you are
 io.on("connection", socket => {
   console.log("Connected Successfully!", socket.actor);
+  console.log("socket id", socket.id)
+
   socket.broadcast.emit('new-connection', socket.actor) // emit to everyone except the one connecting (socket.broadcast means emit outwards)
+
+  // socket.on("disconnect", () => console.log("Client disconnected"));
+  socket.on("disconnect", () => {
+    console.log('DISCONNECT', socket.actor);
+    // socket.broadcast.emit('disconnection', socket.actor)
+  })
 });
 
 io.on('error', function(err) {
