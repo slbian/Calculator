@@ -132,7 +132,7 @@ io.on("connection", socket => {
   // socket.on("disconnect", () => console.log("Client disconnected"));
   socket.on("disconnect", () => {
     console.log('DISCONNECT', socket.actor);
-    socket.broadcast.emit('logout', socket.actor)
+    socket.broadcast.emit('disconnection', socket.actor)
   })
 });
 

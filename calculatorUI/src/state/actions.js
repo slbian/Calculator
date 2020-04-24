@@ -19,6 +19,9 @@ export const setCleared = () => {
 export const setDisplayText = evaluatedValue => {
   return { type: 'setDisplayText', payload: evaluatedValue };
 };
+export const setNotification = evaluatedValue => {
+  return { type: 'setNotification', payload: evaluatedValue };
+};
 export const setThemes = allThemes => {
   return { type: 'setThemes', payload: allThemes };
 };

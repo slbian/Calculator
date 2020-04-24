@@ -2,7 +2,7 @@ import React, { useEffect, useContext } from 'react'; // useState, useReducer
 import styled from 'styled-components';
 
 import './CalculatorApp.css';
-import { mountCalculator, setUsers } from '../state/actions';
+import { mountCalculator, setUsers, setNotification } from '../state/actions';
 import { Store } from '../state/store';
 import Calculator from '../components/calculator/Calculator';
 import getActiveUser from '../api/getActiveUser';
@@ -52,6 +52,15 @@ const StyledDiv = styled.div`
     height: 100vh;
     width: 100%;
   }
+  .notification {
+    background-color: ${props => (props.notificationType==='login' ? 'green' : 'red')};
+    display: flex;
+    justify-content: right;
+    flex-direction: column;
+    align-items: center;
+    margin-left: auto;
+    height: auto;
+  }
   .sidepanel {
     background-color: ${props => props.secondaryColor};
     display: flex;
@@ -74,7 +83,7 @@ export default function CalculatorApp() {
   async function mount() {
     const token = window.localStorage.getItem('token');
     if (token) {
-      const activeUserResponse = await getActiveUser();
+      const activeUserResponse = await getActiveUser(); // calling API
       const allUsersResponse = await getScoreboardUsers();
       const allThemesResponse = await getAllThemes(); // return [ {id: 1, color: 'tomato}...
 
@@ -111,16 +120,18 @@ export default function CalculatorApp() {
     
     console.log("use effect");
 
-    socket.on('new-connection', data => {
-      console.log('connection socket data = ', data)
+    socket.on('new-connection', user => {
+      console.log('connection socket user = ', {user, type: 'login'})
+      dispatch(setNotification({user, type: 'login'}))
     }); 
 
-    socket.on('logout', data => {
-      console.log('logout socket data = ', data)
+    socket.on('disconnection', user => {
+      console.log('disconnection socket user = ', {user, type: 'logout'})
+      dispatch(setNotification({user, type: 'logout'}))
     }); 
 
     socket.on('update-scoreboard', data => {
-      // data is all the active users
+      // data is array of all the active users
       dispatch(setUsers(data.users)); 
     }); 
 
@@ -137,6 +148,7 @@ export default function CalculatorApp() {
       isOpen={state.profileConfigOpen}
       themePath={state.activeUser.theme.themePath}
       secondaryColor={state.activeUser.theme.secondaryColor}
+      notificationType={state.notification ? state.notification.type : null}
     >
       <div className="mainpanel">
         <div>
@@ -145,6 +157,10 @@ export default function CalculatorApp() {
         <div>
           <Calculator />
         </div>
+      </div>
+      <div className="notification">
+        {state.notification ? state.notification.type : null}
+        {state.notification ? state.notification.user[0].username : null}
       </div>
       <div className="sidepanel">
         <div className="profile">
