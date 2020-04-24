@@ -14,6 +14,11 @@ import Profile from '../components/Profile';
 import Scoreboard from '../components/Scoreboard';
 import ThemePicker from '../components/ThemePicker';
 
+import ReactNotifications from 'react-notifications-component';
+import { store } from 'react-notifications-component';
+import 'react-notifications-component/dist/theme.css';
+import 'animate.css';
+
 import socketIOClient from 'socket.io-client';
 
 // TODO: memoization, add different emojis, change eval, live data, error handling/defensive programming, testing
@@ -56,10 +61,11 @@ const StyledDiv = styled.div`
     background-color: ${props => (props.notificationType==='login' ? 'green' : 'red')};
     display: flex;
     justify-content: right;
-    flex-direction: column;
+    /* flex-direction: column; */
     align-items: center;
     margin-left: auto;
     height: auto;
+    width: auto;
   }
   .sidepanel {
     background-color: ${props => props.secondaryColor};
@@ -144,36 +150,67 @@ export default function CalculatorApp() {
   }
 
   return (
-    <StyledDiv
-      isOpen={state.profileConfigOpen}
-      themePath={state.activeUser.theme.themePath}
-      secondaryColor={state.activeUser.theme.secondaryColor}
-      notificationType={state.notification ? state.notification.type : null}
-    >
-      <div className="mainpanel">
-        <div>
-          <h1 className="header">Welcome to {state.activeUser.username}'s calculator!</h1>
+    <div>
+      <ReactNotifications />
+      <StyledDiv
+        isOpen={state.profileConfigOpen}
+        themePath={state.activeUser.theme.themePath}
+        secondaryColor={state.activeUser.theme.secondaryColor}
+        notificationType={state.notification ? state.notification.type : null}
+      >
+        <div className="mainpanel">
+          <div>
+            <h1 className="header">Welcome to {state.activeUser.username}'s calculator!</h1>
+          </div>
+          <div>
+            <Calculator />
+          </div>
         </div>
-        <div>
-          <Calculator />
+        <div >
+          {state.notification ? store.addNotification({
+              content: MyNotification,
+              // title: state.notification.type,
+              // message: state.notification.user[0].username,
+              // type: 'success',                         // 'default', 'success', 'info', 'warning'
+              container: 'top-left',                // where to position the notifications
+              animationIn: ["animated", "fadeIn"],     // animate.css classes that's applied
+              animationOut: ["animated", "fadeOut"],   // animate.css classes that's applied
+              dismiss: {
+                duration: 3000, 
+                pauseOnHover: true
+              }
+            }) : null}
+          {/* {state.notification ? state.notification.type : null}
+          {state.notification ? state.notification.user[0].username : null} */}
         </div>
-      </div>
-      <div className="notification">
-        {state.notification ? state.notification.type : null}
-        {state.notification ? state.notification.user[0].username : null}
-      </div>
-      <div className="sidepanel">
-        <div className="profile">
-          <Profile username={state.activeUser.username} score={state.activeUser.score} />
+        <div className="sidepanel">
+          <div className="profile">
+            <Profile username={state.activeUser.username} score={state.activeUser.score} />
+          </div>
+          <div className="profileConfig">
+            <ThemePicker />
+            <Logout />
+          </div>
+          <div className="scoreboard">
+            <Scoreboard users={state.users} />
+          </div>
         </div>
-        <div className="profileConfig">
-          <ThemePicker />
-          <Logout />
-        </div>
-        <div className="scoreboard">
-          <Scoreboard users={state.users} />
-        </div>
-      </div>
-    </StyledDiv>
+      </StyledDiv>
+    </div>
   );
 }
+
+function MyNotification() {
+  return (
+    <div className="notification">
+        <h4>Alligator.io</h4>
+        <p>Has joined the chat</p>
+    </div>
+  )
+}
+
+// style={{
+//   display: 'flex',
+//   backgroundColor: '#0f2f26',
+//   borderRadius: 5,
+// }}
