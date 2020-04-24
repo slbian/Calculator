@@ -113,16 +113,18 @@ export default function CalculatorApp() {
 
     socket.on('new-connection', data => {
       console.log('connection socket data = ', data)
-      
+    }); 
+
+    socket.on('logout', data => {
+      console.log('logout socket data = ', data)
     }); 
 
     socket.on('update-scoreboard', data => {
-      // console.log('socket data = ', data)
       // data is all the active users
-
       dispatch(setUsers(data.users)); 
-    }); // if we hear 'update-scoreboard' event, do console log
+    }); 
 
+    return () => socket.disconnect();
   //eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // [] means can only get called once 
 

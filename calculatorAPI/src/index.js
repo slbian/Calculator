@@ -77,8 +77,8 @@ const socketServer = http.createServer(app); // new server based on our original
 // console.log("!!!", app)
 
 export const io = socketIo(socketServer, {
-  pingTimeout: 20,
-  // pingInterval: 200,
+  pingTimeout: 1000,
+  pingInterval: 20000,
 
   // get past cors
   handlePreflightRequest: (req, res) => {
@@ -126,14 +126,13 @@ io.use(async (socket, next) => {
 // this happens after authentication
 io.on("connection", socket => {
   console.log("Connected Successfully!", socket.actor);
-  console.log("socket id", socket.id)
 
-  socket.broadcast.emit('new-connection', socket.actor) // emit to everyone except the one connecting (socket.broadcast means emit outwards)
+  socket.broadcast.emit('new-connection', socket.actor); // emit to everyone except the one connecting (socket.broadcast means emit outwards)
 
   // socket.on("disconnect", () => console.log("Client disconnected"));
   socket.on("disconnect", () => {
     console.log('DISCONNECT', socket.actor);
-    // socket.broadcast.emit('disconnection', socket.actor)
+    socket.broadcast.emit('logout', socket.actor)
   })
 });
 
