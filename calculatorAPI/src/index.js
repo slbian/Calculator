@@ -21,18 +21,6 @@ var jwtAuth = require('socketio-jwt-auth');
 const PORT = process.env.PORT || 3002;
 const app = express();
 
-// Sharon
-// const server = http.createServer(app);
-// const io = socketIo(server);
-  
-  // chuck
-  // export const socketServer = http.Server(); // create an empty new server
-  // export const io = socketIo(socketServer);
-
-  // socketServer.listen(3003, "127.0.0.1", () => { // different port, anyone can listen to it
-  //   console.log("UNAUTHENTICATED SOCKET LISTENING ON 3003");
-  // });
-
 // const memory = new Memory();
 
 // middleware
@@ -106,13 +94,6 @@ io.use(async (socket, next) => {
     // got the user from dao
     const actor = await usersDao.getById(decodedToken.userId);
     socket.actor = actor; // TODO: if we want to share sockets this will break
-
-    // TODO sockets
-    // log id of the user (done)
-    // publish the id of connected people, and show a popup for other users when someone logs in
-    // same for when someone logs out
-    // query the user from userservice
-    // something with next() to pass user object
 
     next();
   } catch(err) {

@@ -2,7 +2,7 @@ import React, { useEffect, useContext } from 'react'; // useState, useReducer
 import styled from 'styled-components';
 
 import './CalculatorApp.css';
-import { mountCalculator, setUsers, setNotification } from '../state/actions';
+import { mountCalculator, setUsers } from '../state/actions';
 import { Store } from '../state/store';
 import Calculator from '../components/calculator/Calculator';
 import getActiveUser from '../api/getActiveUser';
@@ -21,8 +21,8 @@ import 'animate.css';
 
 import socketIOClient from 'socket.io-client';
 
-// TODO: memoization, add different emojis, change eval, live data, error handling/defensive programming, testing
-// DONE: database, add useState hooks, refactor to useReducer, refactor to useContext, styled components, add styling to database, authentication w argon2, layered route/controller/service/data access object API,
+// TODO: memoization, add different emojis, change eval, error handling/defensive programming, testing
+// DONE: database, add useState hooks, refactor to useReducer, refactor to useContext, styled components, add styling to database, authentication w argon2, layered route/controller/service/data access object API, live data, 
 
 // error message in state
 // style login page, make sure it has messages (invalid credentials) - or different error like network error (force by shutting down server)
@@ -57,15 +57,13 @@ const StyledDiv = styled.div`
     height: 100vh;
     width: 100%;
   }
-  .notification {
+  .notification-item {
     background-color: ${props => (props.notificationType==='login' ? 'green' : 'red')};
-    display: flex;
-    justify-content: right;
-    /* flex-direction: column; */
+    box-shadow: unset;
+    justify-content: center;
     align-items: center;
-    margin-left: auto;
-    height: auto;
-    width: auto;
+    height: 110px;
+    width: 300px;
   }
   .sidepanel {
     background-color: ${props => props.secondaryColor};
@@ -108,8 +106,6 @@ export default function CalculatorApp() {
           })
         );
 
-        // log the active user
-
       } else {
         console.log('MOUNTING FAILED');
       }
@@ -124,16 +120,37 @@ export default function CalculatorApp() {
     const token = window.localStorage.getItem('token');
     const socket = socketIOClient('http://localhost:3002',{query: `auth_token=${token}`}); // looking at port 3003 (hacky way) // TODO: PORT environment variable
     
-    console.log("use effect");
-
     socket.on('new-connection', user => {
       console.log('connection socket user = ', {user, type: 'login'})
-      dispatch(setNotification({user, type: 'login'}))
+      store.addNotification({
+        // content: MyNotification(user, "login"),
+        title: 'login',
+        message: user[0].username,
+        type: 'success',
+        container: 'top-left',                // where to position the notifications
+        animationIn: ["animated", "fadeIn"],     // animate.css classes that's applied
+        animationOut: ["animated", "fadeOut"],   // animate.css classes that's applied
+        dismiss: {
+          duration: 3000, 
+          pauseOnHover: true
+        }
+      })
     }); 
 
     socket.on('disconnection', user => {
       console.log('disconnection socket user = ', {user, type: 'logout'})
-      dispatch(setNotification({user, type: 'logout'}))
+      store.addNotification({
+        // content: MyNotification(user, "logout"),
+        title: 'logout',
+        message: user[0].username,
+        type: 'default',
+        container: 'top-left',                // where to position the notifications
+        animationIn: ["animated", "fadeIn"],     // animate.css classes that's applied
+        animationOut: ["animated", "fadeOut"],   // animate.css classes that's applied
+        dismiss: {
+          duration: 3000, 
+        }
+      })
     }); 
 
     socket.on('update-scoreboard', data => {
@@ -149,14 +166,13 @@ export default function CalculatorApp() {
     return null;
   }
 
-  return (
-    <div>
+  return (   
+      <div>
       <ReactNotifications />
       <StyledDiv
         isOpen={state.profileConfigOpen}
         themePath={state.activeUser.theme.themePath}
         secondaryColor={state.activeUser.theme.secondaryColor}
-        notificationType={state.notification ? state.notification.type : null}
       >
         <div className="mainpanel">
           <div>
@@ -165,23 +181,6 @@ export default function CalculatorApp() {
           <div>
             <Calculator />
           </div>
-        </div>
-        <div >
-          {state.notification ? store.addNotification({
-              content: MyNotification,
-              // title: state.notification.type,
-              // message: state.notification.user[0].username,
-              // type: 'success',                         // 'default', 'success', 'info', 'warning'
-              container: 'top-left',                // where to position the notifications
-              animationIn: ["animated", "fadeIn"],     // animate.css classes that's applied
-              animationOut: ["animated", "fadeOut"],   // animate.css classes that's applied
-              dismiss: {
-                duration: 3000, 
-                pauseOnHover: true
-              }
-            }) : null}
-          {/* {state.notification ? state.notification.type : null}
-          {state.notification ? state.notification.user[0].username : null} */}
         </div>
         <div className="sidepanel">
           <div className="profile">
@@ -196,21 +195,27 @@ export default function CalculatorApp() {
           </div>
         </div>
       </StyledDiv>
-    </div>
+      </div>
   );
 }
 
-function MyNotification() {
+function MyNotification(user, type) {
   return (
-    <div className="notification">
-        <h4>Alligator.io</h4>
-        <p>Has joined the chat</p>
-    </div>
+    // <div style={{
+    //   backgroundColor: type==="login" ? 'green' : 'red',
+    //   borderRadius: 5,
+    // }}>
+    //   <h4>{user[0].username}</h4>
+    //   <p>{type}</p>
+    // </div>
+    <StyledDiv notificationType={type}>
+      <div className='notification-item'>
+        <div>
+          <h4>{user[0].username}</h4>
+          <p>{type}</p>
+        </div>
+      </div>
+    </StyledDiv>
   )
 }
 
-// style={{
-//   display: 'flex',
-//   backgroundColor: '#0f2f26',
-//   borderRadius: 5,
-// }}

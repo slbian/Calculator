@@ -38,8 +38,6 @@ const reducer = (state, action) => {
       return { ...state, isCleared: true };
     case 'setDisplayText':
       return { ...state, displayText: action.payload };
-    case 'setNotification':
-      return { ...state, notification: action.payload };
     case 'setThemes':
       return { ...state, themes: action.payload };
     case 'setUsers':
