@@ -10,6 +10,9 @@ export const logout = () => {
 export const mountCalculator = pageLoad => {
   return { type: 'mountCalculator', payload: pageLoad };
 };
+export const mountWeather = weatherData => {
+  return { type: 'mountWeather', payload: weatherData };
+};
 export const setActiveUser = newActiveUser => {
   return { type: 'setActiveUser', payload: newActiveUser };
 };

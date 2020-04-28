@@ -1,6 +1,12 @@
 import React, { useEffect, useContext } from 'react'; // useState, useReducer
 import styled from 'styled-components';
 
+import ReactNotifications, { store } from 'react-notifications-component';
+import 'react-notifications-component/dist/theme.css';
+import 'animate.css';
+
+import socketIOClient from 'socket.io-client';
+
 import './CalculatorApp.css';
 import { mountCalculator, setUsers } from '../state/actions';
 import { Store } from '../state/store';
@@ -13,13 +19,6 @@ import Logout from '../components/Logout';
 import Profile from '../components/Profile';
 import Scoreboard from '../components/Scoreboard';
 import ThemePicker from '../components/ThemePicker';
-
-import ReactNotifications from 'react-notifications-component';
-import { store } from 'react-notifications-component';
-import 'react-notifications-component/dist/theme.css';
-import 'animate.css';
-
-import socketIOClient from 'socket.io-client';
 
 // TODO: memoization, add different emojis, change eval, error handling/defensive programming, testing
 // DONE: database, add useState hooks, refactor to useReducer, refactor to useContext, styled components, add styling to database, authentication w argon2, layered route/controller/service/data access object API, live data, 
@@ -90,7 +89,7 @@ export default function CalculatorApp() {
       const activeUserResponse = await getActiveUser(); // calling API
       const allUsersResponse = await getScoreboardUsers();
       const allThemesResponse = await getAllThemes(); // return [ {id: 1, color: 'tomato}...
-
+      
       if (
         activeUserResponse &&
         allUsersResponse &&
@@ -107,7 +106,7 @@ export default function CalculatorApp() {
         );
 
       } else {
-        console.log('MOUNTING FAILED');
+        console.log('CALCULATOR MOUNTING FAILED');
       }
     } else {
       console.log('MOUNT: no token');
@@ -199,23 +198,23 @@ export default function CalculatorApp() {
   );
 }
 
-function MyNotification(user, type) {
-  return (
-    // <div style={{
-    //   backgroundColor: type==="login" ? 'green' : 'red',
-    //   borderRadius: 5,
-    // }}>
-    //   <h4>{user[0].username}</h4>
-    //   <p>{type}</p>
-    // </div>
-    <StyledDiv notificationType={type}>
-      <div className='notification-item'>
-        <div>
-          <h4>{user[0].username}</h4>
-          <p>{type}</p>
-        </div>
-      </div>
-    </StyledDiv>
-  )
-}
+// function MyNotification(user, type) {
+//   return (
+//     // <div style={{
+//     //   backgroundColor: type==="login" ? 'green' : 'red',
+//     //   borderRadius: 5,
+//     // }}>
+//     //   <h4>{user[0].username}</h4>
+//     //   <p>{type}</p>
+//     // </div>
+//     <StyledDiv notificationType={type}>
+//       <div className='notification-item'>
+//         <div>
+//           <h4>{user[0].username}</h4>
+//           <p>{type}</p>
+//         </div>
+//       </div>
+//     </StyledDiv>
+//   )
+// }
 

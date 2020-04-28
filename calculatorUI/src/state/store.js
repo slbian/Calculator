@@ -7,7 +7,14 @@ const initialState = {
   isCleared: false,
   profileConfigOpen: false,
   themes: null,
-  users: null
+  users: null,
+
+  temperatureF: null,
+  temperatureC: null,
+  humidity    : null,
+  windSpeedK  : null,
+  windDeg     : null,
+  timeZone    : null,
 };
 
 const reducer = (state, action) => {
@@ -31,6 +38,19 @@ const reducer = (state, action) => {
         activeUser: action.payload.activeUser,
         users: action.payload.users,
         themes: action.payload.themes
+      };
+    case 'mountWeather':
+      console.log(action.payload.temp)
+      return {
+         ...state,
+        //  weather: { TODO make a weather bucket
+          temperatureF: (action.payload.temp * 9) / 5 - 459.67,
+          temperatureC: action.payload.temp - 273.15,
+          humidity    : action.payload.humidity,
+          windSpeedK  : action.payload.wind_speed,
+          windDeg     : action.payload.wind_deg,
+          timeZone    : action.payload.timezone,
+        //  } 
       };
     case 'setActiveUser':
       return { ...state, activeUser: action.payload };
