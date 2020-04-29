@@ -40,16 +40,19 @@ const reducer = (state, action) => {
         themes: action.payload.themes
       };
     case 'mountWeather':
-      console.log(action.payload.temp)
+      console.log(action.payload)
       return {
          ...state,
         //  weather: { TODO make a weather bucket
-          temperatureF: (action.payload.temp * 9) / 5 - 459.67,
-          temperatureC: action.payload.temp - 273.15,
+          temp: (action.payload.temp * 9) / 5 - 459.67, // F
+          highestTemp: (action.payload.highestTemp * 9) / 5 - 459.67,
+          lowestTemp: (action.payload.lowestTemp * 9) / 5 - 459.67,
+          city: action.payload.city,
+          country: action.payload.country,
+          description: action.payload.description,
           humidity    : action.payload.humidity,
-          windSpeedK  : action.payload.wind_speed,
-          windDeg     : action.payload.wind_deg,
-          timeZone    : action.payload.timezone,
+          windSpeed  : action.payload.wind,
+          forecast    : action.payload.forecast,
         //  } 
       };
     case 'setActiveUser':

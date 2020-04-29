@@ -36,6 +36,7 @@ const StyledDiv = styled.div`
   flex-direction: row;
   align-items: center;
   height: 100vh;
+  
   .header {
     text-align: center;
     font-size: 50px;
@@ -77,6 +78,28 @@ const StyledDiv = styled.div`
     width: 230px;
     height: ${props => (props.isOpen ? '110px' : '0px')};
     transition: all 0.5s;
+  }
+`;
+
+const StyledButton = styled.button`
+  border-radius: 20px 20px 20px 20px;
+  background-color: skyblue;
+  border: none;
+  height: auto;
+  color: white;
+  text-transform: uppercase;
+  font-size: 20px;
+  font-weight: bold;
+  box-shadow: 2px 2px 2px 1px rgba(0, 0, 255, 0.2);
+  outline: none;
+  width: 200px;
+  margin: 5px;
+
+  :active {
+    box-shadow: none;
+  }
+  ::selection {
+    background: transparent;
   }
 `;
 
@@ -165,36 +188,44 @@ export default function CalculatorApp() {
     return null;
   }
 
+  function handleWeatherRequest(event) {
+    event.preventDefault();
+    history.push('/weather');
+  }
+
   return (   
-      <div>
-      <ReactNotifications />
-      <StyledDiv
-        isOpen={state.profileConfigOpen}
-        themePath={state.activeUser.theme.themePath}
-        secondaryColor={state.activeUser.theme.secondaryColor}
-      >
-        <div className="mainpanel">
-          <div>
-            <h1 className="header">Welcome to {state.activeUser.username}'s calculator!</h1>
-          </div>
-          <div>
-            <Calculator />
-          </div>
+    <div>
+    <ReactNotifications />
+    <StyledDiv
+      isOpen={state.profileConfigOpen}
+      themePath={state.activeUser.theme.themePath}
+      secondaryColor={state.activeUser.theme.secondaryColor}
+    >
+      <div className="mainpanel">
+      <StyledButton type="button" onClick={handleWeatherRequest}>
+          What's the weather today?
+      </StyledButton>
+        <div>
+          <h1 className="header">Welcome to {state.activeUser.username}'s calculator!</h1>
+        </div>  
+        <div>
+          <Calculator />
         </div>
-        <div className="sidepanel">
-          <div className="profile">
-            <Profile username={state.activeUser.username} score={state.activeUser.score} />
-          </div>
-          <div className="profileConfig">
-            <ThemePicker />
-            <Logout />
-          </div>
-          <div className="scoreboard">
-            <Scoreboard users={state.users} />
-          </div>
-        </div>
-      </StyledDiv>
       </div>
+      <div className="sidepanel">
+        <div className="profile">
+          <Profile username={state.activeUser.username} score={state.activeUser.score} />
+        </div>
+        <div className="profileConfig">
+          <ThemePicker />
+          <Logout />
+        </div>
+        <div className="scoreboard">
+          <Scoreboard users={state.users} />
+        </div>
+      </div>
+    </StyledDiv>
+    </div>
   );
 }
 

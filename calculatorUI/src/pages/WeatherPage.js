@@ -3,16 +3,38 @@ import styled from 'styled-components';
 
 import { Store } from '../state/store';
 import { mountWeather } from '../state/actions';
-import getWeather from '../api/getWeather';
+import getWeatherCurrent from '../api/getWeatherCurrent';
+import getWeatherForecast from '../api/getWeatherForecast';
 import history from '../state/history';
 
 const StyledDiv = styled.div`
-  background-color: seagreen;
+  background-color: skyblue;
   height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  button {
+    border-radius: 20px 20px 20px 20px;
+    background-color: goldenrod;
+    border: none;
+    height: auto;
+    color: white;
+    text-transform: uppercase;
+    font-size: 20px;
+    font-weight: bold;
+    box-shadow: 2px 2px 2px 1px rgba(0, 0, 255, 0.2);
+    outline: none;
+    width: 200px;
+    margin: 5px;
+
+    :active {
+      box-shadow: none;
+    }
+    ::selection {
+      background: transparent;
+    }
+  }
 `;
 
 export default function WeatherPage() {
@@ -21,17 +43,20 @@ export default function WeatherPage() {
   async function mount() {
     const token = window.localStorage.getItem('token');
     if (token) {
-    const weatherResponse = await getWeather(40.7128, 74.0060); // weather
-    // console.log(weatherResponse);
-    
-      if (weatherResponse && weatherResponse.data){
-        // const weatherData = weatherResponse.data;
-        dispatch(mountWeather({
-          timezone: weatherResponse.data.timezone,
-          temp: weatherResponse.data.current.temp,
-          humidity: weatherResponse.data.current.humidity,
-          wind_speed: weatherResponse.data.current.wind_speed,
-          wind_deg: weatherResponse.data.current.wind_deg,
+      const weatherCurrentResponse = await getWeatherCurrent('New York'); 
+      const weatherForecastResponse = await getWeatherForecast('New York'); 
+      console.log(weatherCurrentResponse)
+      if (weatherCurrentResponse && weatherForecastResponse && weatherCurrentResponse.data && weatherForecastResponse.data){
+        dispatch(mountWeather({ // also cord, sunrise, sunset
+          city: weatherCurrentResponse.data.name,
+          country: weatherCurrentResponse.data.sys.country,
+          description: weatherCurrentResponse.data.weather[0].description,
+          temp: weatherCurrentResponse.data.main.temp,
+          highestTemp: weatherCurrentResponse.data.main.temp_max,
+          lowestTemp: weatherCurrentResponse.data.main.temp_min,
+          humidity: weatherCurrentResponse.data.main.humidity,
+          wind: weatherCurrentResponse.data.wind.speed,
+          forecast: weatherForecastResponse.data.list,
         }))
       }
       else {
@@ -49,19 +74,28 @@ export default function WeatherPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   
-  if (!state || !state.timeZone) { // || state.timeZone
+  if (!state || !state.temp || !state.forecast) { 
     return null;
+  }
+
+  function handleCalculatorRequest(event) {
+    event.preventDefault();
+    history.push('/');
   }
 
   return (
     <StyledDiv>
-      <h1>Welcome to the weather app!</h1>
-      {/* <p>From openweatherapi</p> */}
-      <p>Temp: {state.temperatureF}</p>
-      <p>Humidity: {state.humidity}</p>
-      <p>Wind speed: {state.windSpeedK}</p>
-      <p>Wind deg: {state.windDeg}</p>
-      <p>Timezone: {state.timeZone}</p>
+      <button type="submit" onClick={handleCalculatorRequest}>
+            Let's do math
+          </button>
+      <h1>Today is a nice day in {state.city}, {state.country} with a {state.description}</h1>
+      <h2>Using openweatherapi</h2>
+      <p>Temp: {state.temp} F</p>
+      <p>High: {state.highestTemp} F</p>
+      <p>Low: {state.lowestTemp} F</p>
+      <p>Humidity: {state.humidity} %</p>
+      <p>Wind speed: {state.windSpeed} mph</p>
+      {/* <p>Forecast: {state.forecast[0].dt}</p> */}
     </StyledDiv>
   );
 
