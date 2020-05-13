@@ -39,8 +39,8 @@ const reducer = (state, action) => {
         users: action.payload.users,
         themes: action.payload.themes
       };
-    case 'mountWeather':
-      console.log(action.payload)
+    case 'setWeather':
+      console.log("action", action.payload)
       return {
          ...state,
         //  weather: { TODO make a weather bucket
@@ -50,6 +50,7 @@ const reducer = (state, action) => {
           city: action.payload.city,
           country: action.payload.country,
           description: action.payload.description,
+          descriptionid: action.payload.descriptionid,
           humidity    : action.payload.humidity,
           windSpeed  : action.payload.wind,
           forecast    : action.payload.forecast,
