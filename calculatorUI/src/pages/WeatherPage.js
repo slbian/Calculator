@@ -2,10 +2,12 @@ import React, { useEffect, useContext } from 'react';
 import styled from 'styled-components';
 
 import { Store } from '../state/store';
-import { mountWeather } from '../state/actions';
+import { setWeather } from '../state/actions';
 import getWeatherCurrent from '../api/getWeatherCurrent';
 import getWeatherForecast from '../api/getWeatherForecast';
 import history from '../state/history';
+import Search from '../components/weather/Search'
+
 
 const StyledDiv = styled.div`
   background-color: skyblue;
@@ -47,10 +49,11 @@ export default function WeatherPage() {
       const weatherForecastResponse = await getWeatherForecast('New York'); 
       console.log(weatherCurrentResponse)
       if (weatherCurrentResponse && weatherForecastResponse && weatherCurrentResponse.data && weatherForecastResponse.data){
-        dispatch(mountWeather({ // also cord, sunrise, sunset
+        dispatch(setWeather({ // also cord, sunrise, sunset
           city: weatherCurrentResponse.data.name,
           country: weatherCurrentResponse.data.sys.country,
           description: weatherCurrentResponse.data.weather[0].description,
+          descriptionid: weatherCurrentResponse.data.weather[0].id,
           temp: weatherCurrentResponse.data.main.temp,
           highestTemp: weatherCurrentResponse.data.main.temp_max,
           lowestTemp: weatherCurrentResponse.data.main.temp_min,
@@ -87,7 +90,8 @@ export default function WeatherPage() {
     <StyledDiv>
       <button type="submit" onClick={handleCalculatorRequest}>
             Let's do math
-          </button>
+      </button>
+      <Search />
       <h1>Today is a nice day in {state.city}, {state.country} with a {state.description}</h1>
       <h2>Using openweatherapi</h2>
       <p>Temp: {state.temp} F</p>
