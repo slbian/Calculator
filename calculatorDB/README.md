@@ -8,6 +8,8 @@ https://stackoverflow.com/questions/10431426/trying-to-get-postgres-setup-in-my-
 
 initdb /usr/local/var/postgres
 
+pg_ctl -D /usr/local/var/postgres -l logfile start
+
 createdb calculatordb
 
 psql calculatordb
