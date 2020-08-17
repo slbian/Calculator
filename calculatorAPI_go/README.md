@@ -18,8 +18,9 @@ Upside down world features
 To do:
 - [x] Massive seed script
 - [x] Make a Go API with a hello world endpoint
-- [] hot loading
-- [] Read from the database + add to the response
+- [x] Hot loading
+- [x] Read from the database + add to the response
+- [] Validate JWT and authorize
 - [] Come up with the upside world calculation + rules
   - [] syncronous
   - [] reimplement it using go routines
@@ -41,3 +42,5 @@ UI:
 
 Notes:
 - Air for hot reloads https://github.com/cosmtrek/air
+- Why did I have to go get?
+  - `go get -u github.com/lib/pq`
