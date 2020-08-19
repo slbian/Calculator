@@ -44,3 +44,12 @@ Notes:
 - Air for hot reloads https://github.com/cosmtrek/air
 - Why did I have to go get?
   - `go get -u github.com/lib/pq`
+
+How to set up Air:
+1. Install Air with `go get -u github.com/cosmtrek/air`
+2. Add `alias air='~/bin/air'` to your ~/.zshrc
+3. `curl -sSfL https://raw.githubusercontent.com/cosmtrek/air/master/install.sh | sh -s -- -b $(go env GOPATH)/bin` or `curl -sSfL https://raw.githubusercontent.com/cosmtrek/air/master/install.sh`
+4. Install postgres library with `go get -u github.com/lib/pq`
+5. Make sure `GO111MODULE=auto`
+6. Start server with hot loading with `air -c .air.toml`
+7. Make HTTP request with `http http://localhost:3003/hello`
