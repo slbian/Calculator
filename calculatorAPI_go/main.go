@@ -43,7 +43,7 @@ func handleHello(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	http.HandleFunc("/hello", handleHello)
-
+	http.HandleFunc("/token", handleToken)
 	fmt.Println("Listening to!")
 	http.ListenAndServe(":3003", nil)
 }
