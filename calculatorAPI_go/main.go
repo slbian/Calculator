@@ -33,6 +33,16 @@ func getUser() (username string) {
 	return
 }
 
+// tasks
+// Do upside down world calculation for all users in scoreboard
+// for user:
+// get all executions
+// parse the string
+// + for - and - for +
+// execute
+// length of the result
+// add it to some total for that user
+
 func handleHello(w http.ResponseWriter, r *http.Request) {
 	username := getUser()
 	byte := []byte(username)
