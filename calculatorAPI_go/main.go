@@ -5,7 +5,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strings"
 
+	"github.com/Knetic/govaluate"
+	_ "github.com/Knetic/govaluate"
 	"github.com/lib/pq"
 	_ "github.com/lib/pq"
 )
@@ -37,14 +40,14 @@ func getUsers() (users []User) {
 	}
 
 	sqlStatementGetUsers := `SELECT id, username FROM users`
-	rows, err := db.Query(sqlStatementGetUsers)
+	rowIterator, err := db.Query(sqlStatementGetUsers)
 	if err != nil {
 		panic(err)
 	}
 
-	for rows.Next() {
+	for rowIterator.Next() {
 		var user User
-		err := rows.Scan(&user.Id, &user.Username)
+		err := rowIterator.Scan(&user.Id, &user.Username)
 		if err != nil {
 			panic(err)
 		}
@@ -60,9 +63,7 @@ func getUsers() (users []User) {
 
 	// sqlStatementGetExecutions := `SELECT $1, $2 FROM users`
 	sqlStatementGetExecutions := fmt.Sprintf(`SELECT %s, %s FROM executions`, uCol, eCol)
-	rows, err = db.Query(sqlStatementGetExecutions)
-
-	// err := db.Exec(fmt.Sprintf("INSERT INTO %s VALUES ($1)", quoted), data)
+	rowIterator, err = db.Query(sqlStatementGetExecutions) // TODO: query arguments
 
 	if err != nil {
 		panic(err)
@@ -75,14 +76,13 @@ func getUsers() (users []User) {
 		m[userId] = 0
 	}
 
-	for rows.Next() {
+	for rowIterator.Next() {
 		var userScore UserScore
-		fmt.Println(rows)
-		err := rows.Scan(&userScore.UserId, &userScore.Equation)
+		err := rowIterator.Scan(&userScore.UserId, &userScore.Equation)
 		if err != nil {
 			panic(err)
 		}
-		m[userScore.UserId] += 1 // call to our calculation
+		m[userScore.UserId] += handleUpsideDownEquation(userScore.Equation)
 	}
 
 	for i := range users {
@@ -97,12 +97,16 @@ func getUsers() (users []User) {
 // tasks
 // Do upside down world calculation for all users in scoreboard
 // for user:
-// get all executions
-// parse the string
-// + for - and - for +
-// execute
-// length of the result
-// add it to some total for that user
+//   get all executions
+//   parse the string
+//   + for - and - for +
+//   execute
+//   length of the result
+//   add it to some total for that user
+
+//		time the request
+// cleanup + organization of code
+//   think about error handling strategy
 
 func handleHealthCheck(w http.ResponseWriter, r *http.Request) {
 	text := "world"
@@ -121,6 +125,20 @@ func handleUsers(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(200)
 	w.Write(bytes)
+}
+
+func handleUpsideDownEquation(equation string) (score int) {
+	var s string
+	s = strings.Replace(equation, "+", "foo", -1)
+	s = strings.Replace(equation, "-", "+", -1)
+	s = strings.Replace(equation, "foo", "-", -1)
+
+	expression, _ := govaluate.NewEvaluableExpression(s)
+	r, _ := expression.Eval(nil)
+	res := int(r.(float64))
+
+	score = len(string(res))
+	return
 }
 
 func main() {
