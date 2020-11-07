@@ -103,8 +103,7 @@ func getUsers() (users []User) {
 //   execute
 //   length of the result
 //   add it to some total for that user
-
-//		time the request
+// time the request - javascript tool - for browser too
 // cleanup + organization of code
 //   think about error handling strategy
 

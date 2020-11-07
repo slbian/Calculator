@@ -20,11 +20,11 @@ To do:
 - [x] Make a Go API with a hello world endpoint
 - [x] Hot loading
 - [x] Read from the database + add to the response
-- [] Validate JWT and authorize
 - [] Come up with the upside world calculation + rules
   - [] syncronous
   - [] reimplement it using go routines
   - [] keep both around for benchmarking
+- [] Validate JWT and authorize
 
 
 Things that need to change:
