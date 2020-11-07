@@ -30,7 +30,7 @@ type UserScore struct {
 	Equation string `db:"equation" json:"equation"`
 }
 
-func getUsers() (users []User) {
+func getUsersBenchmark() (users []User) {
 	psqlInfo := fmt.Sprintf("host=%s port=%d dbname=%s sslmode=disable",
 		host, port, dbname)
 
@@ -116,7 +116,18 @@ func handleHealthCheck(w http.ResponseWriter, r *http.Request) {
 }
 
 func handleUsers(w http.ResponseWriter, r *http.Request) {
-	users := getUsers()
+	// switch case based off query param
+	var users []User
+	params := r.URL.Query()["mode"]
+	if params == nil || params[0] != "benchmark" {
+		fmt.Println("bad mode")
+		w.WriteHeader(400)
+		w.Write([]byte("Bad Request"))
+	}
+	switch params[0] {
+	case "benchmark":
+		users = getUsersBenchmark()
+	}
 	bytes, err := json.Marshal(users)
 	if err != nil {
 		panic(err)
