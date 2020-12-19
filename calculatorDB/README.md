@@ -2,11 +2,11 @@ Database startup notes:
 
 `brew install postgres`
 
+`initdb /usr/local/var/postgres`
+
 might need `chmod`
 
 https://stackoverflow.com/questions/10431426/trying-to-get-postgres-setup-in-my-environment-but-cant-seem-to-get-permissions
-
-`initdb /usr/local/var/postgres`
 
 `pg_ctl -D /usr/local/var/postgres -l logfile start`
 
