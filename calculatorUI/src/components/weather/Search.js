@@ -1,8 +1,9 @@
-import React, { useContext } from 'react';
+import React from 'react';
+// import React, { useContext } from 'react';
 import styled from 'styled-components';
 import { FiSearch } from 'react-icons/fi';
 
-import { Store } from '../../state/store';
+// import { Store } from '../../state/store';
 
 const SearchBar = styled.div`
   margin: 0 auto;

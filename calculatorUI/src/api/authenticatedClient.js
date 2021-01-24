@@ -2,7 +2,7 @@ import axios from 'axios';
 import history from '../state/history';
 
 class AuthenticatedClient {
-  async get(path) {
+  get = async (path) => {
     try {
       const token = window.localStorage.getItem('token');
       const config = {
@@ -16,10 +16,11 @@ class AuthenticatedClient {
     } catch (error) {
       // TODO: don't redirect for network errors
       history.push('/login');
+      return null;
     }
   }
 
-  async post(path, body) {
+  post = async (path, body) => {
     try {
       const token = window.localStorage.getItem('token');
       const config = {
@@ -33,6 +34,7 @@ class AuthenticatedClient {
     } catch (error) {
       // TODO: don't redirect for network errors
       history.push('/login');
+      return null;
     }
   }
 }

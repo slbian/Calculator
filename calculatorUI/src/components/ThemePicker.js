@@ -39,6 +39,17 @@ const StyledContainer = styled.div`
 
 export default function ThemePicker() {
   const { state, dispatch } = useContext(Store);
+  
+    async function handleColorPick(themeId) {
+      const response = await updateActiveUserTheme(state.activeUser.id, themeId);
+      if (!response) {
+        console.log('Could not update theme');
+        throw new Error();
+      }
+      const activeUserResponse = await getActiveUser();
+      if (!activeUserResponse) throw new Error()
+      dispatch(setActiveUser(activeUserResponse.data));
+    }
 
   return (
     <StyledContainer>
@@ -53,14 +64,4 @@ export default function ThemePicker() {
       ))}
     </StyledContainer>
   );
-
-  async function handleColorPick(themeId) {
-    const response = await updateActiveUserTheme(state.activeUser.id, themeId);
-    if (!response) {
-      console.log('Could not update theme');
-      throw new Error();
-    }
-    const activeUserResponse = await getActiveUser();
-    dispatch(setActiveUser(activeUserResponse.data));
-  }
 }

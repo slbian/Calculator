@@ -57,16 +57,50 @@ const StyledDiv = styled.div`
       background: transparent;
     }
   }
-`;
-
-export default function Register() {
-  const [registerUsername, setRegisterUsername] = useState('');
-  const [registerPassword, setRegisterPassword] = useState('');
-  const [registerPassword2, setRegisterPassword2] = useState('');
-  const [registerMessage, setRegisterMessage] = useState('');
-
-  return (
-    <div>
+  `;
+  
+  export default function Register() {
+    const [registerUsername, setRegisterUsername] = useState('');
+    const [registerPassword, setRegisterPassword] = useState('');
+    const [registerPassword2, setRegisterPassword2] = useState('');
+    const [registerMessage, setRegisterMessage] = useState('');
+    
+      // text in Register box
+      function handleChangeRegisterUsername(event) {
+        const text = event.target.value;
+        setRegisterUsername(text);
+      }
+    
+      function handleChangeRegisterPassword(event) {
+        const text = event.target.value;
+        setRegisterPassword(text);
+      }
+    
+      function handleChangeRegisterPassword2(event) {
+        const text = event.target.value;
+        setRegisterPassword2(text);
+      }
+    
+      async function handleRegisterRequest(event) {
+        event.preventDefault();
+        if (registerPassword !== registerPassword2) {
+          setRegisterMessage(copytext.errorMessage_password);
+          return;
+        }
+        const response = await postUser(registerUsername, registerPassword);
+        if (response.data) {
+          setRegisterMessage(copytext.success);
+          return;
+        }
+        if (response.errorCode === 409) {
+          setRegisterMessage(copytext.errorMessage_auth);
+        } else {
+          setRegisterMessage(copytext.errorMessage_default);
+        }
+      }
+    
+    return (
+      <div>
       <form>
         <StyledDiv>
           <input
@@ -95,38 +129,4 @@ export default function Register() {
       {registerMessage}
     </div>
   );
-
-  // text in Register box
-  function handleChangeRegisterUsername(event) {
-    const text = event.target.value;
-    setRegisterUsername(text);
-  }
-
-  function handleChangeRegisterPassword(event) {
-    const text = event.target.value;
-    setRegisterPassword(text);
-  }
-
-  function handleChangeRegisterPassword2(event) {
-    const text = event.target.value;
-    setRegisterPassword2(text);
-  }
-
-  async function handleRegisterRequest(event) {
-    event.preventDefault();
-    if (registerPassword !== registerPassword2) {
-      setRegisterMessage(copytext.errorMessage_password);
-      return;
-    }
-    const response = await postUser(registerUsername, registerPassword);
-    if (response.data) {
-      setRegisterMessage(copytext.success);
-      return;
-    }
-    if (response.errorCode === 409) {
-      setRegisterMessage(copytext.errorMessage_auth);
-    } else {
-      setRegisterMessage(copytext.errorMessage_default);
-    }
-  }
 }

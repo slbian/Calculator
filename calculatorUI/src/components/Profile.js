@@ -51,7 +51,7 @@ export default function Profile({ username, score }) {
       <span>
         {username} : {score}
       </span></div>
-      <img src={arrow} alt="arrow"></img>
+      <img src={arrow} alt="arrow"/>
     </StyledDiv>
   );
 }

@@ -3,6 +3,7 @@
   "plugins": ["prettier"],
   "rules": {
     "no-console": "off",
+    "no-param-reassign": 0,
     "spaced-comment": "off",
     "react/no-unescaped-entities": "off",
     "react/jsx-filename-extension": [

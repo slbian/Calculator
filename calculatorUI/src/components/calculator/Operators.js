@@ -7,11 +7,9 @@ import {
   setDisplayText,
   setCleared,
   setActiveUser,
-  setUsers
 } from '../../state/actions';
 import { Store } from '../../state/store';
 import postExecution from '../../api/postExecution';
-import getScoreboardUsers from '../../api/getScoreboardUsers';
 import getActiveUser from '../../api/getActiveUser';
 
 const StyledDiv = styled.div`
@@ -26,16 +24,7 @@ export default function Operators() {
   const { state, dispatch } = useContext(Store);
 
   const values = ['+', '-'];
-  return (
-    <StyledDiv>
-      <Button text="C" handleClick={handleClear} />
-      {values.map(val => (
-        <Button text={val} handleClick={handlePlusMinus} key={val} />
-      ))}
-      <Button text="=" handleClick={evaluate} />
-    </StyledDiv>
-  );
-
+  
   function handleClear() {
     dispatch(clearScreen());
   }
@@ -56,9 +45,6 @@ export default function Operators() {
       
       if (!successfulExecution || !activeUserResponse) throw new Error();
 
-      // const response = await getScoreboardUsers();
-      // dispatch(setUsers(response.data));
-
       dispatch(setActiveUser(activeUserResponse.data));
       dispatch(setDisplayText(evaluatedValue));
       dispatch(setCleared());
@@ -68,4 +54,14 @@ export default function Operators() {
       dispatch(clearScreen());
     }
   }
+
+  return (
+    <StyledDiv>
+      <Button text="C" handleClick={handleClear} />
+      {values.map(val => (
+        <Button text={val} handleClick={handlePlusMinus} key={val} />
+      ))}
+      <Button text="=" handleClick={evaluate} />
+    </StyledDiv>
+  );
 }
