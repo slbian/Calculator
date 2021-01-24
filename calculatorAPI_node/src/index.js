@@ -110,7 +110,6 @@ io.on("connection", socket => {
 
   socket.broadcast.emit('new-connection', socket.actor); // emit to everyone except the one connecting (socket.broadcast means emit outwards)
 
-  // socket.on("disconnect", () => console.log("Client disconnected"));
   socket.on("disconnect", () => {
     console.log('DISCONNECT', socket.actor);
     socket.broadcast.emit('disconnection', socket.actor)

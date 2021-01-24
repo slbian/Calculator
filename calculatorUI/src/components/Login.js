@@ -83,7 +83,6 @@ export default function Login() {
     if (newToken) {
       window.localStorage.setItem('token', newToken.data);
       history.push('/');
-      console.log('login ', newToken.data);
     }
     if (errorCode === 401) {
       setLoginMessage(copytext.errorMessage_auth);
