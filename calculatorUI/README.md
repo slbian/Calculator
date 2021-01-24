@@ -6,7 +6,7 @@ In the project directory, you can run:
 
 ### `npm install`
 
-If node_modules is missing. If not, skip this.
+If node_modules is missing. If not, skip this. To update packages, run `npm i <package>@latest`
 
 ### `npm start`
 

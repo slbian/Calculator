@@ -6,16 +6,16 @@
     "@material-ui/core": "^4.0.0-rc.0",
     "animate.css": "^4.1.1",
     "axios": "^0.21.0",
-    "history": "^4.9.0",
-    "react": "^16.8.6",
-    "react-dom": "^16.8.6",
-    "react-icons": "^3.10.0",
-    "react-notifications-component": "^2.4.0",
-    "react-router-dom": "^5.0.1",
+    "history": "^4.10.1",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "react-icons": "^4.1.0",
+    "react-notifications-component": "^3.0.3",
+    "react-router-dom": "^5.2.0",
     "react-router-redux": "^4.0.8",
     "react-scripts": "^3.4.4",
-    "socket.io-client": "^2.3.0",
-    "styled-components": "^4.3.2",
+    "socket.io-client": "^3.1.0",
+    "styled-components": "^5.2.1",
     "styled-tooltip-component": "^4.0.0"
   },
   "scripts": {
@@ -38,13 +38,13 @@
   },
   "devDependencies": {
     "eslint-config-airbnb": "^18.0.1",
-    "eslint-config-prettier": "^6.2.0",
+    "eslint-config-prettier": "^7.2.0",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-jsx-a11y": "^6.4.1",
     "eslint-plugin-prettier": "^3.1.0",
     "eslint-plugin-react": "^7.21.5",
     "eslint-plugin-react-hooks": "^4.2.0",
-    "prettier": "^1.18.2"
+    "prettier": "^2.2.1"
   },
   "env": {
     "browser": true,

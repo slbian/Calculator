@@ -43,13 +43,11 @@ export default function Scoreboard({ users }) {
       <h3>Scoreboard</h3>
       <ol>
         {users ? (
-          users.map(userEntry => {
-            return (
+          users.map(userEntry => 
               <li key={userEntry.username}>
                 {userEntry.username} : {userEntry.score}
               </li>
-            );
-          })
+          )
         ) : (
           <div>Loading...</div>
         )}
