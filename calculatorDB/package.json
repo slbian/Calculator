@@ -10,8 +10,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "eslint": "^6.1.0",
-    "knex": "^0.21.1",
-    "pg": "^8.0.3"
+    "eslint": "^6.8.0",
+    "knex": "^0.21.16",
+    "pg": "^8.5.1"
   }
 }
