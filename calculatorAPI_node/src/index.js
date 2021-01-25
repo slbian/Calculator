@@ -13,9 +13,10 @@ import usersRouter from './routes/users';
 import usersDao from './Instances/usersDao'
 import registerRouter from './routes/register';
 import jwt from 'jsonwebtoken';
-import { emit } from 'cluster';
 
-var jwtAuth = require('socketio-jwt-auth');
+// socket.io - prob don't need
+// import { emit } from 'cluster';
+// var jwtAuth = require('socketio-jwt-auth');
 
 
 const PORT = process.env.PORT || 3002;
@@ -68,16 +69,22 @@ export const io = socketIo(socketServer, {
   pingTimeout: 1000,
   pingInterval: 20000,
 
-  // get past cors
-  handlePreflightRequest: (req, res) => {
-    const headers = {
-      "Access-Control-Allow-Headers": "Content-Type, Authorization, x-auth-token",  // list of acceptable headers
-      "Access-Control-Allow-Origin": req.headers.origin,
-      "Access-Control-Allow-Credentials": true,
-    };
-    res.writeHead(200, headers);
-    res.end();
-  },
+  // Chuck's hack to get past cors
+  // handlePreflightRequest: (req, res) => {
+  //   const headers = {
+  //     "Access-Control-Allow-Headers": "Content-Type, Authorization, x-auth-token",  // list of acceptable headers
+  //     "Access-Control-Allow-Origin": req.headers.origin,
+  //     "Access-Control-Allow-Credentials": true,
+  //   };
+  //   res.writeHead(200, headers);
+  //   res.end();
+  // },
+  cors: {
+    origin: "http://localhost:3000",
+    methods: ["GET", "POST"],
+    allowedHeaders: ["Content-Type", "Authorization", "x-auth-token"],
+    credentials: true
+  }
 });
 
 // New Authenticate package

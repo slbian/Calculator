@@ -140,11 +140,13 @@ export default function CalculatorApp() {
   useEffect(() => {
     mount();
     const token = window.localStorage.getItem('token');
-    const socket = socketIOClient('http://localhost:3002',{query: `auth_token=${token}`}); // looking at port 3003 (hacky way) // TODO: PORT environment variable
-    console.log("HELLO")
-    console.log(socket)
-    socket.io.on('new-connection', user => {
-      console.log('connection socket user = ', {user, type: 'login'})
+    const socket = socketIOClient('http://localhost:3002',{
+      query: `auth_token=${token}`,
+      withCredentials: true,
+    }); // looking at port 3003 (hacky way) // TODO: PORT environment variable
+    // console.log(socket)
+    socket.on('new-connection', user => {
+      // console.log('connection socket user = ', {user, type: 'login'})
       store.addNotification({
         // content: MyNotification(user, "login"),
         title: 'login',
@@ -160,8 +162,8 @@ export default function CalculatorApp() {
       })
     }); 
 
-    socket.io.on('disconnection', user => {
-      console.log('disconnection socket user = ', {user, type: 'logout'})
+    socket.on('disconnection', user => {
+      // console.log('disconnection socket user = ', {user, type: 'logout'})
       store.addNotification({
         // content: MyNotification(user, "logout"),
         title: 'logout',
@@ -176,13 +178,13 @@ export default function CalculatorApp() {
       })
     }); 
 
-    socket.io.on('update-scoreboard', data => {
+    socket.on('update-scoreboard', data => {
       // data is array of all the active users
       dispatch(setUsers(data.users)); 
     }); 
 
     return () => socket.disconnect();
-  //eslint-disable-next-line react-hooks/exhaustive-deps
+  //eslint-disable-next-line
   }, []); // [] means can only get called once 
 
   if (!state || !state.activeUser || !state.users || !state.themes) {
