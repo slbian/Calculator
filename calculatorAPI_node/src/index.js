@@ -18,7 +18,6 @@ import jwt from 'jsonwebtoken';
 // import { emit } from 'cluster';
 // var jwtAuth = require('socketio-jwt-auth');
 
-
 const PORT = process.env.PORT || 3002;
 const app = express();
 

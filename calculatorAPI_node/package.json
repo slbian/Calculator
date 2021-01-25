@@ -10,13 +10,13 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "argon2": "^0.24.0",
-    "babel-jest": "^24.9.0",
+    "argon2": "^0.27.1",
+    "babel-jest": "^26.6.3",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "dotenv": "^8.0.0",
     "express": "^4.17.1",
-    "jest": "^24.9.0",
+    "jest": "^26.6.3",
     "json-stringify-safe": "^5.0.1",
     "jsonwebtoken": "^8.5.1",
     "knex": "^0.21.1",
@@ -28,7 +28,7 @@
     "pg": "^8.0.3",
     "react-router-dom": "^5.0.1",
     "socket.io": "^3.1.0",
-    "socketio-jwt-auth": "^0.1.0"
+    "socketio-jwt-auth": "^0.2.1"
   },
   "devDependencies": {
     "@babel/core": "^7.5.5",
@@ -36,11 +36,11 @@
     "@babel/plugin-proposal-class-properties": "^7.5.5",
     "@babel/preset-env": "^7.4.5",
     "@types/lodash": "^4.14.136",
-    "axios": "^0.19.0",
+    "axios": "^0.21.1",
     "babel-eslint": "^10.0.2",
-    "eslint": "^6.1.0",
+    "eslint": "^7.18.0",
     "mock-knex": "^0.4.6",
-    "nodemon": "^1.19.1"
+    "nodemon": "^2.0.7"
   },
   "jest": {
     "snapshotSerializers": [
