@@ -61,8 +61,8 @@ app.use('/themes', themesRouter);
 // Socket stuff below
 const socketServer = http.createServer(app); // new server based on our original express app
 
-// console.log(typeof app)
-// console.log("!!!", app)
+console.log(typeof app)
+console.log("!!!", app)
 
 export const io = socketIo(socketServer, {
   pingTimeout: 1000,
@@ -89,7 +89,7 @@ io.use(async (socket, next) => {
   try{
     // console.log(socket.handshake.query.auth_token, ">>>");
     const decodedToken = jwt.verify(socket.handshake.query.auth_token, process.env.JWT_SECRET); // ensuring it was signed by my secret
-    console.log('SUCCESS', decodedToken);
+    console.log('Decoded Token: ', decodedToken);
 
     // got the user from dao
     const actor = await usersDao.getById(decodedToken.userId);
@@ -106,12 +106,12 @@ io.use(async (socket, next) => {
 // listening to an event of its own ('connection') , and disconnection, on UI be prepared to receive 
 // this happens after authentication
 io.on("connection", socket => {
-  console.log("Connected Successfully!", socket.actor);
+  console.log("Connected: ", socket.actor[0].username);
 
   socket.broadcast.emit('new-connection', socket.actor); // emit to everyone except the one connecting (socket.broadcast means emit outwards)
 
   socket.on("disconnect", () => {
-    console.log('DISCONNECT', socket.actor);
+    console.log("Disconnected: ", socket.actor[0].username);
     socket.broadcast.emit('disconnection', socket.actor)
   })
 });

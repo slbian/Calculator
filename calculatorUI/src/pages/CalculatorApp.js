@@ -141,8 +141,9 @@ export default function CalculatorApp() {
     mount();
     const token = window.localStorage.getItem('token');
     const socket = socketIOClient('http://localhost:3002',{query: `auth_token=${token}`}); // looking at port 3003 (hacky way) // TODO: PORT environment variable
-    
-    socket.on('new-connection', user => {
+    console.log("HELLO")
+    console.log(socket)
+    socket.io.on('new-connection', user => {
       console.log('connection socket user = ', {user, type: 'login'})
       store.addNotification({
         // content: MyNotification(user, "login"),
@@ -159,7 +160,7 @@ export default function CalculatorApp() {
       })
     }); 
 
-    socket.on('disconnection', user => {
+    socket.io.on('disconnection', user => {
       console.log('disconnection socket user = ', {user, type: 'logout'})
       store.addNotification({
         // content: MyNotification(user, "logout"),
@@ -175,7 +176,7 @@ export default function CalculatorApp() {
       })
     }); 
 
-    socket.on('update-scoreboard', data => {
+    socket.io.on('update-scoreboard', data => {
       // data is array of all the active users
       dispatch(setUsers(data.users)); 
     }); 
