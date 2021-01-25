@@ -18,6 +18,7 @@ import Logout from '../components/Logout';
 import Profile from '../components/Profile';
 import Scoreboard from '../components/Scoreboard';
 import ThemePicker from '../components/ThemePicker';
+import fish from '../images/fish_midnight.png';
 
 // TODO: memoization, add different emojis, change eval, error handling/defensive programming, testing
 // DONE: database, add useState hooks, refactor to useReducer, refactor to useContext, styled components, add styling to database, authentication w argon2, layered route/controller/service/data access object API, live data, 
@@ -28,8 +29,9 @@ import ThemePicker from '../components/ThemePicker';
 // logout button - just push to login page, and clear local storage
 // add profile page
 // cleanup all logs, make sure organized
+// background-image: url(${props => props.themePath});
 const StyledDiv = styled.div`
-  background-image: url(${props => props.themePath});
+  background-image: url(${fish});
   background-size: cover;
   display: flex;
   flex-direction: row;
